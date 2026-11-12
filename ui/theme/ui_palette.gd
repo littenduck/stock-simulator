@@ -14,9 +14,15 @@ const DOWN := Color("#f85149")
 const GOLD := Color("#e3b341")
 const DIM := Color(0.0, 0.0, 0.0, 0.62)
 
-const RARITY_COMMON := Color("#9aa7b4")
-const RARITY_RARE := Color("#4c9ffe")
-const RARITY_LEGENDARY := Color("#e3b341")
+## Text on the light Kenney panels.
+const INK := Color("#232130")
+const INK_MUTED := Color("#5d6270")
+const INK_UP := Color("#2a8a3c")
+const INK_DOWN := Color("#c0392b")
+
+const RARITY_COMMON := Color("#5d6270")
+const RARITY_RARE := Color("#1f6fc4")
+const RARITY_LEGENDARY := Color("#b9770e")
 
 
 ## `rarity` is a PerkDef.Rarity value.

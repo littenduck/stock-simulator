@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://ui/theme/animated_background.gd" id="1"]
+[ext_resource type="Shader" path="res://ui/theme/animated_background.gdshader" id="2"]
+[ext_resource type="Texture2D" path="res://ui/theme/assets/bg_tile.png" id="3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bg"]
+shader = ExtResource("2")
+shader_parameter/tile = ExtResource("3")
+shader_parameter/rect_size = Vector2(1280, 720)
+shader_parameter/tile_size = Vector2(96, 96)
+shader_parameter/speed = 24.0
+
+[node name="AnimatedBackground" type="ColorRect"]
+material = SubResource("ShaderMaterial_bg")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.039, 0.102, 0.078, 1)
+script = ExtResource("1")

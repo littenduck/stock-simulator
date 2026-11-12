@@ -76,7 +76,9 @@ func _character_card_body(def: CharacterDef, unlocked: bool) -> Control:
 	desc.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	box.add_child(desc)
 	if not unlocked:
-		box.add_child(_label(tr("UI_FLOW_LOCKED") + ": " + _unlock_hint(def), &"RarityLegendaryLabel"))
+		var locked := _label(tr("UI_FLOW_LOCKED") + ": " + _unlock_hint(def), &"RarityLegendaryLabel")
+		locked.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		box.add_child(locked)
 		box.modulate = Color(1, 1, 1, 0.7)
 	return margin
 
@@ -108,6 +110,7 @@ func _build_difficulties() -> void:
 		if not unlocked:
 			button.text += "  (" + tr("UI_FLOW_LOCKED") + ")"
 			button.custom_minimum_size = Vector2(190, 0)
+			button.add_theme_constant_override("outline_size", 0)
 		button.toggled.connect(_on_difficulty_button_toggled.bind(level))
 		_difficulty_row.add_child(button)
 		if level == 1:

@@ -1,8 +1,11 @@
-## Dev tool: regenerates ui/theme/main_theme.tres.
-## Run: godot --headless --path . --script res://ui/theme/dev/build_theme.gd
+## Dev tool: regenerates ui/theme/main_theme.tres from the Kenney Pixel UI Pack art.
+## Run (after build_assets.gd): godot --headless --path . --script res://ui/theme/dev/build_theme.gd
+## Look: light Kenney panels, coloured Kenney buttons, Godot's default font.
 extends SceneTree
 
 const OUT_PATH := "res://ui/theme/main_theme.tres"
+const ART := "res://ui/theme/assets/ui_2x/"
+const MARGIN := 12  ## 9-slice margin of the 2x art
 
 
 func _init() -> void:
@@ -16,93 +19,92 @@ func _init() -> void:
 	quit(0 if err == OK else 1)
 
 
-func _box(bg: Color, border: Color = Color.TRANSPARENT, border_w: int = 0, radius: int = 6, pad: int = 10) -> StyleBoxFlat:
-	var s := StyleBoxFlat.new()
-	s.bg_color = bg
-	s.border_color = border
-	s.set_border_width_all(border_w)
-	s.set_corner_radius_all(radius)
-	s.content_margin_left = pad
-	s.content_margin_right = pad
-	s.content_margin_top = pad * 0.6
-	s.content_margin_bottom = pad * 0.6
+func _tex(art: String, pad_h: int = 16, pad_v: int = 8) -> StyleBoxTexture:
+	var s := StyleBoxTexture.new()
+	s.texture = load(ART + art + ".png")
+	s.set_texture_margin_all(MARGIN)
+	s.content_margin_left = pad_h
+	s.content_margin_right = pad_h
+	s.content_margin_top = pad_v
+	s.content_margin_bottom = pad_v + 4
+	s.draw_center = true
 	return s
 
 
-func _focus_box() -> StyleBoxFlat:
-	var s := _box(Color.TRANSPARENT, UiPalette.ACCENT, 2, 6, 10)
+func _focus() -> StyleBoxFlat:
+	var s := StyleBoxFlat.new()
+	s.draw_center = false
+	s.border_color = UiPalette.INK
+	s.set_border_width_all(3)
+	s.set_corner_radius_all(4)
 	return s
 
 
 func _base(t: Theme) -> void:
-	t.set_color("font_color", "Label", UiPalette.TEXT)
+	t.set_color("font_color", "Label", UiPalette.INK)
 	t.set_constant("line_spacing", "Label", 3)
-	t.set_stylebox("panel", "Panel", _box(UiPalette.PANEL, UiPalette.BORDER, 1, 8, 12))
-	t.set_stylebox("panel", "PanelContainer", _box(UiPalette.PANEL, UiPalette.BORDER, 1, 8, 16))
+	t.set_stylebox("panel", "Panel", _tex("colored_grey", 20, 16))
+	t.set_stylebox("panel", "PanelContainer", _tex("colored_grey", 28, 20))
 	t.set_constant("separation", "VBoxContainer", 10)
 	t.set_constant("separation", "HBoxContainer", 10)
 	t.set_constant("h_separation", "GridContainer", 16)
 	t.set_constant("v_separation", "GridContainer", 8)
-	t.set_color("font_color", "LineEdit", UiPalette.TEXT)
-	t.set_stylebox("normal", "LineEdit", _box(UiPalette.BG, UiPalette.BORDER, 1))
-	t.set_stylebox("focus", "LineEdit", _focus_box())
+
+
+## `selected` is the look of a toggled-on / held button (green for plain buttons, so a chosen toggle stands out).
+func _button_look(t: Theme, type_name: String, base: String, selected: String = "") -> void:
+	var sel := selected if selected != "" else base
+	t.set_stylebox("normal", type_name, _tex("colored_" + base))
+	t.set_stylebox("hover", type_name, _tex("colored_" + base))
+	t.set_stylebox("pressed", type_name, _tex("colored_%s_pressed" % sel))
+	t.set_stylebox("hover_pressed", type_name, _tex("colored_%s_pressed" % sel))
+	t.set_stylebox("disabled", type_name, _tex("colored_grey_pressed"))
+	t.set_stylebox("focus", type_name, _focus())
+	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
+		t.set_color(c, type_name, Color.WHITE)
+	t.set_color("font_disabled_color", type_name, UiPalette.INK_MUTED)
+	t.set_color("font_outline_color", type_name, UiPalette.INK)
+	t.set_constant("outline_size", type_name, 4)
 
 
 func _buttons(t: Theme) -> void:
-	for type_name in ["Button", "OptionButton", "CheckBox"]:
-		t.set_color("font_color", type_name, UiPalette.TEXT)
-		t.set_color("font_hover_color", type_name, Color.WHITE)
-		t.set_color("font_pressed_color", type_name, Color.WHITE)
-		t.set_color("font_focus_color", type_name, Color.WHITE)
-		t.set_color("font_disabled_color", type_name, UiPalette.MUTED.darkened(0.25))
-	t.set_stylebox("normal", "Button", _box(UiPalette.PANEL_RAISED, UiPalette.BORDER, 1))
-	t.set_stylebox("hover", "Button", _box(UiPalette.PANEL_RAISED.lightened(0.12), UiPalette.ACCENT, 1))
-	t.set_stylebox("pressed", "Button", _box(UiPalette.ACCENT.darkened(0.45), UiPalette.ACCENT, 1))
-	t.set_stylebox("disabled", "Button", _box(UiPalette.PANEL, UiPalette.BORDER.darkened(0.3), 1))
-	t.set_stylebox("focus", "Button", _focus_box())
-	t.set_stylebox("normal", "OptionButton", _box(UiPalette.PANEL_RAISED, UiPalette.BORDER, 1))
+	_button_look(t, "Button", "blue", "green")
+	_button_look(t, "OptionButton", "blue", "green")
 
 
 func _variations(t: Theme) -> void:
-	# Labels.
-	_label_var(t, "TitleLabel", 56, UiPalette.TEXT)
-	_label_var(t, "HeaderLabel", 28, UiPalette.TEXT)
-	_label_var(t, "SubtleLabel", 14, UiPalette.MUTED)
-	_label_var(t, "PositiveLabel", 16, UiPalette.UP)
-	_label_var(t, "NegativeLabel", 16, UiPalette.DOWN)
-	_label_var(t, "BigNumberLabel", 64, UiPalette.TEXT)
+	# Labels (all dark: they sit on the light panels).
+	_label_var(t, "TitleLabel", 56, UiPalette.INK)
+	_label_var(t, "HeaderLabel", 28, UiPalette.INK)
+	_label_var(t, "SubtleLabel", 14, UiPalette.INK_MUTED)
+	_label_var(t, "PositiveLabel", 16, UiPalette.INK_UP)
+	_label_var(t, "NegativeLabel", 16, UiPalette.INK_DOWN)
+	_label_var(t, "BigNumberLabel", 64, UiPalette.INK)
 	_label_var(t, "RarityCommonLabel", 14, UiPalette.RARITY_COMMON)
 	_label_var(t, "RarityRareLabel", 14, UiPalette.RARITY_RARE)
 	_label_var(t, "RarityLegendaryLabel", 14, UiPalette.RARITY_LEGENDARY)
 
 	# Buttons.
 	t.set_type_variation("AccentButton", "Button")
-	t.set_stylebox("normal", "AccentButton", _box(UiPalette.ACCENT.darkened(0.25), UiPalette.ACCENT, 1))
-	t.set_stylebox("hover", "AccentButton", _box(UiPalette.ACCENT.darkened(0.1), UiPalette.ACCENT.lightened(0.3), 1))
-	t.set_stylebox("pressed", "AccentButton", _box(UiPalette.ACCENT.darkened(0.45), UiPalette.ACCENT, 1))
+	_button_look(t, "AccentButton", "green")
 	t.set_font_size("font_size", "AccentButton", 20)
 	t.set_type_variation("DangerButton", "Button")
-	t.set_stylebox("normal", "DangerButton", _box(UiPalette.DOWN.darkened(0.5), UiPalette.DOWN, 1))
-	t.set_stylebox("hover", "DangerButton", _box(UiPalette.DOWN.darkened(0.3), UiPalette.DOWN, 1))
+	_button_look(t, "DangerButton", "red")
 	t.set_type_variation("BigMenuButton", "Button")
+	_button_look(t, "BigMenuButton", "blue")
 	t.set_font_size("font_size", "BigMenuButton", 22)
-	t.set_stylebox("normal", "BigMenuButton", _box(UiPalette.PANEL_RAISED, UiPalette.BORDER, 1, 6, 16))
-	t.set_stylebox("hover", "BigMenuButton", _box(UiPalette.PANEL_RAISED.lightened(0.12), UiPalette.ACCENT, 1, 6, 16))
-	t.set_stylebox("pressed", "BigMenuButton", _box(UiPalette.ACCENT.darkened(0.45), UiPalette.ACCENT, 1, 6, 16))
-	t.set_stylebox("disabled", "BigMenuButton", _box(UiPalette.PANEL, UiPalette.BORDER.darkened(0.3), 1, 6, 16))
-	t.set_stylebox("focus", "BigMenuButton", _box(Color.TRANSPARENT, UiPalette.ACCENT, 2, 6, 16))
 
 	# Panels.
 	t.set_type_variation("CardPanel", "PanelContainer")
-	t.set_stylebox("panel", "CardPanel", _box(UiPalette.PANEL_RAISED, UiPalette.BORDER, 1, 10, 18))
+	t.set_stylebox("panel", "CardPanel", _tex("ancient_tan", 20, 14))
 	t.set_type_variation("DialogPanel", "PanelContainer")
-	t.set_stylebox("panel", "DialogPanel", _box(UiPalette.PANEL, UiPalette.BORDER, 2, 12, 28))
+	t.set_stylebox("panel", "DialogPanel", _tex("colored_grey", 36, 28))
 
-	# Selectable cards: Button variations, one per rarity plus a plain selectable card.
-	_card_var(t, "PerkCardCommon", UiPalette.RARITY_COMMON)
-	_card_var(t, "PerkCardRare", UiPalette.RARITY_RARE)
-	_card_var(t, "PerkCardLegendary", UiPalette.RARITY_LEGENDARY)
-	_card_var(t, "SelectCard", UiPalette.ACCENT)
+	# Selectable cards: light panels. Selected = green outline, rarity = outline colour.
+	_card_var(t, "SelectCard", "ancient_tan", "outline_green")
+	_card_var(t, "PerkCardCommon", "ancient_tan", "outline_green")
+	_card_var(t, "PerkCardRare", "outline_blue", "outline_blue")
+	_card_var(t, "PerkCardLegendary", "outline_yellow", "outline_yellow")
 
 
 func _label_var(t: Theme, name: String, size: int, color: Color) -> void:
@@ -111,13 +113,13 @@ func _label_var(t: Theme, name: String, size: int, color: Color) -> void:
 	t.set_color("font_color", name, color)
 
 
-## A big button used as a card. Border colour = `accent`; thick when hovered, focused or toggled.
-func _card_var(t: Theme, name: String, accent: Color) -> void:
+func _card_var(t: Theme, name: String, normal: String, pressed: String) -> void:
 	t.set_type_variation(name, "Button")
-	var base := UiPalette.PANEL_RAISED
-	t.set_stylebox("normal", name, _box(base, accent.darkened(0.45), 2, 10, 16))
-	t.set_stylebox("hover", name, _box(base.lightened(0.1), accent, 3, 10, 16))
-	t.set_stylebox("pressed", name, _box(accent.darkened(0.6), accent, 3, 10, 16))
-	t.set_stylebox("hover_pressed", name, _box(accent.darkened(0.55), accent, 3, 10, 16))
-	t.set_stylebox("disabled", name, _box(UiPalette.PANEL, UiPalette.BORDER.darkened(0.3), 1, 10, 16))
-	t.set_stylebox("focus", name, _box(Color.TRANSPARENT, Color.WHITE, 3, 10, 16))
+	t.set_stylebox("normal", name, _tex(normal, 16, 14))
+	t.set_stylebox("hover", name, _tex(pressed, 16, 14))
+	t.set_stylebox("pressed", name, _tex(pressed, 16, 14))
+	t.set_stylebox("hover_pressed", name, _tex(pressed, 16, 14))
+	t.set_stylebox("disabled", name, _tex("colored_grey_pressed", 16, 14))
+	t.set_stylebox("focus", name, _focus())
+	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color", "font_disabled_color"]:
+		t.set_color(c, name, UiPalette.INK)
