@@ -2,7 +2,6 @@
 ## player acts. Holds the current GameSession and translates DayReports into EventBus signals.
 ## CONTRACT: public signatures frozen. Owner of the body: session-integration.
 ## Autoload scripts must not declare class_name.
-## STUB: scene switching only.
 extends Node
 
 enum State { MENU, PLAYING, DRAFTING, GAME_OVER }
@@ -11,6 +10,7 @@ const MAIN_MENU_SCENE := "res://ui/main_menu/main_menu.tscn"
 const RUN_SETUP_SCENE := "res://ui/run_setup/run_setup.tscn"
 const GAME_SCENE := "res://ui/game_screen/game_screen.tscn"
 const HIGH_SCORES_SCENE := "res://ui/high_scores/high_scores.tscn"
+const SETTINGS_SCENE := "res://ui/main_menu/settings.tscn"
 
 var state: State = State.MENU
 ## Read-only for UI. Null in the menu.
@@ -22,13 +22,30 @@ func _unhandled_input(event: InputEvent) -> void:
 		next_day()
 
 
-func start_run(_config: RunConfig) -> void:
-	push_warning("STUB GameManager.start_run")
+func start_run(config: RunConfig) -> void:
+	if config == null or config.character == null:
+		return
+	session = GameSession.new(config, ContentDb.companies(), ContentDb.perks(), ContentDb.news(), _unlocked_ids())
+	session.start()
+	SaveManager.save_run(session)
+	_enter_game()
 
 
 ## Resumes the saved run. Returns false if there is none.
 func continue_run() -> bool:
-	return false
+	var data := SaveManager.load_run_data()
+	if data.is_empty():
+		return false
+	var config := GameSession.config_from_dict(data)
+	if config == null:
+		return false
+	var loaded := GameSession.from_dict(data, config, ContentDb.companies(), ContentDb.perks(), ContentDb.news())
+	if loaded == null or loaded.is_finished():
+		SaveManager.delete_run()
+		return false
+	session = loaded
+	_enter_game()
+	return true
 
 
 func has_saved_run() -> bool:
@@ -37,24 +54,60 @@ func has_saved_run() -> bool:
 
 ## Advance one trading day (only in PLAYING).
 func next_day() -> void:
-	pass
+	if state != State.PLAYING or session == null:
+		return
+	var report := session.next_day()
+	_emit_report(report)
+	if report.finished:
+		_finish_run()
+		return
+	SaveManager.save_run(session)
+	if not report.draft_offer.is_empty():
+		_change_state(State.DRAFTING)
+		EventBus.draft_offered.emit(report.draft_offer)
 
 
 ## Market orders fill now; limit/stop orders are queued. Failures also emit EventBus.trade_failed.
 func submit_order(order: Order) -> TradeResult:
-	return TradeResult.fail("TRADE_ERR_NOT_IMPLEMENTED", order)
+	if state != State.PLAYING or session == null:
+		return TradeResult.fail("TRADE_ERR_NOT_IMPLEMENTED", order)
+	var result := session.submit(order)
+	if not result.ok:
+		EventBus.trade_failed.emit(result.reason)
+		return result
+	if result.pending:
+		EventBus.order_placed.emit(order)
+	else:
+		EventBus.order_filled.emit(order, result)
+		EventBus.portfolio_changed.emit()
+	SaveManager.save_run(session)
+	return result
 
 
 func cancel_order(order_id: int) -> bool:
-	return session != null and session.cancel_order(order_id)
+	if session == null or state != State.PLAYING:
+		return false
+	var ok := session.cancel_order(order_id)
+	if ok:
+		EventBus.order_cancelled.emit(order_id)
+		SaveManager.save_run(session)
+	return ok
 
 
-func choose_perk(_perk: PerkDef) -> void:
-	pass
+func choose_perk(perk: PerkDef) -> void:
+	if state != State.DRAFTING or session == null or perk not in session.pending_draft:
+		return
+	session.choose_perk(perk)
+	SaveManager.save_run(session)
+	EventBus.perks_changed.emit()
+	EventBus.portfolio_changed.emit()
+	_change_state(State.PLAYING)
 
 
 ## Throws the current run away (no score is recorded) and returns to the menu.
 func abandon_run() -> void:
+	SaveManager.delete_run()
+	session = null
 	go_to_menu()
 
 
@@ -65,6 +118,64 @@ func go_to_menu() -> void:
 
 func open_scene(path: String) -> void:
 	get_tree().change_scene_to_file(path)
+
+
+func _unlocked_ids() -> Array[StringName]:
+	var out: Array[StringName] = []
+	for id in SaveManager.profile.unlocked.keys():
+		out.append(StringName(id))
+	return out
+
+
+## Switches to the game scene; once it is loaded (its overlays listen to EventBus) sends the
+## current state: prices, and the open draft if there is one.
+func _enter_game() -> void:
+	_change_state(State.DRAFTING if not session.pending_draft.is_empty() else State.PLAYING)
+	get_tree().change_scene_to_file(GAME_SCENE)
+	# change_scene_to_file is deferred; wait until the new scene's _ready has run.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if session == null:
+		return
+	EventBus.day_advanced.emit(session.day)
+	EventBus.prices_updated.emit()
+	EventBus.portfolio_changed.emit()
+	EventBus.perks_changed.emit()
+	for r in session.news.pending():
+		EventBus.rumor_posted.emit(r)
+	for o in session.book.pending():
+		EventBus.order_placed.emit(o)
+	if state == State.DRAFTING:
+		EventBus.draft_offered.emit(session.pending_draft)
+
+
+func _emit_report(report: DayReport) -> void:
+	EventBus.day_advanced.emit(report.day)
+	for r in report.resolved_rumors:
+		r.resolved = true
+		EventBus.rumor_resolved.emit(r)
+	EventBus.prices_updated.emit()
+	for res in report.fills:
+		if res.ok:
+			EventBus.order_filled.emit(res.order, res)
+		else:
+			EventBus.order_cancelled.emit(res.order.id)
+			EventBus.trade_failed.emit(res.reason)
+	if report.margin_called:
+		EventBus.margin_called.emit()
+	for r in report.new_rumors:
+		EventBus.rumor_posted.emit(r)
+	EventBus.portfolio_changed.emit()
+
+
+func _finish_run() -> void:
+	var final_score := session.score()
+	# Profile first: the game-over dialog reads rank and unlocks from it.
+	SaveManager.profile.record_run(final_score, session.config)
+	SaveManager.save_profile()
+	SaveManager.delete_run()
+	_change_state(State.GAME_OVER)
+	EventBus.run_finished.emit(final_score)
 
 
 func _change_state(new_state: State) -> void:
