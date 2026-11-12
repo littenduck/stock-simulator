@@ -10,4 +10,4 @@ sector = "energy"
 start_price = 40.0
 annual_drift = 0.14
 annual_volatility = 0.7
-unlock_id = &"co_tidalon"
+unlock_id = &"company_extra_2"

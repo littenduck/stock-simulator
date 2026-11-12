@@ -11,11 +11,14 @@ var character: CharacterDef
 ## 1 = easiest. Levels above 1 are P2 content.
 var difficulty: int = 1
 var seed_value: int = 0
+## Fixed per run. When false: no short selling and leverage 1x (ModifiersBuilder enforces it).
+var margin_enabled: bool = false
 
 
-static func make(p_character: CharacterDef, p_difficulty: int = 1, p_seed: int = 0) -> RunConfig:
+static func make(p_character: CharacterDef, p_difficulty: int = 1, p_seed: int = 0, p_margin_enabled: bool = false) -> RunConfig:
 	var c := RunConfig.new()
 	c.character = p_character
 	c.difficulty = p_difficulty
 	c.seed_value = p_seed if p_seed != 0 else randi()
+	c.margin_enabled = p_margin_enabled
 	return c

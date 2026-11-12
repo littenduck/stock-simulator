@@ -10,4 +10,4 @@ sector = "finance"
 start_price = 110.0
 annual_drift = 0.04
 annual_volatility = 0.12
-unlock_id = &"co_oldegate"
+unlock_id = &"company_olde"

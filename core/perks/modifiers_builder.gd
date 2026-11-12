@@ -20,4 +20,7 @@ static func build(config: RunConfig, owned_perks: Array[PerkDef]) -> RunModifier
 		if perk.id not in applied:
 			applied.append(perk.id)
 			mods.apply(perk)
+	if not config.margin_enabled:
+		mods.can_short = false
+		mods.max_leverage = 1.0
 	return mods

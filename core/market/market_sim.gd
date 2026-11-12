@@ -12,6 +12,9 @@ var _prices: Dictionary = {}     ## symbol -> float
 var _history: Dictionary = {}    ## symbol -> PackedFloat32Array
 ## Active news shocks in registration order: {"symbol": String, "daily": float, "days": int}.
 var _shocks: Array[Dictionary] = []
+## Set by the session from RunModifiers.volatility_mult (difficulty 4 = 1.2).
+var volatility_mult: float = 1.0
+var _scaled: Dictionary = {}     ## symbol -> CompanyDef copy with scaled volatility
 
 
 func _init(companies: Array[CompanyDef], model: PriceModel, rng: RandomNumberGenerator) -> void:
@@ -104,10 +107,21 @@ func apply_news(event: NewsEventDef, scale: float = 1.0) -> void:
 
 
 ## Advances one trading day.
+func _with_volatility(c: CompanyDef) -> CompanyDef:
+	if is_equal_approx(volatility_mult, 1.0):
+		return c
+	var cached: CompanyDef = _scaled.get(c.symbol)
+	if cached == null or not is_equal_approx(cached.annual_volatility, c.annual_volatility * volatility_mult):
+		cached = c.duplicate()
+		cached.annual_volatility = c.annual_volatility * volatility_mult
+		_scaled[c.symbol] = cached
+	return cached
+
+
 func step() -> void:
 	for c in _companies:
 		var extra := _consume_shocks(c.symbol)
-		var price: float = _model.next_price(_prices[c.symbol], c, extra, _rng)
+		var price: float = _model.next_price(_prices[c.symbol], _with_volatility(c), extra, _rng)
 		_prices[c.symbol] = price
 		var h: PackedFloat32Array = _history[c.symbol]
 		h.append(price)

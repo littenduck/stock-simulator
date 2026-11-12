@@ -10,4 +10,4 @@ sector = "health"
 start_price = 85.0
 annual_drift = 0.08
 annual_volatility = 0.45
-unlock_id = &"co_aurelix"
+unlock_id = &"company_extra_3"

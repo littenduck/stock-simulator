@@ -30,6 +30,14 @@ Guidelines:
 - Tests: determinism (same seed + same inputs => same final score), save/load round trip mid-run gives identical continuation, the fixed daily order, draft days, finishing, Iron-Hands-free forced liquidation does not end the run.
 - Replace the foundation placeholders only inside your files; keep every signature that tests/contract guards.
 
+Read also before starting: every file in docs/team/requests/ (items addressed to session-integration), and these lead decisions already on main:
+- RunConfig now has `margin_enabled` (default false); ModifiersBuilder already forces can_short=false / max_leverage=1.0 when it is off. Store `margin_enabled` in the run save so Continue keeps it.
+- MarketSim has a public `volatility_mult`; set it from `mods.volatility_mult` after building modifiers (and again after loading a save).
+- Company unlock ids now equal Profile's constants (company_moon, company_olde, company_extra_1..3); pass `profile.unlocked.keys()` (as Array[StringName]) to `MarketSim.draw_companies`.
+- Call Profile.record_run and write profile.json BEFORE emitting EventBus.run_finished (the game-over dialog reads the profile).
+- Emit order_placed / order_filled / order_cancelled, set Rumor.resolved = true before rumor_resolved, emit prices_updated and portfolio_changed after every day and every trade, use `r.event` + `r.impact_scale()` for apply_news, treat OrderBook.place() == 0 as failure, call book.cancel_all() at day 60, start_run must switch to GAME_SCENE, and add a SETTINGS_SCENE constant.
+- Dividend: Value Investor's doubled long dividend only matters if a base `long_dividend_daily` exists; if it is 0 in the character data, note it in your request file (meta-progression owns the data).
+
 Definition of done: scripts/test.sh green (including a full 60-day scripted run in tests/unit/session/), scripts/check_scope.sh session-integration prints 'scope ok', and the game can be played from the main menu to the game over dialog in the editor with the UI that is on main.
 Finish with a short report: what is implemented, what is not, and the contents of your request file (if any).
 ```

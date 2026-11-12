@@ -142,7 +142,7 @@ func _on_difficulty_button_toggled(pressed: bool, level: int) -> void:
 func _on_start_button_pressed() -> void:
 	if _character == null:
 		return
-	GameManager.start_run(RunConfig.make(_character, _difficulty))
+	GameManager.start_run(RunConfig.make(_character, _difficulty, 0, GameSettings.margin_enabled()))
 
 
 func _on_back_button_pressed() -> void:

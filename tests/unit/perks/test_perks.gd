@@ -9,7 +9,7 @@ const PERK_IDS: Array[StringName] = [
 
 
 func _build(perk_id: StringName = &"", character_id: StringName = &"rookie", difficulty: int = 1) -> RunModifiers:
-	var cfg := RunConfig.make(ContentDb.character_by_id(character_id), difficulty, 1)
+	var cfg := RunConfig.make(ContentDb.character_by_id(character_id), difficulty, 1, true)
 	var owned: Array[PerkDef] = []
 	if perk_id != &"":
 		owned.append(ContentDb.perk_by_id(perk_id))
@@ -109,7 +109,7 @@ func test_market_maker() -> void:
 
 
 func test_market_maker_wins_over_low_fees_in_any_order() -> void:
-	var cfg := RunConfig.make(ContentDb.character_by_id(&"rookie"), 1, 1)
+	var cfg := RunConfig.make(ContentDb.character_by_id(&"rookie"), 1, 1, true)
 	var owned: Array[PerkDef] = [ContentDb.perk_by_id(&"low_fees"), ContentDb.perk_by_id(&"market_maker")]
 	assert_almost(ModifiersBuilder.build(cfg, owned).effective_fee_rate(), 0.0)
 
@@ -133,7 +133,7 @@ func test_day_trader() -> void:
 
 
 func test_day_trader_does_not_double_apply_low_fees() -> void:
-	var cfg := RunConfig.make(ContentDb.character_by_id(&"day_trader"), 1, 1)
+	var cfg := RunConfig.make(ContentDb.character_by_id(&"day_trader"), 1, 1, true)
 	var owned: Array[PerkDef] = [ContentDb.perk_by_id(&"low_fees")]
 	assert_almost(ModifiersBuilder.build(cfg, owned).effective_fee_rate(), 0.0005)
 
@@ -181,7 +181,7 @@ func test_value_investor_can_short_stays_a_real_bool() -> void:
 
 
 func test_rebuild_from_ids_is_identical_and_order_independent() -> void:
-	var cfg := RunConfig.make(ContentDb.character_by_id(&"day_trader"), 4, 1)
+	var cfg := RunConfig.make(ContentDb.character_by_id(&"day_trader"), 4, 1, true)
 	var a: Array[PerkDef] = [ContentDb.perk_by_id(&"margin_account"), ContentDb.perk_by_id(&"cheap_borrow"), ContentDb.perk_by_id(&"compounder")]
 	var b: Array[PerkDef] = [a[2], a[0], a[1]]
 	var m1 := ModifiersBuilder.build(cfg, a)
