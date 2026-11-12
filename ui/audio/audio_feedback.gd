@@ -9,17 +9,17 @@ const IFACE := "res://audio/kenney_interface-sounds/Audio/"
 ## Event -> file. All effects come from Kenney "Interface Sounds" so the style stays consistent.
 ## The other Kenney packs in audio/ are bundled unused for now (see CREDITS.md).
 const SFX: Dictionary = {
-	&"buy": IFACE + "confirmation_002.ogg",
-	&"sell": IFACE + "drop_004.ogg",
+	&"buy": IFACE + "confirmation_001.ogg",
+	&"sell": IFACE + "drop_001.ogg",
 	&"next_day": IFACE + "toggle_001.ogg",
-	&"perk": IFACE + "maximize_006.ogg",
-	&"perk_picked": IFACE + "confirmation_003.ogg",
-	&"margin_call": IFACE + "error_005.ogg",
+	&"perk": IFACE + "maximize_001.ogg",
+	&"perk_picked": IFACE + "pluck_001.ogg",
+	&"margin_call": IFACE + "glitch_001.ogg",
 	&"error": IFACE + "error_001.ogg",
-	&"win": IFACE + "maximize_009.ogg",
-	&"lose": IFACE + "error_007.ogg",
+	&"win": IFACE + "glass_001.ogg",
+	&"lose": IFACE + "scratch_001.ogg",
 	&"order_placed": IFACE + "open_001.ogg",
-	&"order_cancelled": IFACE + "close_002.ogg",
+	&"order_cancelled": IFACE + "close_001.ogg",
 	&"rumor_posted": IFACE + "question_001.ogg",
 	&"rumor_resolved": IFACE + "bong_001.ogg",
 }
