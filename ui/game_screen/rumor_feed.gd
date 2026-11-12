@@ -46,7 +46,8 @@ func _refresh() -> void:
 		return
 	for child in _list.get_children():
 		_list.remove_child(child)
-		child.queue_free()
+		if child != _empty:
+			child.queue_free()
 	if _entries.is_empty():
 		_list.add_child(_empty)
 		return
