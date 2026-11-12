@@ -1,5 +1,45 @@
 keys,en
+UI_FLOW_GAME_TITLE,Stock Simulator
+UI_FLOW_TAGLINE,Sixty trading days. One score.
 UI_FLOW_NEW_RUN,New Run
 UI_FLOW_CONTINUE,Continue
 UI_FLOW_HIGH_SCORES,High Scores
 UI_FLOW_QUIT,Quit
+UI_FLOW_BACK,Back
+UI_FLOW_SETUP_TITLE,New Run
+UI_FLOW_SETUP_CHARACTER,Character
+UI_FLOW_SETUP_DIFFICULTY,Difficulty
+UI_FLOW_SETUP_START,Start Run
+UI_FLOW_START_CASH,Starting cash: %s
+UI_FLOW_LOCKED,Locked
+UI_FLOW_LOCKED_GENERIC,Keep playing to unlock this.
+UI_FLOW_UNLOCK_HINT_DAY_TRADER,Finish any run.
+UI_FLOW_UNLOCK_HINT_VALUE_INVESTOR,Reach $20000 net worth in a single run.
+UI_FLOW_DIFFICULTY_LEVEL,Level %d
+UI_FLOW_DIFFICULTY_1,Standard rules.
+UI_FLOW_DIFFICULTY_2,Fees +50%.
+UI_FLOW_DIFFICULTY_3,Rumors are 10% less likely to be true.
+UI_FLOW_DIFFICULTY_4,Daily volatility +20%.
+UI_FLOW_DIFFICULTY_5,Higher maintenance margin. Perk drafts offer one fewer choice.
+UI_FLOW_DIFFICULTY_NOTE,Each level adds its penalty to all lower levels.
+UI_FLOW_DRAFT_TITLE,Choose a perk
+UI_FLOW_DRAFT_HINT,Press 1-%d or click a card.
+UI_FLOW_RARITY_COMMON,Common
+UI_FLOW_RARITY_RARE,Rare
+UI_FLOW_RARITY_LEGENDARY,Legendary
+UI_FLOW_GAME_OVER_TITLE,Run complete
+UI_FLOW_FINAL_SCORE,Final score
+UI_FLOW_RANK,Rank #%d of your top %d
+UI_FLOW_RANK_NONE,Not in your top %d
+UI_FLOW_RUN_INFO,%s - difficulty %d
+UI_FLOW_NEW_UNLOCKS,New unlocks
+UI_FLOW_UNLOCK_CHARACTER,Character: %s
+UI_FLOW_UNLOCK_OTHER,Unlocked: %s
+UI_FLOW_BACK_TO_MENU,Back to Menu
+UI_FLOW_SCORES_TITLE,High Scores
+UI_FLOW_SCORES_EMPTY,No runs yet. Finish a run to set a score.
+UI_FLOW_COL_RANK,Rank
+UI_FLOW_COL_SCORE,Score
+UI_FLOW_COL_CHARACTER,Character
+UI_FLOW_COL_DIFFICULTY,Difficulty
+UI_FLOW_COL_DATE,Date
