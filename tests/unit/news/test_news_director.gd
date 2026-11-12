@@ -231,3 +231,48 @@ func test_save_load_roundtrip() -> void:
 				assert_eq(a[k], b[k], k)
 	assert_eq(d2.to_dict()["cooldowns"], d.to_dict()["cooldowns"])
 	assert_eq(d2.to_dict()["last_insider_day"], d.to_dict()["last_insider_day"])
+
+
+func test_any_symbol_template_picks_stock_of_sector() -> void:
+	var tpl := _event("pick", "tech", NewsDirector.ANY_SYMBOL)
+	tpl.cooldown_days = 0
+	var companies: Array[CompanyDef] = [_company("AAA", "tech"), _company("BBB", "tech"), _company("CCC", "energy")]
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 4
+	var market := MarketSim.new(companies, GbmPriceModel.new(), rng)
+	var d := NewsDirector.new([tpl] as Array[NewsEventDef], rng)
+	var seen := {}
+	for day in 100:
+		var r: Rumor = d.roll(day, RunModifiers.new(), market)[0]
+		assert_true(r.target_symbol in ["AAA", "BBB"], "symbol of the sector")
+		assert_eq(r.event.target_symbol, r.target_symbol, "event copy carries the symbol")
+		assert_eq(tpl.target_symbol, NewsDirector.ANY_SYMBOL, "template untouched")
+		seen[r.target_symbol] = true
+	assert_eq(seen.size(), 2, "both stocks get picked")
+	# no stock of the sector in the market => never eligible
+	var only_energy := MarketSim.new([_company("CCC", "energy")] as Array[CompanyDef], GbmPriceModel.new(), rng)
+	assert_eq(NewsDirector.new([tpl] as Array[NewsEventDef], rng).roll(1, RunModifiers.new(), only_energy).size(), 0)
+
+
+func test_any_symbol_survives_save_load_and_hits_only_that_stock() -> void:
+	var tpl := _event("pick", "tech", NewsDirector.ANY_SYMBOL)
+	tpl.total_impact = 0.2
+	tpl.duration_days = 1
+	var companies: Array[CompanyDef] = [_company("AAA", "tech"), _company("BBB", "tech")]
+	for c in companies:
+		c.start_price = 100.0
+		c.annual_volatility = 0.0001
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 2
+	var market := MarketSim.new(companies, GbmPriceModel.new(), rng)
+	var d := NewsDirector.new([tpl] as Array[NewsEventDef], rng)
+	var r: Rumor = d.roll(1, RunModifiers.new(), market)[0]
+	var d2 := NewsDirector.new([tpl] as Array[NewsEventDef], rng)
+	d2.load_dict(JSON.parse_string(JSON.stringify(d.to_dict())))
+	var loaded := d2.pending()[0]
+	assert_eq(loaded.target_symbol, r.target_symbol)
+	market.apply_news(loaded.event, 1.0)
+	market.step()
+	var other := "BBB" if r.target_symbol == "AAA" else "AAA"
+	assert_almost(market.price_of(r.target_symbol), 120.0, 0.5)
+	assert_almost(market.price_of(other), 100.0, 0.5)

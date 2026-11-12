@@ -5,7 +5,8 @@
 ##   1. one randf() per eligible event in pool order (does it fire?)
 ##   2. if more events fired than MAX_PER_DAY: randi_range() to drop random ones
 ##   3. Insider Friend only: randi_range() to pick a forced event when none fired
-##   4. per created rumor: randf() truth, randfn() credibility noise, randf_range() range offset, randi_range() delay
+##   4. per created rumor: randi_range() to pick the stock when the template is "any" (resolve target), then
+##   5. per created rumor: randf() truth, randfn() credibility noise, randf_range() range offset, randi_range() delay
 class_name NewsDirector
 extends RefCounted
 
@@ -19,6 +20,9 @@ const CREDIBILITY_MAX := 0.95
 const RANGE_HALF_WIDTH := 0.1
 const RANGE_OFFSET := 0.05
 const INSIDER_INTERVAL_DAYS := 10
+## Template convention: target_symbol == "any" means "one random stock of target_sector that is in the market".
+## roll() resolves it by drawing from rng and stores a copy of the event with the concrete symbol in the Rumor.
+const ANY_SYMBOL := "any"
 
 var _pool: Array[NewsEventDef] = []
 var _rng: RandomNumberGenerator
@@ -54,10 +58,11 @@ func roll(day: int, mods: RunModifiers, market: MarketSim) -> Array[Rumor]:
 			fired.append(candidates[_rng.randi_range(0, candidates.size() - 1)])
 
 	var out: Array[Rumor] = []
-	for event in fired:
+	for template in fired:
+		var event := _resolve_target(template, market)
 		var guaranteed := insider_due and out.is_empty()
 		out.append(_make_rumor(event, day, m, market, guaranteed))
-		_cooldown_until[event.id] = day + event.cooldown_days
+		_cooldown_until[event.id] = day + event.cooldown_days    # same id for template and copy
 		if guaranteed:
 			_last_insider_day = day
 	_pending.append_array(out)
@@ -101,6 +106,8 @@ func load_dict(data: Dictionary) -> void:
 		var event := _event_by_id(String(d.get("event_id", "")))
 		if event == null:
 			continue
+		if event.target_symbol == ANY_SYMBOL and String(d.get("target_symbol", "")) != "":
+			event = _with_symbol(event, String(d["target_symbol"]))
 		var r := Rumor.new()
 		r.event = event
 		r.target_symbol = String(d.get("target_symbol", ""))
@@ -142,6 +149,23 @@ func _make_rumor(event: NewsEventDef, day: int, mods: RunModifiers, market: Mark
 	return r
 
 
+## Templates with ANY_SYMBOL become a copy aimed at one random market stock of their sector.
+func _resolve_target(template: NewsEventDef, market: MarketSim) -> NewsEventDef:
+	if template.target_symbol != ANY_SYMBOL:
+		return template
+	var candidates: Array[String] = []
+	for symbol in market.symbols():
+		if market.company_of(symbol).sector == template.target_sector:
+			candidates.append(symbol)
+	return _with_symbol(template, candidates[_rng.randi_range(0, candidates.size() - 1)])
+
+
+static func _with_symbol(template: NewsEventDef, symbol: String) -> NewsEventDef:
+	var copy: NewsEventDef = template.duplicate()
+	copy.target_symbol = symbol
+	return copy
+
+
 func _can_fire(event: NewsEventDef, day: int, market: MarketSim) -> bool:
 	if day < event.min_day or day < int(_cooldown_until.get(event.id, 0)):
 		return false
@@ -150,6 +174,8 @@ func _can_fire(event: NewsEventDef, day: int, market: MarketSim) -> bool:
 
 ## Only symbols/sectors that exist in this run's market may be targeted.
 static func _targets_market(event: NewsEventDef, market: MarketSim) -> bool:
+	if event.target_symbol == ANY_SYMBOL:
+		return event.target_sector in market.sectors()
 	if event.target_symbol != "":
 		return market.has_symbol(event.target_symbol)
 	if event.target_sector == "all":
@@ -158,7 +184,7 @@ static func _targets_market(event: NewsEventDef, market: MarketSim) -> bool:
 
 
 static func _sector_of(event: NewsEventDef, market: MarketSim) -> String:
-	if event.target_symbol != "":
+	if event.target_symbol != "" and event.target_symbol != ANY_SYMBOL:
 		var c := market.company_of(event.target_symbol)
 		return c.sector if c != null else ""
 	if event.target_sector == "all":
