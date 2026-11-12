@@ -16,3 +16,8 @@ No contract change is required. Notes for the lead and session-integration, so t
 3. **Portfolio (trading-engine).** The UI reads `positions[symbol]["avg_cost"]` and `["shares"]`, plus
    `long_value()`, `short_value()`, `gross_exposure()` and `net_worth()`.
 4. Space = next day is handled only by `GameManager._unhandled_input`. The pause menu swallows it while open.
+5. **Missing glyphs in web exports (lead / ui-flow).** Godot's default font has no ▲ ▼ ✔ ✘ ★ ● ✕ and a web export has
+   no system fallback font, so these characters show as boxes. The game screen draws them as icons
+   (`ui/game_screen/icons.gd`, `delta.gd`). Any other screen that prints them as text should do the same, or ship a font that has them.
+6. The game screen ships its own copy of the Kenney Pixel UI slices in `ui/game_screen/skins/pixel/`; once ui-flow is merged
+   it could share `ui/theme/assets/` instead.
