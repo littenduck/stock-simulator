@@ -1,0 +1,311 @@
+{
+ "source": "audio/music/startmenu.ogg (Suno result for the author's 4-bar theme)",
+ "method": "melody layer from MDX-Net stem separation, notes from Basic Pitch; at each long/short slot of the 3+3+2 eighth grid the loudest note within +-1 sixteenth was taken. Bars 1-5 are reliable, bars 6-8 are not (arpeggio/chord tones mixed in).",
+ "units": "start/len are in sixteenth notes inside the bar; midi is the MIDI note number; confidence is Basic Pitch amplitude",
+ "bars": [
+  [
+   {
+    "start": 0,
+    "len": 4,
+    "midi": 64,
+    "confidence": 0.7
+   },
+   {
+    "start": 4,
+    "len": 2,
+    "midi": 65,
+    "confidence": 0.57
+   },
+   {
+    "start": 6,
+    "len": 4,
+    "midi": 64,
+    "confidence": 0.72
+   },
+   {
+    "start": 10,
+    "len": 2,
+    "midi": 65,
+    "confidence": 0.5
+   },
+   {
+    "start": 12,
+    "len": 2,
+    "midi": 64,
+    "confidence": 0.67
+   },
+   {
+    "start": 14,
+    "len": 2,
+    "midi": 65,
+    "confidence": 0.52
+   }
+  ],
+  [
+   {
+    "start": 0,
+    "len": 4,
+    "midi": 67,
+    "confidence": 0.68
+   },
+   {
+    "start": 4,
+    "len": 2,
+    "midi": 65,
+    "confidence": 0.57
+   },
+   {
+    "start": 6,
+    "len": 4,
+    "midi": 67,
+    "confidence": 0.73
+   },
+   {
+    "start": 10,
+    "len": 2,
+    "midi": 65,
+    "confidence": 0.58
+   },
+   {
+    "start": 12,
+    "len": 2,
+    "midi": 67,
+    "confidence": 0.67
+   },
+   {
+    "start": 14,
+    "len": 2,
+    "midi": 62,
+    "confidence": 0.57
+   }
+  ],
+  [
+   {
+    "start": 0,
+    "len": 4,
+    "midi": 69,
+    "confidence": 0.76
+   },
+   {
+    "start": 4,
+    "len": 2,
+    "midi": 71,
+    "confidence": 0.66
+   },
+   {
+    "start": 6,
+    "len": 4,
+    "midi": 69,
+    "confidence": 0.7
+   },
+   {
+    "start": 10,
+    "len": 2,
+    "midi": 64,
+    "confidence": 0.68
+   },
+   {
+    "start": 12,
+    "len": 2,
+    "midi": 69,
+    "confidence": 0.66
+   },
+   {
+    "start": 14,
+    "len": 2,
+    "midi": 71,
+    "confidence": 0.5
+   }
+  ],
+  [
+   {
+    "start": 0,
+    "len": 4,
+    "midi": 72,
+    "confidence": 0.49
+   },
+   {
+    "start": 4,
+    "len": 2,
+    "midi": 74,
+    "confidence": 0.66
+   },
+   {
+    "start": 6,
+    "len": 4,
+    "midi": 72,
+    "confidence": 0.64
+   },
+   {
+    "start": 10,
+    "len": 2,
+    "midi": 74,
+    "confidence": 0.63
+   },
+   {
+    "start": 12,
+    "len": 2,
+    "midi": 68,
+    "confidence": 0.61
+   },
+   {
+    "start": 14,
+    "len": 2,
+    "midi": 74,
+    "confidence": 0.47
+   }
+  ],
+  [
+   {
+    "start": 0,
+    "len": 4,
+    "midi": 76,
+    "confidence": 0.65
+   },
+   {
+    "start": 4,
+    "len": 2,
+    "midi": 77,
+    "confidence": 0.58
+   },
+   {
+    "start": 6,
+    "len": 4,
+    "midi": 76,
+    "confidence": 0.73
+   },
+   {
+    "start": 10,
+    "len": 2,
+    "midi": 67,
+    "confidence": 0.67
+   },
+   {
+    "start": 12,
+    "len": 2,
+    "midi": 72,
+    "confidence": 0.64
+   },
+   {
+    "start": 14,
+    "len": 2,
+    "midi": 77,
+    "confidence": 0.59
+   }
+  ],
+  [
+   {
+    "start": 0,
+    "len": 4,
+    "midi": 79,
+    "confidence": 0.61
+   },
+   {
+    "start": 4,
+    "len": 2,
+    "midi": 67,
+    "confidence": 0.66
+   },
+   {
+    "start": 6,
+    "len": 4,
+    "midi": 79,
+    "confidence": 0.68
+   },
+   {
+    "start": 10,
+    "len": 2,
+    "midi": 77,
+    "confidence": 0.61
+   },
+   {
+    "start": 12,
+    "len": 2,
+    "midi": 71,
+    "confidence": 0.57
+   },
+   {
+    "start": 14,
+    "len": 2,
+    "midi": 77,
+    "confidence": 0.65
+   }
+  ],
+  [
+   {
+    "start": 0,
+    "len": 4,
+    "midi": 72,
+    "confidence": 0.59
+   },
+   {
+    "start": 4,
+    "len": 2,
+    "midi": 69,
+    "confidence": 0.68
+   },
+   {
+    "start": 6,
+    "len": 4,
+    "midi": 72,
+    "confidence": 0.67
+   },
+   {
+    "start": 10,
+    "len": 2,
+    "midi": 69,
+    "confidence": 0.6
+   },
+   {
+    "start": 12,
+    "len": 2,
+    "midi": 81,
+    "confidence": 0.57
+   },
+   {
+    "start": 14,
+    "len": 2,
+    "midi": 79,
+    "confidence": 0.49
+   }
+  ],
+  [
+   {
+    "start": 0,
+    "len": 4,
+    "midi": 65,
+    "confidence": 0.53
+   },
+   {
+    "start": 4,
+    "len": 2,
+    "midi": 60,
+    "confidence": 0.46
+   },
+   {
+    "start": 6,
+    "len": 4,
+    "midi": 65,
+    "confidence": 0.58
+   },
+   {
+    "start": 10,
+    "len": 2,
+    "midi": 86,
+    "confidence": 0.57
+   },
+   {
+    "start": 12,
+    "len": 2,
+    "midi": 65,
+    "confidence": 0.52
+   },
+   {
+    "start": 14,
+    "len": 2,
+    "midi": 86,
+    "confidence": 0.52
+   }
+  ]
+ ]
+}

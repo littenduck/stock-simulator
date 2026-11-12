@@ -20,3 +20,13 @@ with its original `License.txt`. Credit is not required but appreciated: "Sound 
 
 ## Art / fonts
 `icon.svg` belongs to the project. No third-party art or fonts yet.
+
+## Music (`audio/music/`)
+| File | What it is |
+|---|---|
+| `startmenu.ogg` | Start-screen theme, generated with Suno (a chiptune track from the project owner's own prompts) |
+| `gameplay.ogg` | In-game background loop, generated with Suno from the owner's 4-bar theme; cut at a bar line so it loops seamlessly |
+| `startmenu.mid`, `gameplay.mid` | Raw NES-style (pulse + triangle) versions of the two pieces as MIDI. Not used by the game (Godot does not import them); made with `tools/audio/render_game_8bit.py`, no samples |
+
+The Suno tracks are subject to the terms of the Suno plan they were generated under: check them before a commercial release.
+The Suno masters are not in the repository (about 25 MB as WAV); only the compressed .ogg files are.
