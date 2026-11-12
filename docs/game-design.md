@@ -87,7 +87,7 @@
 | P1 | 保证金和强制平仓 | 净值低于维持保证金时全部平仓 | 平仓后有明确提示，可以继续玩到第 60 天 |
 | P1 | 限价单 / 止损单 | 挂单到第 60 天或手动取消 | 第二天价格触及时自动成交 |
 | P1 | 角色 | 3 个起始角色，规则略有不同 | 不同角色开局资金或初始天赋不同 |
-| P1 | 局外解锁 | 解锁角色、额外公司、难度 | 满足条件后主菜单出现新选项 |
+| P1 | 局外解锁 | 解锁角色、难度（公司解锁机制保留但暂时为空） | 满足条件后主菜单出现新选项 |
 | P1 | 单局存档 | 每天自动存档，关网页后可继续 | 刷新页面后点“Continue”回到同一天 |
 | P1 | 音效 / 音乐 | 素材包 | 买、卖、下一天、天赋都有反馈音 |
 | P2 | 难度 2–5 | 类似“进阶”：手续费更高、传闻更假等 | — |
@@ -98,7 +98,7 @@
 
 ## 5. 内容设计（第一版）
 
-### 5.1 行业与公司（25 家初始 + 5 家可解锁）
+### 5.1 行业与公司（30 家，全部初始可用）
 
 公司都是真实上市公司的搞笑改名版（名字是谐音梗，代码是缩写梗）。每个公司文件用 `history_key` 对应真实代码，价格回放
 `data/market/history.csv` 里的真实日线（2022–2026，已按拆股调整）。一局随机选一段 60 个交易日的窗口，6 家公司用同一段日期，
@@ -109,12 +109,12 @@
 
 | 行业 | 公司：游戏代码（名字，真实代码） |
 |---|---|
-| 科技（11） | NVDO（Nvideo，NVDA）、AND（Advanced Nano Device，AMD）、BVGO（Brovago Comm，AVGO）、MUN（Mucron，MU）、SNDH（Sandish，SNDK）、MRBL（Marbble，MRVL）、MHDR（Macro Hard，MSFT）、PPLE（Pineapple，AAPL）、FOGO（Foogl，GOOGL）、MEGA（Mega，META）、PLBR（Polarbear，PLTR，可解锁） |
-| 太空（4） | SPCZ（SpaceZ，SPCX，可解锁）、RKLP（Rocket Lap，RKLB）、FSTS（Fast Spacemobile，ASTS）、LUNA（Lunatic Machine，LUNR） |
-| 消费（12） | AMZG（Amazing，AMZN）、TZLA（Tezla，TSLA，可解锁）、RIBN（Ribbon，RIVN）、LBIC（Lubric Motor，LCID）、NUTX（Nutflix，NFLX）、BOBX（Boblox，RBLX）、GMB（Game Blip，GME，可解锁）、AAC（AAA Cinema，AMC）、CSGO（Costgo，COST）、SDUX（Starducks，SBUX）、KEKO（Keko Cola，KO，可解锁）、POPS（Popsi Cola，PEP） |
+| 科技（11） | NVDO（Nvideo，NVDA）、AND（Advanced Nano Device，AMD）、BVGO（Brovago Comm，AVGO）、MUN（Mucron，MU）、SNDH（Sandish，SNDK）、MRBL（Marbble，MRVL）、MHDR（Macro Hard，MSFT）、PPLE（Pineapple，AAPL）、FOGO（Foogl，GOOGL）、MEGA（Mega，META）、PLBR（Polarbear，PLTR） |
+| 太空（4） | SPCZ（SpaceZ，SPCX）、RKLP（Rocket Lap，RKLB）、FSTS（Fast Spacemobile，ASTS）、LUNA（Lunatic Machine，LUNR） |
+| 消费（12） | AMZG（Amazing，AMZN）、TZLA（Tezla，TSLA）、RIBN（Ribbon，RIVN）、LBIC（Lubric Motor，LCID）、NUTX（Nutflix，NFLX）、BOBX（Boblox，RBLX）、GMB（Game Blip，GME）、AAC（AAA Cinema，AMC）、CSGO（Costgo，COST）、SDUX（Starducks，SBUX）、KEKO（Keko Cola，KO）、POPS（Popsi Cola，PEP） |
 | 金融（3） | BAIT（Coinbait，COIN）、HOOK（Robinhook，HOOD）、LOFI（Lofi，SOFI） |
 
-可解锁的 5 家：SPCZ（`company_moon`）、KEKO（`company_olde`）、PLBR、GMB、TZLA（`company_extra_1..3`）。
+公司解锁暂时关闭：现在 30 家都是现实公司的改名版，全部初始可用（每家的 `unlock_id` 都为空，`Profile` 不再发放 `company_*` 解锁）。机制本身保留，以后加入新的搞笑虚构公司时，给它设置 `unlock_id` 并在 `Profile.record_run` 里发放对应 id 即可。
 
 名字是玩笑，仅用于游戏内；公开发布前要再确认改名是否合适，以及行情数据的再分发条款（见 `CREDITS.md`）。
 

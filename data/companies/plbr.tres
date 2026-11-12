@@ -12,4 +12,4 @@ history_key = "PLTR"
 start_price = 172.40
 annual_drift = 0.500
 annual_volatility = 0.664
-unlock_id = &"company_extra_1"
+unlock_id = &""

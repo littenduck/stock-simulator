@@ -7,7 +7,7 @@ extends RefCounted
 
 const MAX_SCORES := 10
 
-## Unlock ids. CharacterDef/CompanyDef.unlock_id refer to these.
+## Unlock ids. CharacterDef/CompanyDef.unlock_id refer to these. No company uses a company_* id yet (all open).
 const UNLOCK_CHAR_DAY_TRADER := &"char_day_trader"        ## finish any run
 const UNLOCK_CHAR_VALUE_INVESTOR := &"char_value_investor"  ## score >= VALUE_INVESTOR_SCORE in one run
 const UNLOCK_COMPANY_MOON := &"company_moon"              ## finish 3 runs
@@ -48,11 +48,9 @@ func record_run(score: float, config: RunConfig) -> Array[StringName]:
 	var gained: Array[StringName] = []
 	_grant(UNLOCK_CHAR_DAY_TRADER, true, gained)
 	_grant(UNLOCK_CHAR_VALUE_INVESTOR, score >= VALUE_INVESTOR_SCORE, gained)
-	_grant(UNLOCK_COMPANY_MOON, total_runs >= 3, gained)
-	_grant(UNLOCK_COMPANY_OLDE, score >= OLDE_SCORE, gained)
-	_grant(UNLOCK_COMPANY_EXTRA_1, total_runs >= 5, gained)
-	_grant(UNLOCK_COMPANY_EXTRA_2, total_runs >= 8, gained)
-	_grant(UNLOCK_COMPANY_EXTRA_3, score >= EXTRA_3_SCORE, gained)
+	# Company unlocks are switched off: every company is available from the start. The mechanism
+	# (CompanyDef.unlock_id + the ids above) stays for future locked companies; to use it, set
+	# unlock_id on a company and grant the id here (for example _grant(UNLOCK_COMPANY_MOON, total_runs >= 3, gained)).
 	if config.difficulty < Difficulty.MAX_LEVEL:
 		_grant(difficulty_unlock_id(config.difficulty + 1), true, gained)
 	return gained

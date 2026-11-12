@@ -12,4 +12,4 @@ history_key = "GME"
 start_price = 25.55
 annual_drift = 0.313
 annual_volatility = 0.891
-unlock_id = &"company_extra_2"
+unlock_id = &""

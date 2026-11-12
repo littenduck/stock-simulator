@@ -2386,4 +2386,4 @@ python3 -m http.server 8060 --directory /Users/kevin/stock-simulator/build/web
 - `MarketSim`：新增 `candles_of`、`lookback_of`、`step_count`、`init_series`；历史上限 `MAX_HISTORY = 91`（30 天赛前 + 第 0 天 + 60 天）。
 - 新闻：64 个模板（见 game-design 5.2.1），`NewsEventDef` 新增 `icon`。
 - 数据维护：`python3 tools/fetch_history.py` 重新抓取并重写 CSV；导出预设的 `include_filter` 必须包含 `data/market/*.csv`。
-
+- 公司解锁：暂时关闭，30 家公司的 `unlock_id` 都为空，`Profile.record_run` 不再发放 `company_*`；`CompanyDef.unlock_id`、`MarketSim.draw_companies` 的过滤和 `Profile` 里的 id 常量保留，等以后加入虚构公司再启用。

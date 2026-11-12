@@ -88,7 +88,7 @@ func test_window_leaves_lookback_for_every_drawn_company() -> void:
 func test_late_listed_companies_still_appear() -> void:
 	# SpaceZ (real SPCX, listed 2026-06) fits only recent windows but must still be drawable.
 	var spcz := 0
-	var unlocked: Array[StringName] = [&"company_moon"]
+	var unlocked: Array[StringName] = []
 	for seed_value in range(1, 301):
 		var cfg := RunConfig.make(ContentDb.characters()[0], 1, seed_value)
 		var s := GameSession.new(cfg, ContentDb.companies(), ContentDb.perks(), ContentDb.news(), unlocked)

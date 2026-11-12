@@ -59,14 +59,14 @@ func test_difficulty_chain_unlocks_next_level_only() -> void:
 	assert_eq(Profile.difficulty_unlock_id(2), Profile.UNLOCK_DIFFICULTY_2)
 
 
-func test_company_unlocks() -> void:
+func test_no_company_is_locked_for_now() -> void:
 	var p := Profile.new()
-	p.record_run(16000.0, _cfg())
-	assert_true(p.is_unlocked(Profile.UNLOCK_COMPANY_OLDE))
-	assert_false(p.is_unlocked(Profile.UNLOCK_COMPANY_MOON))
-	p.record_run(1.0, _cfg())
-	var gained := p.record_run(1.0, _cfg())
-	assert_true(Profile.UNLOCK_COMPANY_MOON in gained, "3rd run")
+	for i in 10:
+		p.record_run(30000.0, _cfg())
+	for id in p.unlocked:
+		assert_false(String(id).begins_with("company_"), "no company unlock is granted yet: " + String(id))
+	for c in ContentDb.companies():
+		assert_eq(c.unlock_id, &"", "company open from the start: " + c.symbol)
 
 
 func test_dict_round_trip() -> void:
@@ -77,7 +77,7 @@ func test_dict_round_trip() -> void:
 	assert_eq(q.total_runs, 1)
 	assert_eq(q.top_scores.size(), 1)
 	assert_eq(q.unlocked.keys().size(), p.unlocked.keys().size())
-	assert_true(q.is_unlocked(Profile.UNLOCK_COMPANY_EXTRA_3))
+	assert_true(q.is_unlocked(Profile.UNLOCK_CHAR_VALUE_INVESTOR))
 
 
 func test_load_dict_tolerates_empty_data() -> void:

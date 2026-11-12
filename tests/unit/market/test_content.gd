@@ -33,7 +33,7 @@ func test_company_counts_and_fields() -> void:
 		assert_true(c.unlock_id == &"" or c.unlock_id in ALL_UNLOCKS, "unknown unlock id " + String(c.unlock_id))
 	assert_eq(symbols.size(), 30, "unique symbols")
 	assert_eq(keys.size(), 30, "unique history keys")
-	assert_eq(starters, 25)
+	assert_eq(starters, 30, "all companies open from the start")
 	assert_eq(sectors.size(), 4)
 	for s in sectors:
 		assert_true(sectors[s] >= 3, "3+ starters in " + s)

@@ -12,4 +12,4 @@ history_key = "KO"
 start_price = 97.57
 annual_drift = 0.117
 annual_volatility = 0.168
-unlock_id = &"company_olde"
+unlock_id = &""

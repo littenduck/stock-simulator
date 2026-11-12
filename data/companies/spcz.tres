@@ -12,4 +12,4 @@ history_key = "SPCX"
 start_price = 139.75
 annual_drift = -0.004
 annual_volatility = 0.818
-unlock_id = &"company_moon"
+unlock_id = &""

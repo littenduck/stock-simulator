@@ -12,4 +12,4 @@ history_key = "TSLA"
 start_price = 390.84
 annual_drift = 0.171
 annual_volatility = 0.593
-unlock_id = &"company_extra_3"
+unlock_id = &""
