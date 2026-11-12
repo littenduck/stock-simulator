@@ -1,11 +1,11 @@
 ## Dev harness for the game screen. Builds a GameSession by hand (dev market, dev portfolio, tiny
 ## order matching) and emits the EventBus signals the real GameManager will emit later.
 ## Run:   godot --path . res://ui/game_screen/dev/dev_harness.tscn
+## Skins: --skin=dark|light|pixel (variant scenes game_screen_<skin>.tscn)
 ## Shot:  godot --path . res://ui/game_screen/dev/dev_harness.tscn --resolution 1280x720 -- --shot=/tmp/a.png
 ## Keys:  Space next day | F1 post rumor | F2 Fact Checker | F3 Insider Friend | F4 margin call | F5 short ban
 extends Node
 
-const SCREEN := preload("res://ui/game_screen/game_screen.tscn")
 
 var _session: GameSession
 var _rng := RandomNumberGenerator.new()
@@ -110,7 +110,9 @@ func _ready() -> void:
 
 	var args: Dictionary = _parse_args()
 	_seed_demo(int(args.get("days", 22)))
-	_screen = SCREEN.instantiate()
+	var skin: String = String(args.get("skin", ""))
+	var scene_path: String = "res://ui/game_screen/game_screen%s.tscn" % ("_" + skin if skin != "" else "")
+	_screen = (load(scene_path) as PackedScene).instantiate()
 	add_child(_screen)
 	if args.has("tour"):
 		await _tour(String(args["tour"]))

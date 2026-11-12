@@ -10,11 +10,15 @@ var _empty: Label
 var _entries: Array[Rumor] = []
 
 
+@export var show_title: bool = true
+
+
 func _ready() -> void:
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 6)
 	add_child(box)
-	box.add_child(GameFmt.label(tr("UI_GAME_RUMORS"), GameColors.MUTED, 14))
+	if show_title:
+		box.add_child(GameFmt.label(tr("UI_GAME_RUMORS"), GameColors.MUTED, 14))
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -61,7 +65,7 @@ func _make_entry(r: Rumor) -> Control:
 
 	var panel := PanelContainer.new()
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(1, 1, 1, 0.04)
+	style.bg_color = GameColors.CARD
 	style.border_color = accent
 	style.border_width_left = 4
 	style.set_corner_radius_all(3)
@@ -148,7 +152,7 @@ class _CredBar extends Control:
 		var label: String = ("%d–%d%%" % [roundi(low * 100.0), roundi(high * 100.0)]) if fact_checker else ("%d%%" % roundi(value * 100.0))
 		var label_w: float = 66.0
 		var bar := Rect2(0, size.y * 0.5 - 4, size.x - label_w, 8)
-		draw_rect(bar, Color(1, 1, 1, 0.12))
+		draw_rect(bar, GameColors.TRACK)
 		if fact_checker:
 			var a: float = bar.position.x + bar.size.x * clampf(low, 0.0, 1.0)
 			var b: float = bar.position.x + bar.size.x * clampf(high, 0.0, 1.0)

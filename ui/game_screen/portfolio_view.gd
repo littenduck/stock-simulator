@@ -11,11 +11,15 @@ var _tree: Tree
 var _empty: Label
 
 
+@export var show_title: bool = true
+
+
 func _ready() -> void:
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 6)
 	add_child(box)
-	box.add_child(GameFmt.label(tr("UI_GAME_PORTFOLIO"), GameColors.MUTED, 14))
+	if show_title:
+		box.add_child(GameFmt.label(tr("UI_GAME_PORTFOLIO"), GameColors.MUTED, 14))
 
 	_summary = GridContainer.new()
 	_summary.columns = 4
@@ -66,7 +70,7 @@ func _refresh() -> void:
 		return
 	var p: Portfolio = s.portfolio
 	(_values["cash"] as Label).text = GameFmt.money(p.cash)
-	(_values["cash"] as Label).add_theme_color_override("font_color", GameColors.DOWN if p.cash < 0.0 else Color.WHITE)
+	GameFmt.tint(_values["cash"] as Label, GameColors.DOWN if p.cash < 0.0 else Color.WHITE)
 	(_values["long"] as Label).text = GameFmt.money(p.long_value(s.market))
 	(_values["short"] as Label).text = GameFmt.money(p.short_value(s.market))
 	var equity: float = p.net_worth(s.market)

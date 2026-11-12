@@ -45,6 +45,7 @@ func _ready() -> void:
 
 	var frame := PanelContainer.new()
 	frame.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	frame.theme_type_variation = &"ChartPanel"
 	add_child(frame)
 	_canvas = Control.new()
 	_canvas.name = "Canvas"
@@ -137,7 +138,7 @@ func _on_canvas_draw() -> void:
 	_lo = lo
 	_hi = hi
 
-	var grid_color := Color(1, 1, 1, 0.08)
+	var grid_color: Color = GameColors.GRID
 	for i in 5:
 		var t: float = i / 4.0
 		var y: float = _plot.position.y + _plot.size.y * t
@@ -173,7 +174,7 @@ func _on_canvas_draw() -> void:
 
 	if _hover_index >= 0 and _hover_index < n:
 		var hp: Vector2 = points[_hover_index]
-		_canvas.draw_line(Vector2(hp.x, _plot.position.y), Vector2(hp.x, _plot.end.y), Color(1, 1, 1, 0.35), 1.0)
+		_canvas.draw_line(Vector2(hp.x, _plot.position.y), Vector2(hp.x, _plot.end.y), GameColors.CROSSHAIR, 1.0)
 		_canvas.draw_circle(hp, 4.0, Color.WHITE)
 		var day_no: int = first_day + _hover_index
 		var text: String = "%s %d  %s" % [tr("UI_GAME_DAY"), day_no, GameFmt.price(history[_hover_index])]

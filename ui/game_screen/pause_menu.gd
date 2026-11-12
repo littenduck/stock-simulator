@@ -18,6 +18,7 @@ func _ready() -> void:
 	add_child(center)
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(320, 0)
+	panel.theme_type_variation = &"DialogPanel"
 	center.add_child(panel)
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 10)

@@ -1,0 +1,151 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://ui/game_screen/skins/variant_dark.gd" id="1"]
+[ext_resource type="Script" path="res://ui/game_screen/top_bar.gd" id="2"]
+[ext_resource type="Script" path="res://ui/game_screen/stock_list.gd" id="3"]
+[ext_resource type="Script" path="res://ui/game_screen/price_chart.gd" id="4"]
+[ext_resource type="Script" path="res://ui/game_screen/portfolio_view.gd" id="5"]
+[ext_resource type="Script" path="res://ui/game_screen/pending_orders_view.gd" id="6"]
+[ext_resource type="Script" path="res://ui/game_screen/order_panel.gd" id="7"]
+[ext_resource type="Script" path="res://ui/game_screen/rumor_feed.gd" id="8"]
+[ext_resource type="Script" path="res://ui/game_screen/perk_bar.gd" id="9"]
+[ext_resource type="Script" path="res://ui/game_screen/pause_menu.gd" id="10"]
+[ext_resource type="PackedScene" path="res://ui/perk_draft/perk_draft_dialog.tscn" id="11"]
+[ext_resource type="PackedScene" path="res://ui/game_over/game_over_dialog.tscn" id="12"]
+[ext_resource type="PackedScene" path="res://ui/audio/audio_feedback.tscn" id="13"]
+
+[node name="GameScreen" type="Control"]
+script = ExtResource("1")
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="."]
+mouse_filter = 2
+color = Color(0.043, 0.047, 0.055, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Layout" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 12
+
+[node name="Rows" type="VBoxContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopBar" type="PanelContainer" parent="Layout/Rows"]
+unique_name_in_owner = true
+script = ExtResource("2")
+layout_mode = 2
+theme_type_variation = &"ChartPanel"
+hero_size = 40
+value_size = 20
+
+[node name="Body" type="HBoxContainer" parent="Layout/Rows"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="StockList" type="PanelContainer" parent="Layout/Rows/Body"]
+unique_name_in_owner = true
+script = ExtResource("3")
+layout_mode = 2
+custom_minimum_size = Vector2(210, 0)
+show_names = false
+row_height = 52
+
+[node name="Center" type="VBoxContainer" parent="Layout/Rows/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="PriceChart" type="VBoxContainer" parent="Layout/Rows/Body/Center"]
+unique_name_in_owner = true
+script = ExtResource("4")
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="Tabs" type="TabContainer" parent="Layout/Rows/Body/Center"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="PortfolioView" type="PanelContainer" parent="Layout/Rows/Body/Center/Tabs"]
+unique_name_in_owner = true
+script = ExtResource("5")
+layout_mode = 2
+show_title = false
+metadata/title_key = "UI_GAME_PORTFOLIO"
+
+[node name="PendingOrdersView" type="PanelContainer" parent="Layout/Rows/Body/Center/Tabs"]
+unique_name_in_owner = true
+script = ExtResource("6")
+layout_mode = 2
+show_title = false
+metadata/title_key = "UI_GAME_PENDING_ORDERS"
+
+[node name="Right" type="VBoxContainer" parent="Layout/Rows/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(350, 0)
+theme_override_constants/separation = 10
+
+[node name="OrderPanel" type="PanelContainer" parent="Layout/Rows/Body/Right"]
+unique_name_in_owner = true
+script = ExtResource("7")
+layout_mode = 2
+
+[node name="RumorFeed" type="PanelContainer" parent="Layout/Rows/Body/Right"]
+unique_name_in_owner = true
+script = ExtResource("8")
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PerkBar" type="PanelContainer" parent="Layout/Rows"]
+unique_name_in_owner = true
+script = ExtResource("9")
+layout_mode = 2
+theme_type_variation = &"ChartPanel"
+
+[node name="PauseMenu" type="Control" parent="."]
+unique_name_in_owner = true
+script = ExtResource("10")
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlays" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PerkDraftDialog" parent="Overlays" instance=ExtResource("11")]
+
+[node name="GameOverDialog" parent="Overlays" instance=ExtResource("12")]
+
+[node name="AudioFeedback" parent="." instance=ExtResource("13")]

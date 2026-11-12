@@ -210,7 +210,7 @@ func _refresh() -> void:
 		text = tr("UI_GAME_SHORT_DISABLED")
 		effect_color = GameColors.DOWN
 	_effect.text = text
-	_effect.add_theme_color_override("font_color", effect_color)
+	GameFmt.tint(_effect, effect_color)
 
 	var ref_price: float = price if kind == Order.Kind.MARKET else _trigger.value
 	var value: float = ref_price * n
@@ -218,8 +218,7 @@ func _refresh() -> void:
 
 	var side_text: String = tr("UI_GAME_BUY") if is_buy else tr("UI_GAME_SELL")
 	_submit.text = "%s %d %s" % [side_text, n, symbol]
-	_submit.add_theme_color_override("font_color", GameColors.UP if is_buy else GameColors.DOWN)
-	_submit.add_theme_color_override("font_hover_color", GameColors.UP if is_buy else GameColors.DOWN)
+	_submit.theme_type_variation = &"BuyButton" if is_buy else &"SellButton"
 
 
 func _on_buy_toggled(pressed: bool) -> void:

@@ -49,6 +49,14 @@ static func label(text: String = "", color: Color = Color.WHITE, size: int = 0) 
 	return l
 
 
+## Colours a label, or restores the theme colour when `color` is Color.WHITE (= "no special colour").
+static func tint(l: Label, color: Color) -> void:
+	if color == Color.WHITE:
+		l.remove_theme_color_override("font_color")
+	else:
+		l.add_theme_color_override("font_color", color)
+
+
 ## Button that never keeps keyboard focus, so Space always means "next day" and never re-presses it.
 static func button(text: String) -> Button:
 	var b := Button.new()

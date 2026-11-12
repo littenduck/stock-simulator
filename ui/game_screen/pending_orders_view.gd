@@ -8,11 +8,15 @@ var _list: VBoxContainer
 var _empty: Label
 
 
+@export var show_title: bool = true
+
+
 func _ready() -> void:
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 6)
 	add_child(box)
-	box.add_child(GameFmt.label(tr("UI_GAME_PENDING_ORDERS"), GameColors.MUTED, 14))
+	if show_title:
+		box.add_child(GameFmt.label(tr("UI_GAME_PENDING_ORDERS"), GameColors.MUTED, 14))
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
