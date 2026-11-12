@@ -43,3 +43,17 @@ UI_FLOW_COL_SCORE,Score
 UI_FLOW_COL_CHARACTER,Character
 UI_FLOW_COL_DIFFICULTY,Difficulty
 UI_FLOW_COL_DATE,Date
+UI_FLOW_SETTINGS,Settings
+UI_FLOW_SETTINGS_TITLE,Settings
+UI_FLOW_SETTINGS_GAME_MODE,Game mode
+UI_FLOW_SETTINGS_MARGIN,Margin trading
+UI_FLOW_SETTINGS_MARGIN_HINT,"Short selling and leverage. Harder to learn, so it is off by default. Applies from the start of your next run."
+UI_FLOW_SETTINGS_SOUND,Sound
+UI_FLOW_SETTINGS_VOLUME,Volume
+UI_FLOW_SETTINGS_MUTED,Muted
+UI_FLOW_SETTINGS_DISPLAY,Display
+UI_FLOW_SETTINGS_FULLSCREEN,Fullscreen
+UI_FLOW_SETTINGS_ON,On
+UI_FLOW_SETTINGS_OFF,Off
+UI_FLOW_SETUP_MARGIN_ON,Margin trading: On (change it in Settings)
+UI_FLOW_SETUP_MARGIN_OFF,Margin trading: Off (turn it on in Settings)
