@@ -78,3 +78,43 @@ func test_dict_round_trip() -> void:
 	assert_eq(q.top_scores.size(), 1)
 	assert_eq(q.unlocked.keys().size(), p.unlocked.keys().size())
 	assert_true(q.is_unlocked(Profile.UNLOCK_COMPANY_EXTRA_3))
+
+
+func test_load_dict_tolerates_empty_data() -> void:
+	var p := Profile.new()
+	p.load_dict({})
+	assert_eq(p.total_runs, 0)
+	assert_eq(p.top_scores.size(), 0)
+	assert_true(p.is_unlocked(&""))
+	assert_false(p.is_unlocked(Profile.UNLOCK_CHAR_DAY_TRADER))
+
+
+func test_loaded_profile_keeps_ranking_rules() -> void:
+	var p := Profile.new()
+	for s in [100.0, 300.0, 200.0]:
+		p.record_run(s, _cfg())
+	var q := Profile.new()
+	q.load_dict(p.to_dict())
+	q.record_run(250.0, _cfg())
+	assert_eq(q.top_scores.map(func(e: Dictionary) -> float: return e["score"]), [300.0, 250.0, 200.0, 100.0])
+	assert_eq(q.total_runs, 4)
+
+
+func test_all_content_unlock_ids_are_grantable() -> void:
+	# Every character unlock_id used by content must be reachable through record_run.
+	var p := Profile.new()
+	var reachable := {}
+	for score in [1.0, 20000.0, 30000.0]:
+		for id in p.record_run(score, _cfg()):
+			reachable[id] = true
+	for c in ContentDb.characters():
+		if c.unlock_id != &"":
+			assert_true(p.is_unlocked(c.unlock_id), "unreachable unlock " + String(c.unlock_id))
+
+
+func test_difficulty_unlocks_cover_every_level() -> void:
+	var p := Profile.new()
+	for level in range(1, Difficulty.MAX_LEVEL):
+		p.record_run(1.0, _cfg(&"rookie", level))
+	for level in range(2, Difficulty.MAX_LEVEL + 1):
+		assert_true(p.is_unlocked(Profile.difficulty_unlock_id(level)), "level %d" % level)

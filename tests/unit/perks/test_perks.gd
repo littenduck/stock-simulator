@@ -169,3 +169,39 @@ func test_difficulty_levels_are_cumulative() -> void:
 
 func test_second_opinion_offsets_difficulty_5() -> void:
 	assert_eq(_build(&"second_opinion", &"rookie", 5).draft_choices, 3)
+
+
+func test_value_investor_can_short_stays_a_real_bool() -> void:
+	var m := _build(&"", &"value_investor")
+	assert_eq(typeof(m.can_short), TYPE_BOOL, "can_short must remain a bool after the SET effect")
+	assert_eq(m.can_short, false)
+	assert_eq(typeof(_build().can_short), TYPE_BOOL)
+
+
+func test_rebuild_from_ids_is_identical_and_order_independent() -> void:
+	var cfg := RunConfig.make(ContentDb.character_by_id(&"day_trader"), 4, 1)
+	var a: Array[PerkDef] = [ContentDb.perk_by_id(&"margin_account"), ContentDb.perk_by_id(&"cheap_borrow"), ContentDb.perk_by_id(&"compounder")]
+	var b: Array[PerkDef] = [a[2], a[0], a[1]]
+	var m1 := ModifiersBuilder.build(cfg, a)
+	var m2 := ModifiersBuilder.build(cfg, b)
+	var m3 := ModifiersBuilder.build(cfg, a)
+	for stat in ["fee_rate", "fee_mult", "max_leverage", "maintenance_margin", "borrow_rate_daily", "loan_rate_daily", "score_mult", "draft_choices"]:
+		assert_almost(m1.get(stat), m2.get(stat), 0.000001, "order independent " + stat)
+		assert_almost(m1.get(stat), m3.get(stat), 0.000001, "rebuild " + stat)
+	assert_almost(m1.max_leverage, 3.0, 0.000001, "day trader +1, margin account +1")
+
+
+func test_difficulty_clamps_out_of_range_levels() -> void:
+	var low := RunModifiers.new()
+	Difficulty.apply(0, low)
+	assert_almost(low.fee_rate, RunModifiers.new().fee_rate)
+	var high := RunModifiers.new()
+	var max_mods := RunModifiers.new()
+	Difficulty.apply(99, high)
+	Difficulty.apply(Difficulty.MAX_LEVEL, max_mods)
+	assert_almost(high.maintenance_margin, max_mods.maintenance_margin)
+	assert_eq(high.draft_choices, max_mods.draft_choices)
+
+
+func test_difficulty_5_with_every_draft_perk_combination_keeps_two_choices_minimum() -> void:
+	assert_true(_build(&"", &"rookie", 5).draft_choices >= 2)

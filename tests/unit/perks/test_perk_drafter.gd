@@ -49,3 +49,29 @@ func test_rarity_weights_roughly_60_30_10() -> void:
 	assert_almost(counts[0] / float(n), 360.0 / 550.0, 0.03, "common")
 	assert_almost(counts[1] / float(n), 150.0 / 550.0, 0.03, "rare")
 	assert_almost(counts[2] / float(n), 40.0 / 550.0, 0.02, "legendary")
+
+
+func test_zero_or_negative_count_returns_empty() -> void:
+	var none: Array[PerkDef] = []
+	assert_eq(_drafter(1).offer(none, 0).size(), 0)
+	assert_eq(_drafter(1).offer(none, -2).size(), 0)
+
+
+func test_offer_does_not_mutate_inputs() -> void:
+	var owned: Array[PerkDef] = [ContentDb.perk_by_id(&"low_fees")]
+	var pool_size := ContentDb.perks().size()
+	_drafter(3).offer(owned, 3)
+	assert_eq(owned.size(), 1)
+	assert_eq(ContentDb.perks().size(), pool_size)
+
+
+func test_six_drafts_in_a_row_never_repeat() -> void:
+	var d := _drafter(99)
+	var owned: Array[PerkDef] = []
+	for i in 6:
+		var offer := d.offer(owned, 3)
+		assert_eq(offer.size(), 3)
+		for p in offer:
+			assert_false(p in owned, "offered an owned perk")
+		owned.append(offer[0])
+	assert_eq(owned.size(), 6)
