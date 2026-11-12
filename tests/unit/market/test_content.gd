@@ -17,6 +17,8 @@ func test_company_counts_and_fields() -> void:
 		assert_true(c.symbol != "" and c.symbol == c.symbol.to_upper(), "symbol " + c.symbol)
 		assert_eq(c.display_name, "COMPANY_" + c.symbol)
 		assert_true(c.symbol not in REAL_TICKERS, "real ticker " + c.symbol)
+		# NOVA is the one 4-letter exception: the lead's test_foundation refers to it (see requests file)
+		assert_true(c.symbol.length() == 5 or c.symbol == "NOVA", "5 letter ticker " + c.symbol)
 		assert_true(c.start_price > 0.0 and c.annual_volatility > 0.0)
 		assert_true(tr(c.display_name) != c.display_name, "missing translation " + c.display_name)
 	assert_eq(symbols.size(), 20, "unique symbols")
@@ -28,7 +30,7 @@ func test_company_counts_and_fields() -> void:
 
 func test_news_templates() -> void:
 	var ns := ContentDb.news()
-	assert_true(ns.size() >= 30, "about 30 templates")
+	assert_true(ns.size() >= 30, "about 30+ templates")
 	var good := {}
 	var bad := {}
 	var ids := {}
@@ -40,7 +42,9 @@ func test_news_templates() -> void:
 		assert_eq(e.headline_key, "NEWS_" + e.id.to_upper())
 		assert_true(tr(e.headline_key) != e.headline_key, "missing translation " + e.headline_key)
 		assert_true(e.total_impact > -0.9 and e.denial_impact_ratio < 0.0)
-		if e.target_symbol != "":
+		if e.target_symbol == NewsDirector.ANY_SYMBOL:
+			assert_true(e.target_sector in symbols.values(), "no company in sector " + e.target_sector)
+		elif e.target_symbol != "":
 			assert_true(symbols.has(e.target_symbol), "unknown symbol " + e.target_symbol)
 		elif e.target_sector != "all":
 			var d := good if e.total_impact > 0.0 else bad

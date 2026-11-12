@@ -29,3 +29,8 @@ NEWS_CURELIA_TRIAL_SUCCESS,Rumor: Curelia Therapeutics' key drug trial succeeded
 NEWS_CURELIA_TRIAL_FAILURE,Rumor: Curelia Therapeutics' key drug trial failed
 NEWS_GENOVIA_BUYOUT,Rumor: a giant pharma firm wants to buy Genovia Biotech
 NEWS_VOLTARA_OUTAGE,Rumor: Voltara Power faces costly fallout from a grid outage
+NEWS_PICK_TECH_BIG_CONTRACT,Rumor: a tech company is about to land a giant contract
+NEWS_PICK_ENERGY_ACCIDENT,Rumor: an energy company is hit by a serious plant accident
+NEWS_PICK_CONSUMER_TAKEOVER,Rumor: a consumer brand is the target of a takeover bid
+NEWS_PICK_FINANCE_FRAUD,Rumor: a financial firm is under fraud investigation
+NEWS_PICK_HEALTH_TRIAL_FAIL,Rumor: a drug maker's flagship trial is failing
