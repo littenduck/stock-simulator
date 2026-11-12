@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1")
-symbol = "NOVA"
-display_name = "COMPANY_NOVA"
+symbol = "NOVAN"
+display_name = "COMPANY_NOVAN"
 sector = "tech"
 start_price = 80.0
 annual_drift = 0.12
