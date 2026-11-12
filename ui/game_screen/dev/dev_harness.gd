@@ -100,6 +100,9 @@ func _ready() -> void:
 	_session.portfolio = DevPortfolio.new(character.start_cash)
 	_session.mods.max_leverage = 2.0
 	_session.day = 0
+	if OS.get_cmdline_user_args().has("--nomargin"):
+		_session.mods.can_short = false
+		_session.mods.max_leverage = 1.0
 
 	GameManager.session = _session
 	GameManager.state = GameManager.State.PLAYING
@@ -212,6 +215,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				EventBus.margin_called.emit()
 			KEY_F5:
 				_session.mods.can_short = false
+				_session.mods.max_leverage = 1.0
+				EventBus.perks_changed.emit()
 
 
 func _next_day() -> void:

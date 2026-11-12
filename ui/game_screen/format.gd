@@ -37,6 +37,12 @@ static func _group(whole: int) -> String:
 	return out
 
 
+## True when the run has short selling or leverage. With the margin game mode off
+## (can_short = false and max_leverage = 1) the screen hides everything about them.
+static func margin_on(mods: RunModifiers) -> bool:
+	return mods.can_short or mods.max_leverage > 1.0
+
+
 ## A Label with an optional colour and font size. Mouse-transparent.
 static func label(text: String = "", color: Color = Color.WHITE, size: int = 0) -> Label:
 	var l := Label.new()

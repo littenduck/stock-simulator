@@ -175,6 +175,12 @@ func _refresh() -> void:
 	var price: float = _price_now()
 	var pos: int = s.portfolio.shares_of(symbol)
 	var is_buy: bool = _side == Order.Dir.BUY
+	var can_short: bool = s.mods.can_short
+	_sell.text = (tr("UI_GAME_SELL_SHORT") if can_short else tr("UI_GAME_SELL")) + " [S]"
+	# A stop-buy only exists to protect a short, so it goes away with short selling.
+	_kind.set_item_disabled(2, is_buy and not can_short)
+	if _kind.get_item_count() > 2 and _kind.is_item_disabled(2) and _kind.selected == 2:
+		_kind.select(0)
 	var kind: int = _kind_id()
 	var n: int = int(_shares.value)
 

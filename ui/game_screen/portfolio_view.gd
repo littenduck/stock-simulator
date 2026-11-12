@@ -6,6 +6,7 @@ signal stock_selected(symbol: String)
 
 var _summary: GridContainer
 var _values: Dictionary = {}     ## key -> Label
+var _cells: Dictionary = {}      ## key -> summary cell
 var _margin: Label
 var _tree: Tree
 var _empty: Label
@@ -33,6 +34,7 @@ func _ready() -> void:
 		cell.add_child(v)
 		_summary.add_child(cell)
 		_values[key] = v
+		_cells[key] = cell
 	_margin = GameFmt.label("", GameColors.MUTED, 13)
 	box.add_child(_margin)
 
@@ -61,6 +63,7 @@ func _ready() -> void:
 
 	EventBus.prices_updated.connect(_on_prices_updated)
 	EventBus.portfolio_changed.connect(_on_portfolio_changed)
+	EventBus.perks_changed.connect(_on_prices_updated)
 	_refresh()
 
 
@@ -76,6 +79,9 @@ func _refresh() -> void:
 	var equity: float = p.net_worth(s.market)
 	(_values["worth"] as Label).text = GameFmt.money(equity)
 
+	var show_margin: bool = GameFmt.margin_on(s.mods)
+	(_cells["short"] as Control).visible = show_margin or p.short_value(s.market) > 0.0
+	_margin.visible = show_margin
 	var gross: float = p.gross_exposure(s.market)
 	if gross > 0.0:
 		var ratio: float = equity / gross
