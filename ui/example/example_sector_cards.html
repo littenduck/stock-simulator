@@ -1,0 +1,40 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Sector theme colours</title>
+<style>
+:root{--bg:#2b1f4a;--panel:#f4ead5;--ink:#232130;--muted:#5d6270;--up:#2a8a3c;--down:#c0392b}
+*{box-sizing:border-box}
+body{margin:0;width:1280px;height:720px;background:var(--bg);font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);padding:24px}
+h1{margin:0 0 4px;color:#fff;font-size:26px}
+.sub{color:#cfc6ee;margin-bottom:16px;font-size:14px}
+.wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.col{background:var(--panel);border-radius:14px;padding:14px;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.chip{width:30px;height:30px;border-radius:9px}
+.head b{font-size:18px}
+.sw{display:flex;gap:6px;margin:0 0 12px}
+.sw span{flex:1;height:26px;border-radius:7px;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.card{display:flex;align-items:center;gap:10px;border-radius:12px;padding:10px 12px;margin-bottom:10px;border:3px solid;position:relative}
+.tile{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2)}
+.mid{flex:1;min-width:0}
+.tk{font-weight:800;font-size:18px;line-height:1}
+.nm{font-size:12px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pr{text-align:right}
+.pr b{font-size:17px}
+.pr i{display:inline-block;font-style:normal;font-size:12px;font-weight:700;padding:1px 7px;border-radius:9px;margin-top:3px;background:rgba(255,255,255,.7)}
+.up{color:var(--up)}.down{color:var(--down)}
+.note{margin-top:14px;color:#cfc6ee;font-size:13px}
+</style></head><body>
+<h1>Sector theme colours</h1>
+<div class="sub">Four sectors, four "races": main colour for borders and badges, soft tint for card backgrounds, deep tone for text.</div>
+<div class="wrap" id="w"></div>
+<div class="note">Icon tiles are placeholders (first letter); real pixel icons come with the UI branch. Prices and changes are samples.</div>
+<script>
+const S=[
+ {n:"Tech",k:"#1ea7d6",s:"#dff3fa",d:"#0f6f91",c:[["NVDO","Nvideo","165.98","+0.19%",1],["MHDR","Macro Hard","498.69","-0.03%",0],["PPLE","Pineapple","350.58","-1.53%",0]]},
+ {n:"Space",k:"#7b4fd6",s:"#ebe3fb",d:"#4d2b9e",c:[["SPCZ","SpaceZ","139.94","+3.80%",1],["LUNA","Lunatic Machine","10.23","+4.51%",1],["RKLP","Rocket Lap","66.15","-2.22%",0]]},
+ {n:"Consumer",k:"#ee62a6",s:"#fde4f1",d:"#a3195f",c:[["AMZG","Amazing","266.17","+0.23%",1],["TZLA","Tezla","390.84","-1.30%",0],["SDUX","Starducks","109.89","+1.35%",1]]},
+ {n:"Finance",k:"#18a999",s:"#d9f3ef",d:"#0d6f64",c:[["BAIT","Coinbait","136.27","+2.45%",1],["HOOK","Robinhook","81.35","-0.96%",0],["LOFI","Lofi","15.63","+0.51%",1]]}];
+document.getElementById('w').innerHTML=S.map(s=>`<div class="col"><div class="head"><div class="chip" style="background:${s.k}"></div><b style="color:${s.d}">${s.n}</b></div>
+<div class="sw"><span style="background:${s.k};color:#fff">${s.k}</span><span style="background:${s.s};color:${s.d}">${s.s}</span><span style="background:${s.d};color:#fff">${s.d}</span></div>
+${s.c.map(c=>`<div class="card" style="background:${s.s};border-color:${s.k}"><div class="tile" style="background:${s.k}">${c[0][0]}</div><div class="mid"><div class="tk" style="color:${s.d}">${c[0]}</div><div class="nm" style="color:${s.d}">${c[1]}</div></div><div class="pr"><b>${c[2]}</b><br><i class="${c[4]?'up':'down'}">${c[3]}</i></div></div>`).join('')}</div>`).join('');
+</script></body></html>

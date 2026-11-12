@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Game screen with sector colours</title>
+<style>
+:root{--bg:#2b1f4a;--panel:#f4ead5;--ink:#232130;--muted:#5d6270;--up:#2a8a3c;--down:#c0392b}
+*{box-sizing:border-box}
+body{margin:0;width:1280px;height:720px;background:var(--bg);font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);position:relative;overflow:hidden}
+.p{position:absolute;background:var(--panel);border-radius:12px;box-shadow:0 5px 0 rgba(0,0,0,.25);padding:12px}
+.lbl{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.05em}
+#top{left:14px;top:12px;width:1252px;height:72px;display:flex;align-items:center;gap:36px;padding:0 20px}
+#top b{font-size:22px}
+.btn{padding:10px 20px;border-radius:8px;color:#fff;font-weight:700;box-shadow:inset 0 -4px 0 rgba(0,0,0,.25)}
+#list{left:14px;top:96px;width:266px;height:560px}
+.card{display:flex;align-items:center;gap:8px;border-radius:12px;padding:8px 10px;margin-top:8px;border:3px solid;height:74px}
+.card.sel{box-shadow:0 0 0 3px #fff,0 0 14px 2px var(--glow)}
+.tile{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2)}
+.mid{flex:1}.tk{font-weight:800;font-size:18px;line-height:1}.nm{font-size:11px;margin-top:3px}
+.pr{text-align:right}.pr b{font-size:16px}.pr i{display:block;font-style:normal;font-size:11px;font-weight:700;margin-top:2px}
+.up{color:var(--up)}.down{color:var(--down)}
+#chart{left:292px;top:96px;width:620px;height:300px;padding:0;overflow:hidden}
+#chart .band{height:64px;display:flex;align-items:center;gap:14px;padding:0 16px;color:#fff}
+#chart .band .tile{background:rgba(255,255,255,.25);width:44px;height:44px}
+#order{left:924px;top:96px;width:342px;height:300px}
+#port{left:292px;top:408px;width:300px;height:248px}
+#pend{left:604px;top:408px;width:308px;height:248px}
+#rum{left:924px;top:408px;width:342px;height:248px}
+.pill{display:inline-block;padding:2px 10px;border-radius:10px;font-size:12px;font-weight:800;color:#fff}
+.rum{border-radius:10px;padding:8px 10px;margin-top:8px;border-left:6px solid;font-size:13px}
+#toast{left:560px;top:150px;width:350px;padding:12px 14px;border:3px solid #7b4fd6;background:#ebe3fb;box-shadow:0 8px 0 rgba(0,0,0,.3),0 0 18px #7b4fd688;transform:rotate(-1deg)}
+#perks{left:14px;top:668px;width:1252px;height:42px;padding:10px 16px}
+</style></head><body>
+<div class="p" id="top"><b>Day 17 / 60 · Aug 22, 2025</b><div><div class="lbl">Cash</div><b>$9,974.90</b></div><div><div class="lbl">Net worth</div><b>$10,411.20</b></div><div><div class="lbl">Return</div><b class="up">▲ 4.11%</b></div><div style="flex:1"></div><div class="btn" style="background:#6cc84a">Next Day [Space]</div><div class="btn" style="background:#2aa8e0">Menu [Esc]</div></div>
+<div class="p" id="list"><div class="lbl">STOCKS</div></div>
+<div class="p" id="chart"><div class="band" id="band"></div><svg id="svg" width="620" height="236"></svg></div>
+<div class="p" id="order"><div class="lbl">LUNA @ 10.23</div><div style="margin-top:10px;display:flex;gap:8px"><div class="btn" style="background:#6cc84a;flex:1;text-align:center">Buy [B]</div><div class="btn" style="background:#2aa8e0;flex:1;text-align:center">Sell [S]</div></div><div style="margin-top:14px" class="lbl">Shares</div><div style="margin-top:6px;border:2px solid #232130;border-radius:6px;padding:8px;background:#fff">10</div><div style="margin-top:10px;display:flex;gap:6px"><span class="pill" style="background:#7b4fd6">+1</span><span class="pill" style="background:#7b4fd6">+10</span><span class="pill" style="background:#7b4fd6">25%</span><span class="pill" style="background:#7b4fd6">Max</span></div><div class="btn" style="background:#6cc84a;margin-top:18px;text-align:center">Buy 10 LUNA</div></div>
+<div class="p" id="port"><div class="lbl">PORTFOLIO</div><div style="margin-top:10px">Long value $436.30</div></div>
+<div class="p" id="pend"><div class="lbl">PENDING ORDERS</div><div style="margin-top:10px">Buy 10 MHDR · Limit @ 488.64</div></div>
+<div class="p" id="rum"><div class="lbl">RUMORS</div>
+<div class="rum" style="background:#ebe3fb;border-color:#7b4fd6"><b style="color:#4d2b9e">[LUNA]</b> Lunatic Machine is said to stick the landing on the moon</div>
+<div class="rum" style="background:#dff3fa;border-color:#1ea7d6"><b style="color:#0f6f91">[PPLE]</b> Pineapple's next phone is said to last a week</div>
+<div class="rum" style="background:#fde4f1;border-color:#ee62a6"><b style="color:#a3195f">[SDUX]</b> Starducks is said to launch a viral latte</div></div>
+<div class="p" id="toast"><div style="display:flex;gap:10px"><div class="tile" style="background:#7b4fd6;width:44px;height:44px">L</div><div><div class="lbl" style="color:#4d2b9e">NEW RUMOR · SPACE</div><div style="font-weight:700;margin-top:2px">Lunatic Machine is said to stick the landing on the moon</div><div style="font-size:12px;margin-top:4px;color:#4d2b9e">Bullish · resolves in 2 days · 88%</div></div></div></div>
+<div class="p" id="perks"><span class="lbl">PERKS</span> &nbsp; None yet. A pick is offered every 10 days.</div>
+<script>
+const S={tech:["#1ea7d6","#dff3fa","#0f6f91"],space:["#7b4fd6","#ebe3fb","#4d2b9e"],consumer:["#ee62a6","#fde4f1","#a3195f"],finance:["#18a999","#d9f3ef","#0d6f64"]};
+const L=[["LUNA","Lunatic Machine","10.23","+4.51%",1,"space",1],["NVDO","Nvideo","165.98","+0.19%",1,"tech"],["MHDR","Macro Hard","498.69","-0.03%",0,"tech"],["AMZG","Amazing","266.17","+0.23%",1,"consumer"],["BAIT","Coinbait","136.27","+2.45%",1,"finance"],["SPCZ","SpaceZ","139.94","-1.80%",0,"space"]];
+document.getElementById('list').insertAdjacentHTML('beforeend',L.map(c=>{const t=S[c[5]];return `<div class="card ${c[6]?'sel':''}" style="background:${t[1]};border-color:${t[0]};--glow:${t[0]}"><div class="tile" style="background:${t[0]}">${c[0][0]}</div><div class="mid"><div class="tk" style="color:${t[2]}">${c[0]}</div><div class="nm" style="color:${t[2]}">${c[1]}</div></div><div class="pr"><b>${c[2]}</b><i class="${c[4]?'up':'down'}">${c[3]}</i></div></div>`}).join(''));
+const t=S.space;document.getElementById('band').style.background=t[0];
+document.getElementById('band').innerHTML=`<div class="tile">L</div><div><div style="font-size:26px;font-weight:800">LUNA</div><div style="font-size:13px;opacity:.9">Lunatic Machine · Space</div></div><div style="flex:1"></div><div style="font-size:26px;font-weight:800">10.23</div><div style="background:#fff;color:#2a8a3c;border-radius:10px;padding:2px 10px;font-weight:800">▲ 4.51%</div>`;
+let r=7;const rnd=()=>(r=(r*16807)%2147483647)/2147483647;let p=12,h='';const n=44,w=620/n;
+for(let i=0;i<n;i++){const o=p,c=Math.max(7,o+(rnd()-.5)*1.6+(i>30?.05:-.02)),hi=Math.max(o,c)+rnd()*.5,lo=Math.min(o,c)-rnd()*.5;p=c;const y=v=>220-(v-6)*14;const up=c>=o;const col=up?'#2a8a3c':'#c0392b';h+=`<line x1="${i*w+w/2}" x2="${i*w+w/2}" y1="${y(hi)}" y2="${y(lo)}" stroke="${col}" stroke-width="2"/><rect x="${i*w+2}" y="${y(Math.max(o,c))}" width="${w-4}" height="${Math.max(3,Math.abs(y(o)-y(c)))}" fill="${col}"${i<30?' opacity=".55"':''}/>`}
+document.getElementById('svg').innerHTML=`<rect x="0" y="0" width="${30*w}" height="236" fill="${t[1]}" opacity=".7"/>`+h+`<line x1="${30*w}" x2="${30*w}" y1="0" y2="236" stroke="${t[0]}" stroke-dasharray="4 4"/><text x="${30*w+6}" y="226" font-size="12" fill="${t[2]}">Run starts</text>`;
+</script></body></html>
