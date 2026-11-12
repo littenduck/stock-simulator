@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PerkDef" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://data/defs/perk_def.gd" id="1"]
+[ext_resource type="Script" path="res://data/defs/perk_effect_def.gd" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"insider_friend"
+title_key = "PERK_INSIDER_FRIEND_TITLE"
+description_key = "PERK_INSIDER_FRIEND_DESC"
+rarity = 2
+flags = Array[StringName]([&"insider_friend"])

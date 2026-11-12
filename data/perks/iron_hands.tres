@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PerkDef" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://data/defs/perk_def.gd" id="1"]
+[ext_resource type="Script" path="res://data/defs/perk_effect_def.gd" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"iron_hands"
+title_key = "PERK_IRON_HANDS_TITLE"
+description_key = "PERK_IRON_HANDS_DESC"
+rarity = 2
+flags = Array[StringName]([&"iron_hands"])

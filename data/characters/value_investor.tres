@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="CharacterDef" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://data/defs/character_def.gd" id="1"]
+[ext_resource type="Script" path="res://data/defs/perk_effect_def.gd" id="2"]
+
+[sub_resource type="Resource" id="Resource_0"]
+script = ExtResource("2")
+stat = &"can_short"
+op = 2
+value = 0.0
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2")
+stat = &"dividend_mult"
+op = 1
+value = 2.0
+
+[resource]
+script = ExtResource("1")
+id = &"value_investor"
+title_key = "CHAR_VALUE_INVESTOR_TITLE"
+description_key = "CHAR_VALUE_INVESTOR_DESC"
+start_cash = 12000.0
+effects = Array[ExtResource("2")]([SubResource("Resource_0"), SubResource("Resource_1")])
+unlock_id = &"char_value_investor"

@@ -20,6 +20,7 @@ var draft_choices := 3               ## Second Opinion = 4
 var score_mult := 1.0                ## Compounder = 1.1
 var limit_price_improvement := 0.0   ## Market Maker = 0.01
 var can_short := true                ## Value Investor = false
+var volatility_mult := 1.0           ## difficulty 4 = 1.2; MarketSim multiplies every company's volatility by it
 var iron_hands_used := false         ## runtime state, saved by the session
 
 var _flags: Dictionary = {}          ## StringName -> true
