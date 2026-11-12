@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "SNDH"
+display_name = "COMPANY_SNDH"
+sector = "tech"
+icon = "disk"
+history_key = "SNDK"
+start_price = 977.69
+annual_drift = 0.500
+annual_volatility = 1.050
+unlock_id = &""

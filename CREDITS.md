@@ -6,6 +6,11 @@ proposal: the lead confirms the name/year before the first public release.
 
 Built with [Godot Engine](https://godotengine.org) 4.7 (MIT licence, (c) Godot Engine contributors).
 
+## Market data (`data/market/history.csv`)
+Daily open/high/low/close prices for 24 stocks (2022-2026), downloaded from Yahoo Finance with
+`tools/fetch_history.py`. Fetched for personal, non-commercial prototyping. Yahoo's terms may restrict
+redistribution: check them (or switch to a licensed data source) before a public or commercial release.
+
 ## Audio (`audio/`)
 Four sound packs by Kenney (https://kenney.nl), downloaded from kenney.nl, licence CC0 1.0
 (https://creativecommons.org/publicdomain/zero/1.0/). Each is kept in its own folder under its original name,

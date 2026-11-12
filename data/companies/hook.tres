@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "HOOK"
+display_name = "COMPANY_HOOK"
+sector = "finance"
+icon = "coin"
+history_key = "HOOD"
+start_price = 84.58
+annual_drift = 0.500
+annual_volatility = 0.680
+unlock_id = &""

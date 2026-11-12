@@ -1,53 +1,65 @@
 keys,en
-NEWS_TECH_BREAKTHROUGH,Rumor: a chip lab is said to be close to an AI breakthrough
-NEWS_TECH_CHIP_DEMAND,Rumor: AI chip orders are said to be sold out through next year
-NEWS_TECH_ANTITRUST,Rumor: regulators are said to be sharpening their pencils for Big Tech
-NEWS_TECH_DATA_BREACH,Rumor: a cloud outage and data leak is said to be brewing
-NEWS_ENERGY_OIL_CUT,Rumor: oil producers are said to agree on a surprise output cut
-NEWS_ENERGY_GREEN_SUBSIDY,Rumor: a fat solar and wind subsidy is said to be on the table
-NEWS_ENERGY_PIPELINE_LEAK,Rumor: a big pipeline leak is said to be forcing shutdowns
-NEWS_ENERGY_MILD_WINTER,Rumor: a warm winter is said to be crushing fuel demand
-NEWS_CONSUMER_HOLIDAY_BOOM,Rumor: holiday shoppers are said to be spending like never before
-NEWS_CONSUMER_VIRAL_TREND,Rumor: a viral trend is said to be emptying shelves and coffee cups
-NEWS_CONSUMER_RECALL,Rumor: a product recall is said to be spreading across big retailers
-NEWS_CONSUMER_SPENDING_DIP,Rumor: households are said to be quietly skipping streaming and takeout
-NEWS_FINANCE_RATE_CUT,Rumor: the central bank is said to hint at a rate move that favors banks
-NEWS_FINANCE_RECORD_PROFITS,Rumor: banks and card networks are said to be heading for record profits
-NEWS_FINANCE_STRESS_TEST,Rumor: a harsh stress test is said to force banks to raise cash
+NEWS_AAC_BLOCKBUSTER,Rumor: a surprise blockbuster is said to fill every AAA Cinema seat
+NEWS_AAC_DEBT,Rumor: AAA Cinema is said to be drowning in popcorn-sized debt
+NEWS_AMZG_WAREHOUSE_STRIKE,Rumor: Amazing warehouse workers are said to be planning a strike
+NEWS_AND_CONSOLE_WIN,Rumor: Advanced Nano Device is said to be in every next-gen console
+NEWS_BAIT_ETF_RUSH,Rumor: Coinbait is said to be swamped by a flood of new coin traders
+NEWS_BAIT_EXCHANGE_HACK,Rumor: a hacker is said to be circling Coinbait's exchange
+NEWS_BOBX_SAFETY_SUIT,Rumor: parents are said to be furious about safety in Boblox
+NEWS_BVGO_AI_ORDER,Rumor: Brovago Comm is said to land a mountain of AI networking orders
+NEWS_CONSUMER_HOLIDAY_BOOM,"Rumor: holiday shoppers are said to be buying cars, cola and cinema tickets like never before"
+NEWS_CONSUMER_RECALL,Rumor: a product recall is said to be spreading across big retailers and carmakers
+NEWS_CONSUMER_SPENDING_DIP,"Rumor: households are said to be quietly skipping streaming, takeout and new cars"
+NEWS_CONSUMER_VIRAL_TREND,Rumor: a viral meme is said to be sending shoppers and gamers into a frenzy
+NEWS_CSGO_HOTDOG,Rumor: Costgo is said to keep its famous hot dog price for another year
 NEWS_FINANCE_LOAN_DEFAULTS,Rumor: loan defaults are said to be climbing faster than reported
-NEWS_HEALTH_TRIAL_WAVE,Rumor: a wave of promising pharma trial results is said to be coming
-NEWS_HEALTH_FAST_APPROVAL,Rumor: regulators are said to fast track new treatments
-NEWS_HEALTH_PRICE_CAPS,Rumor: lawmakers are said to push price caps on medicines
-NEWS_HEALTH_SUPPLY_SHORTAGE,Rumor: a supply shortage is said to be hitting hospitals and drug makers
+NEWS_FINANCE_RATE_CUT,Rumor: the central bank is said to hint at a rate cut that crypto and fintech will love
+NEWS_FINANCE_RECORD_PROFITS,Rumor: trading apps are said to be heading for record profits
+NEWS_FINANCE_STRESS_TEST,Rumor: a harsh stress test is said to force fintech firms to raise cash
+NEWS_FOGO_SEARCH_FUMBLE,Rumor: Foogl's new AI is said to give very confident wrong answers
+NEWS_FSTS_CONTRACT,Rumor: Fast Spacemobile is said to sign a phone carrier deal from orbit
+NEWS_FSTS_SATELLITE_FAIL,Rumor: Fast Spacemobile's giant antenna is said to refuse to unfold
+NEWS_GMB_SQUEEZE,Rumor: Game Blip is said to be at the center of a giant short squeeze
+NEWS_GMB_STORE_CLOSING,Rumor: Game Blip is said to be closing hundreds of stores
+NEWS_HOOK_NEW_USERS,Rumor: Robinhook is said to gain a million new traders overnight
+NEWS_HOOK_OUTAGE,Rumor: Robinhook's app is said to crash on the busiest trading day
+NEWS_KEKO_NEW_FLAVOR,Rumor: Keko Cola is said to launch a flavor nobody can stop drinking
+NEWS_LBIC_FUNDING,Rumor: Lubric Motor is said to get a fresh cash injection from a rich investor
+NEWS_LBIC_PRODUCTION_DELAY,Rumor: Lubric Motor is said to miss its production target again
+NEWS_LOFI_CHARTER,Rumor: Lofi is said to win a bank charter and calm everybody down
+NEWS_LUNA_LANDING,Rumor: Lunatic Machine is said to stick the landing on the moon
+NEWS_LUNA_TIP_OVER,Rumor: Lunatic Machine's lander is said to have tipped over on the moon
+NEWS_MARKET_RALLY,Rumor: big investors are said to be piling into stocks across the board
 NEWS_MARKET_RATE_CUT,Rumor: a surprise rate cut is said to be coming for the whole market
 NEWS_MARKET_RATE_HIKE,Rumor: a surprise rate hike is said to be shaking the whole market
-NEWS_MARKET_RALLY,Rumor: big investors are said to be piling into stocks across the board
 NEWS_MARKET_SELLOFF,"Rumor: a global selloff is said to be brewing, nerves are high"
-NEWS_PICK_TECH_BIG_CONTRACT,"Rumor: a chip, cloud or space firm is said to be about to land a giant contract"
-NEWS_PICK_ENERGY_ACCIDENT,Rumor: an oil or solar firm is said to be hit by a serious plant accident
+NEWS_MEGA_AD_SLUMP,Rumor: advertisers are said to be quietly ditching Mega
+NEWS_MHDR_MEGA_CONTRACT,Rumor: Macro Hard is said to be closing a giant cloud contract
+NEWS_MRBL_CUSTOM_DEAL,Rumor: Marbble is said to build a custom chip for a cloud giant
+NEWS_MUN_MEMORY_SHORTAGE,Rumor: Mucron is said to profit as a memory shortage drives chips sky high
+NEWS_NUTX_SUBSCRIBER_SURGE,Rumor: Nutflix is said to be adding binge-watchers faster than expected
+NEWS_NVDO_CHIP_FLOP,Rumor: Nvideo's next chip is said to run hot enough to fry eggs
+NEWS_NVDO_CHIP_SELLOUT,Rumor: Nvideo's next chip is said to sell out before launch
 NEWS_PICK_CONSUMER_TAKEOVER,Rumor: a famous consumer brand is said to be the target of a takeover bid
-NEWS_PICK_FINANCE_FRAUD,Rumor: a bank or crypto firm is said to be under a fraud investigation
-NEWS_PICK_HEALTH_TRIAL_FAIL,Rumor: a drug maker is said to see its flagship trial fail
-NEWS_NVDE_CHIP_FLOP,Rumor: Nvidea's next chip is said to run hot enough to fry eggs
-NEWS_NVDE_CHIP_SELLOUT,Rumor: Nvidea's next chip is said to sell out before launch
-NEWS_MSFS_MEGA_CONTRACT,Rumor: Microsaft is said to be closing a giant cloud contract
-NEWS_PEAR_PHONE_HYPE,Rumor: Pear's next phone is said to have a battery that lasts a week
-NEWS_PLTA_GOV_DEAL,Rumor: Palantar is said to be watching a mystery government deal land
+NEWS_PICK_FINANCE_FRAUD,Rumor: a crypto or fintech firm is said to be under a fraud investigation
+NEWS_PICK_SPACE_MISHAP,Rumor: a rocket company is said to be facing a launch pad mishap
+NEWS_PICK_TECH_BIG_CONTRACT,Rumor: a chip or cloud firm is said to be about to land a giant contract
+NEWS_PLBR_GOV_DEAL,Rumor: Polarbear is said to be watching a mystery government deal land
+NEWS_POPS_SUGAR_TAX,Rumor: Popsi Cola is said to face a new sugar tax
+NEWS_PPLE_PHONE_HYPE,Rumor: Pineapple's next phone is said to have a battery that lasts a week
+NEWS_RIBN_RECALL,Rumor: Ribbon is said to recall its trucks over a loose bolt
 NEWS_RKLP_LAUNCH_SUCCESS,Rumor: Rocket Lap is said to have a flawless launch lined up
-NEWS_MEGA_AD_SLUMP,Rumor: advertisers are said to be quietly ditching Mega Platforms
-NEWS_TXLA_ROBOTAXI_DELAY,Rumor: Texla's robotaxi launch is said to slip yet again
-NEWS_TXLA_CHEAP_MODEL,Rumor: Texla is said to be readying a budget car for everyone
-NEWS_NFLE_SUBSCRIBER_SURGE,Rumor: Netflex is said to be adding binge-watchers faster than expected
-NEWS_AMZI_WAREHOUSE_STRIKE,Rumor: Amazin warehouse workers are said to be planning a strike
-NEWS_SBNX_LATTE_CRAZE,Rumor: Starbunks is said to have a new latte that people queue for
-NEWS_COIB_ETF_RUSH,Rumor: Coinbace is said to be swamped by a flood of new coin traders
-NEWS_COIB_EXCHANGE_HACK,Rumor: hackers are said to be poking at Coinbace's vault
-NEWS_JPN_TRADING_LOSS,Rumor: JPMorgen is said to have lost big on a trader's wild bet
-NEWS_LLU_TRIAL_SUCCESS,Rumor: Eli Lully's wonder pill trial is said to have beaten every forecast
-NEWS_LLU_TRIAL_FAILURE,Rumor: Eli Lully's key trial is said to have missed its goal
-NEWS_PFX_BUYOUT,Rumor: a pharma giant is said to be sniffing around Pfixer for a buyout
-NEWS_MRNO_VACCINE_BUZZ,Rumor: Moderno is said to have a surprise shot in late trials
-NEWS_XOL_OIL_DISCOVERY,Rumor: Exxon Mobel is said to have struck a gigantic oil field
-NEWS_XOL_CLEANUP_BILL,Rumor: Exxon Mobel is said to face a hefty cleanup bill
-NEWS_CVN_REFINERY_OUTAGE,Rumor: a grid outage is said to leave a Chevran refinery in the dark
-NEWS_ENPS_SOLAR_ORDERS,Rumor: Enphasa is said to be drowning in rooftop solar orders
+NEWS_SDUX_LATTE_CRAZE,Rumor: Starducks is said to be launching a latte that goes viral
+NEWS_SNDH_FLASH_GLUT,Rumor: Sandish is said to be drowning in unsold flash drives
+NEWS_SPACE_DEBRIS_SCARE,Rumor: a cloud of space junk is said to be threatening satellites
+NEWS_SPACE_FUNDING_ROUND,Rumor: billionaires are said to be pouring money into the moon race
+NEWS_SPACE_LAUNCH_BOOM,Rumor: a wave of launch contracts is said to be heading for space companies
+NEWS_SPACE_REGULATOR_DELAY,Rumor: space regulators are said to be slowing down launch licenses
+NEWS_SPCZ_ROCKET_BOOM,Rumor: SpaceZ is said to have a rapid unscheduled disassembly
+NEWS_SPCZ_STARSHIP_SUCCESS,Rumor: SpaceZ is said to catch its giant rocket with chopsticks again
+NEWS_TECH_ANTITRUST,Rumor: regulators are said to be sharpening their pencils for Big Tech
+NEWS_TECH_BREAKTHROUGH,Rumor: a chip lab is said to be close to an AI breakthrough
+NEWS_TECH_CHIP_DEMAND,Rumor: AI chip orders are said to be sold out through next year
+NEWS_TECH_DATA_BREACH,Rumor: a cloud outage and data leak is said to be brewing
+NEWS_TZLA_CHEAP_MODEL,Rumor: Tezla is said to be readying a budget car for everyone
+NEWS_TZLA_ROBOTAXI_DELAY,Rumor: Tezla's robotaxi launch is said to slip yet again

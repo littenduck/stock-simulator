@@ -10,6 +10,6 @@ sector = "tech"
 icon = "people"
 history_key = "META"
 start_price = 628.77
-annual_drift = 0.128
+annual_drift = 0.235
 annual_volatility = 0.462
 unlock_id = &""

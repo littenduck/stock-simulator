@@ -1,12 +1,13 @@
 extends TestCase
 
-const ICONS := ["chip", "window", "fruit", "magnifier", "people", "eye", "rocket", "box", "car", "play", "cart", "coffee", "soda", "bank", "card", "coin", "pill", "cross", "dna", "robot", "drop", "barrel", "sun"]
+const ICONS := ["chip", "disk", "window", "fruit", "magnifier", "people", "bear", "rocket", "satellite", "moon", "box", "car", "play", "blocks", "game", "ticket", "cart", "coffee", "soda", "coin"]
+const SECTORS := ["tech", "space", "consumer", "finance"]
 const ALL_UNLOCKS: Array[StringName] = [&"company_moon", &"company_olde", &"company_extra_1", &"company_extra_2", &"company_extra_3"]
 
 
 func test_company_counts_and_fields() -> void:
 	var cs := ContentDb.companies()
-	assert_eq(cs.size(), 24, "24 companies")
+	assert_eq(cs.size(), 30, "30 companies")
 	var starters := 0
 	var symbols := {}
 	var keys := {}
@@ -28,11 +29,12 @@ func test_company_counts_and_fields() -> void:
 			assert_true(hist.has_key(c.history_key), "history column " + c.history_key)
 		assert_true(c.start_price > 0.0 and c.annual_volatility > 0.0)
 		assert_true(tr(c.display_name) != c.display_name, "missing translation " + c.display_name)
+		assert_true(c.sector in SECTORS, "sector " + c.symbol)
 		assert_true(c.unlock_id == &"" or c.unlock_id in ALL_UNLOCKS, "unknown unlock id " + String(c.unlock_id))
-	assert_eq(symbols.size(), 24, "unique symbols")
-	assert_eq(keys.size(), 24, "unique history keys")
-	assert_eq(starters, 19)
-	assert_eq(sectors.size(), 5)
+	assert_eq(symbols.size(), 30, "unique symbols")
+	assert_eq(keys.size(), 30, "unique history keys")
+	assert_eq(starters, 25)
+	assert_eq(sectors.size(), 4)
 	for s in sectors:
 		assert_true(sectors[s] >= 3, "3+ starters in " + s)
 
@@ -70,8 +72,8 @@ func test_news_templates() -> void:
 			assert_eq(e.target_sector, symbols[e.target_symbol], "target_sector matches company " + e.id)
 			assert_true(e.id.begins_with(e.target_symbol.to_lower() + "_"), "id starts with ticker " + e.id)
 	assert_true(sym_events >= 20, "20+ symbol events")
-	assert_eq(sectors_with_symbol.size(), 5, "symbol events in all sectors")
-	for s in ["tech", "energy", "consumer", "finance", "health"]:
+	assert_eq(sectors_with_symbol.size(), 4, "symbol events in all sectors")
+	for s in SECTORS:
 		assert_true(good.get(s, 0) >= 2, "2 good in " + s)
 		assert_true(bad.get(s, 0) >= 2, "2 bad in " + s)
 

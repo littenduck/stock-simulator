@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="NewsEventDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/news_event_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "luna_landing"
+headline_key = "NEWS_LUNA_LANDING"
+icon = "moon"
+target_sector = "space"
+target_symbol = "LUNA"
+total_impact = 0.4
+duration_days = 3
+daily_chance = 0.026
+cooldown_days = 40
+min_day = 0
+truth_chance = 0.6
+denial_impact_ratio = -0.3

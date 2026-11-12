@@ -6,38 +6,46 @@ dialogs for perk drafts (3 distinct rarity cards) and for news events, (6) a fix
 box (typing "10" then pressing Buy must buy 10, without needing Enter). Gameplay rules stay unchanged.
 Everything in the repo may be edited (including formerly "frozen" files) as long as tests pass.
 
-## Naming rule
-Real company, ONE letter changed in the display name (and the ticker when sensible). Short readable names.
-Pixel icon per company (see Icons). Sector (mechanics) stays one of tech/energy/consumer/finance/health.
+## Roster (revised: 30 companies, 4 sectors)
+Real companies with joke names chosen by the project owner (name = a pun on the real one; ticker = a short
+pun/abbreviation). Sectors (mechanics): tech, space, consumer (retail, food, cars, entertainment, gaming), finance
+(fintech and crypto). Health and energy were dropped. Icons are names the UI must draw (feat/02 adds the new ones:
+disk, bear, satellite, moon, blocks, game, ticket; chip/window/fruit/magnifier/people/rocket/box/car/play/cart/coffee/soda/coin exist).
+Each run draws 6 companies; at least one is space or finance. Late listings (SNDK 2025-02, SPCX 2026-06, LUNR 2023-02)
+only appear in windows where they have data.
 
 | real | ticker | display name | sector | icon |
 |---|---|---|---|---|
-| NVDA | NVDE | Nvidea | tech | chip |
-| AMD | AMB | AMB | tech | chip |
-| MSFT | MSFS | Microsaft | tech | window |
-| AAPL | PEAR | Pear | tech | fruit (user-requested name) |
-| GOOGL | FOOGL | Foogle | tech | magnifier |
-| META | MEGA | Mega Platforms | tech | people |
-| PLTR | PLTA | Palantar | tech | eye |
-| RKLB | RKLP | Rocket Lap | tech | rocket (space) |
-| AMZN | AMZI | Amazin | consumer | box |
-| TSLA | TXLA | Texla | consumer | car |
-| NFLX | NFLE | Netflex | consumer | play |
-| COST | CAST | Castco | consumer | cart |
-| SBUX | SBNX | Starbunks | consumer | coffee |
-| PEP | PEPY | Pepsy | consumer | soda |
-| JPM | JPN | JPMorgen | finance | bank |
-| V | VASA | Vasa | finance | card |
-| COIN | COIB | Coinbace | finance | coin |
-| LLY | LLU | Eli Lully | health | pill |
-| PFE | PFX | Pfixer | health | cross |
-| MRNA | MRNO | Moderno | health | dna |
-| ISRG | ISRC | Intuitive Surgicel | health | robot |
-| XOM | XOL | Exxon Mobel | energy | drop |
-| CVX | CVN | Chevran | energy | barrel |
-| ENPH | ENPS | Enphasa | energy | sun |
-
-(Agents may adjust a name for readability but must keep the one-letter rule and stay unique.)
+| AMC | AAC | AAA Cinema | consumer | ticket |
+| AMZN | AMZG | Amazing | consumer | box |
+| AMD | AND | Advanced Nano Device | tech | chip |
+| COIN | BAIT | Coinbait | finance | coin |
+| RBLX | BOBX | Boblox | consumer | blocks |
+| AVGO | BVGO | Brovago Comm | tech | chip |
+| COST | CSGO | Costgo | consumer | cart |
+| GOOGL | FOGO | Foogl | tech | magnifier |
+| ASTS | FSTS | Fast Spacemobile | space | satellite |
+| GME | GMB | Game Blip | consumer | game |
+| HOOD | HOOK | Robinhook | finance | coin |
+| KO | KEKO | Keko Cola | consumer | soda |
+| LCID | LBIC | Lubric Motor | consumer | car |
+| SOFI | LOFI | Lofi | finance | coin |
+| LUNR | LUNA | Lunatic Machine | space | moon |
+| META | MEGA | Mega | tech | people |
+| MSFT | MHDR | Macro Hard | tech | window |
+| MRVL | MRBL | Marbble | tech | chip |
+| MU | MUN | Mucron | tech | disk |
+| NFLX | NUTX | Nutflix | consumer | play |
+| NVDA | NVDO | Nvideo | tech | chip |
+| PLTR | PLBR | Polarbear | tech | bear |
+| PEP | POPS | Popsi Cola | consumer | soda |
+| AAPL | PPLE | Pineapple | tech | fruit |
+| RIVN | RIBN | Ribbon | consumer | car |
+| RKLB | RKLP | Rocket Lap | space | rocket |
+| SBUX | SDUX | Starducks | consumer | coffee |
+| SNDK | SNDH | Sandish | tech | disk |
+| SPCX | SPCZ | SpaceZ | space | rocket |
+| TSLA | TZLA | Tezla | consumer | car |
 
 ## Real data
 `data/market/history.csv` (already fetched by `tools/fetch_history.py`): header `date,<REAL>_o,_h,_l,_c,...`,

@@ -160,7 +160,7 @@ func _on_canvas_draw() -> void:
 	_canvas.draw_polyline(points, color, 2.5, true)
 	_canvas.draw_circle(points[n - 1], 4.5, color)
 
-	var first_day: int = maxi(s.day - (n - 1), 0)
+	var first_day: int = s.day - (n - 1)  # negative = real pre-game lookback days
 	_canvas.draw_string(font, Vector2(_plot.position.x, h - 6), "%s %d" % [tr("UI_GAME_DAY"), first_day], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, GameColors.MUTED)
 	_canvas.draw_string(font, Vector2(_plot.end.x - 80, h - 6), "%s %d" % [tr("UI_GAME_DAY"), s.day], HORIZONTAL_ALIGNMENT_RIGHT, 80, fs, GameColors.MUTED)
 

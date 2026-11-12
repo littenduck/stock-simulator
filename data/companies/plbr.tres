@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "PLBR"
+display_name = "COMPANY_PLBR"
+sector = "tech"
+icon = "bear"
+history_key = "PLTR"
+start_price = 172.40
+annual_drift = 0.500
+annual_volatility = 0.664
+unlock_id = &"company_extra_1"

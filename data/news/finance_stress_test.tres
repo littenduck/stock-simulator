@@ -6,7 +6,7 @@
 script = ExtResource("1")
 id = "finance_stress_test"
 headline_key = "NEWS_FINANCE_STRESS_TEST"
-icon = "bank"
+icon = "coin"
 target_sector = "finance"
 target_symbol = ""
 total_impact = -0.14

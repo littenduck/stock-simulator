@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "CSGO"
+display_name = "COMPANY_CSGO"
+sector = "consumer"
+icon = "cart"
+history_key = "COST"
+start_price = 1087.61
+annual_drift = 0.161
+annual_volatility = 0.230
+unlock_id = &""

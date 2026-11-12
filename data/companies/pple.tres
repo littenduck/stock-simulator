@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "PPLE"
+display_name = "COMPANY_PPLE"
+sector = "tech"
+icon = "fruit"
+history_key = "AAPL"
+start_price = 355.63
+annual_drift = 0.178
+annual_volatility = 0.280
+unlock_id = &""

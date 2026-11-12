@@ -39,22 +39,61 @@ func _init(p_config: RunConfig, company_pool: Array[CompanyDef], perk_pool: Arra
 	_perk_pool = perk_pool
 	_drafter = PerkDrafter.new(perk_pool, _rng)
 	mods = ModifiersBuilder.build(p_config, owned_perks)
-	# The window is drawn first so it depends on the seed only (not on which companies are unlocked).
 	_history = HistoryData.default()
-	window_start = _pick_window(_history, _rng)
-	_build_market(MarketSim.draw_companies(company_pool, RunConfig.COMPANIES_PER_RUN, _rng, unlocked))
+	# Companies first, then a window in which every drawn company has enough real data (late listings such as
+	# SpaceX only fit recent windows), so each company is equally likely to appear.
+	var pool := _with_enough_history(company_pool, _history)
+	var drawn := MarketSim.draw_companies(pool, RunConfig.COMPANIES_PER_RUN, _rng, unlocked)
+	_ensure_small_sectors(drawn, pool, unlocked, _rng)
+	window_start = _pick_window(_history, _rng, drawn)
+	_build_market(drawn)
 	market.volatility_mult = mods.volatility_mult
 	portfolio = Portfolio.new(p_config.character.start_cash)
 	book = OrderBook.new()
 	news = NewsDirector.new(news_pool, _rng)
 
 
-## Deterministic start row from the run rng: leaves PRE_GAME_DAYS of lookback before it and TRADING_DAYS rows after it.
-## Returns -1 when there is no (or too little) history.
-static func _pick_window(history: HistoryData, rng: RandomNumberGenerator) -> int:
+## Sectors with few companies; every run gets at least one of them so their rumors always matter.
+const GUARANTEED_SECTORS: Array[String] = ["space", "finance"]
+
+
+## Companies whose real data covers lookback + a full run. A company without real data stays (GBM fallback).
+static func _with_enough_history(pool: Array[CompanyDef], history: HistoryData) -> Array[CompanyDef]:
+	if history == null:
+		return pool
+	var out: Array[CompanyDef] = []
+	for c in pool:
+		if c.history_key == "" or not history.has_key(c.history_key) \
+				or history.first_row(c.history_key) + PRE_GAME_DAYS <= history.row_count() - 1 - RunConfig.TRADING_DAYS:
+			out.append(c)
+	return out
+
+
+## If the draw has no company of GUARANTEED_SECTORS, swaps the last drawn one for a random eligible one.
+static func _ensure_small_sectors(drawn: Array[CompanyDef], pool: Array[CompanyDef], unlocked: Array[StringName], rng: RandomNumberGenerator) -> void:
+	if drawn.size() < 2:
+		return
+	for c in drawn:
+		if c.sector in GUARANTEED_SECTORS:
+			return
+	var candidates: Array[CompanyDef] = []
+	for c in pool:
+		if c.sector in GUARANTEED_SECTORS and (c.unlock_id == &"" or c.unlock_id in unlocked):
+			candidates.append(c)
+	candidates.sort_custom(func(a: CompanyDef, b: CompanyDef) -> bool: return a.symbol < b.symbol)
+	if not candidates.is_empty():
+		drawn[drawn.size() - 1] = candidates[rng.randi_range(0, candidates.size() - 1)]
+
+
+## Deterministic start row from the run rng: leaves PRE_GAME_DAYS of real data before it for every drawn company
+## and TRADING_DAYS rows after it. Returns -1 when there is no (or too little) history.
+static func _pick_window(history: HistoryData, rng: RandomNumberGenerator, companies: Array[CompanyDef]) -> int:
 	if history == null:
 		return -1
 	var lo := PRE_GAME_DAYS
+	for c in companies:
+		if c.history_key != "" and history.has_key(c.history_key):
+			lo = maxi(lo, history.first_row(c.history_key) + PRE_GAME_DAYS)
 	var hi := history.row_count() - 1 - RunConfig.TRADING_DAYS
 	if hi < lo:
 		return -1
@@ -230,6 +269,13 @@ static func config_from_dict(data: Dictionary) -> RunConfig:
 	return c
 
 
+static func _window_has_data(history: HistoryData, companies: Array[CompanyDef], ws: int) -> bool:
+	for c in companies:
+		if c.history_key != "" and history.has_key(c.history_key) and history.first_row(c.history_key) > ws - PRE_GAME_DAYS:
+			return false
+	return true
+
+
 ## Rebuilds a session from a saved dictionary using the same content pools.
 static func from_dict(data: Dictionary, config: RunConfig, company_pool: Array[CompanyDef], perk_pool: Array[PerkDef], news_pool: Array[NewsEventDef]) -> GameSession:
 	var d := migrate(data)
@@ -248,6 +294,7 @@ static func from_dict(data: Dictionary, config: RunConfig, company_pool: Array[C
 	# Saves from before real history have no window: they continue as GBM runs (market.load_dict synthesizes candles).
 	var ws := int(d.get("window_start", -1))
 	if s._history == null or ws < PRE_GAME_DAYS or ws + RunConfig.TRADING_DAYS >= s._history.row_count() \
+			or not _window_has_data(s._history, drawn, ws) \
 			or (d.has("start_date") and s._history.date_at(ws) != String(d["start_date"])):
 		ws = -1
 	s.window_start = ws

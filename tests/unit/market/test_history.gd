@@ -34,12 +34,15 @@ func test_history_data_loads_and_is_consistent() -> void:
 	assert_eq(h.date_at(0), "2022-01-03")
 	assert_eq(h.date_at(1219), "2026-11-11")
 	assert_eq(h.date_at(5000), "")
-	for key in ["NVDA", "V", "ENPH"]:
+	for key in ["NVDA", "SOFI", "SNDK", "SPCX", "LUNR"]:
 		assert_true(h.has_key(key))
-		for r in h.row_count():
+		for r in range(h.first_row(key), h.row_count()):
 			var b := h.bar(key, r)
 			assert_true(b[2] <= b[0] and b[2] <= b[3] and b[0] <= b[1] and b[3] <= b[1], "%s row %d ohlc" % [key, r])
 			assert_true(b[2] > 0.0)
+	assert_eq(h.first_row("NVDA"), 0)
+	assert_true(h.first_row("SNDK") > 0 and h.first_row("SPCX") > h.first_row("SNDK"), "late listings start later")
+	assert_eq(h.first_row("NOPE"), -1)
 	assert_false(h.has_key("NOPE"))
 	assert_eq(h.bar("NOPE", 0).size(), 0)
 
@@ -65,12 +68,44 @@ func test_window_is_deterministic_per_seed_and_in_range() -> void:
 	assert_true(seen.size() >= 15, "different seeds use different windows (%d distinct)" % seen.size())
 
 
-func test_window_independent_of_unlocks() -> void:
-	var cfg := RunConfig.make(ContentDb.characters()[0], 1, 99)
-	var unlocked: Array[StringName] = [&"company_moon", &"company_olde", &"company_extra_1"]
-	var a := GameSession.new(cfg, ContentDb.companies(), ContentDb.perks(), ContentDb.news())
-	var b := GameSession.new(cfg, ContentDb.companies(), ContentDb.perks(), ContentDb.news(), unlocked)
-	assert_eq(a.window_start, b.window_start)
+func test_history_from_text_late_listing_has_empty_cells() -> void:
+	var h := HistoryData.from_text("date,AAA_o,AAA_h,AAA_l,AAA_c,BBB_o,BBB_h,BBB_l,BBB_c\n2024-01-02,10,11,9,10.5,,,,\n2024-01-03,10.5,12,10,11,5,6,4,5.5\n")
+	assert_not_null(h)
+	assert_eq(h.first_row("AAA"), 0)
+	assert_eq(h.first_row("BBB"), 1)
+	assert_almost(h.close_at("BBB", 1), 5.5)
+
+
+func test_window_leaves_lookback_for_every_drawn_company() -> void:
+	var h := HistoryData.default()
+	for seed_value in range(1, 61):
+		var s := _session(seed_value)
+		for sym in s.market.symbols():
+			var c := s.market.company_of(sym)
+			assert_true(h.first_row(c.history_key) <= s.window_start - GameSession.PRE_GAME_DAYS, "%s has data for the whole window (seed %d)" % [sym, seed_value])
+
+
+func test_late_listed_companies_still_appear() -> void:
+	# SpaceZ (real SPCX, listed 2026-06) fits only recent windows but must still be drawable.
+	var spcz := 0
+	var unlocked: Array[StringName] = [&"company_moon"]
+	for seed_value in range(1, 301):
+		var cfg := RunConfig.make(ContentDb.characters()[0], 1, seed_value)
+		var s := GameSession.new(cfg, ContentDb.companies(), ContentDb.perks(), ContentDb.news(), unlocked)
+		if s.market.has_symbol("SPCZ"):
+			spcz += 1
+			assert_true(s.date_of_day(0) >= "2026-07", "SpaceZ windows are recent: " + s.date_of_day(0))
+	assert_true(spcz >= 20, "SpaceZ appears in some runs (%d)" % spcz)
+
+
+func test_every_run_has_a_space_or_finance_company() -> void:
+	for seed_value in range(1, 201):
+		var cfg := RunConfig.make(ContentDb.characters()[0], 1, seed_value)
+		var s := GameSession.new(cfg, ContentDb.companies(), ContentDb.perks(), ContentDb.news())
+		var ok := false
+		for sector in s.market.sectors():
+			ok = ok or sector in GameSession.GUARANTEED_SECTORS
+		assert_true(ok, "seed %d has a space or finance company" % seed_value)
 
 
 func test_dates_aligned_across_companies_and_starting_prices_are_real() -> void:

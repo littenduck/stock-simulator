@@ -6,10 +6,10 @@
 script = ExtResource("1")
 symbol = "RKLP"
 display_name = "COMPANY_RKLP"
-sector = "tech"
+sector = "space"
 icon = "rocket"
 history_key = "RKLB"
 start_price = 66.15
-annual_drift = 0.349
+annual_drift = 0.500
 annual_volatility = 0.786
-unlock_id = &"company_moon"
+unlock_id = &""

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "SPCZ"
+display_name = "COMPANY_SPCZ"
+sector = "space"
+icon = "rocket"
+history_key = "SPCX"
+start_price = 139.75
+annual_drift = -0.004
+annual_volatility = 0.818
+unlock_id = &"company_moon"

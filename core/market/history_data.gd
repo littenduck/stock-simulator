@@ -1,5 +1,6 @@
 ## Real daily OHLC history (data/market/history.csv), parsed once and shared.
 ## CSV layout: header `date,<KEY>_o,<KEY>_h,<KEY>_l,<KEY>_c,...`, one row per trading day, all tickers aligned.
+## Late-listed tickers have empty cells before their first row (see first_row()).
 ## Uses FileAccess on res:// so it works in exported web builds (the .csv is exported via include_filter).
 class_name HistoryData
 extends RefCounted
@@ -12,6 +13,8 @@ static var _tried_default: bool = false
 var dates: PackedStringArray = PackedStringArray()
 ## key -> PackedFloat64Array with 4 values per row (o, h, l, c), row-major.
 var _bars: Dictionary = {}
+## key -> first row that has data (0 for tickers listed before the CSV starts).
+var _first_row: Dictionary = {}
 
 
 ## Shared instance of the bundled history; null when the file is missing or unreadable.
@@ -50,6 +53,11 @@ func row_count() -> int:
 
 func has_key(key: String) -> bool:
 	return _bars.has(key)
+
+
+## First row with real data for `key`; -1 for an unknown key. Rows before it are empty (stock not listed yet).
+func first_row(key: String) -> int:
+	return int(_first_row.get(key, -1))
 
 
 ## ISO date (YYYY-MM-DD) of a row; "" when out of range.
@@ -99,16 +107,22 @@ func _parse(f: FileAccess) -> void:
 		var arr := PackedFloat64Array()
 		arr.resize(n * 4)
 		var ok := true
+		var first := -1
 		for r in n:
 			var line := lines[r]
 			if c + 3 >= line.size():
 				ok = false
 				break
+			if line[c + 3] == "":
+				continue   # not listed yet: leaves zeros
+			if first < 0:
+				first = r
 			var o := line[c].to_float()
 			var cl := line[c + 3].to_float()
 			arr[r * 4] = o
 			arr[r * 4 + 1] = maxf(line[c + 1].to_float(), maxf(o, cl))
 			arr[r * 4 + 2] = minf(line[c + 2].to_float(), minf(o, cl))
 			arr[r * 4 + 3] = cl
-		if ok:
+		if ok and first >= 0:
 			_bars[k] = arr
+			_first_row[k] = first
