@@ -1,6 +1,7 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://ui/game_screen/game_screen.gd" id="1"]
+[ext_resource type="PackedScene" path="res://ui/audio/music_player.tscn" id="music"]
 [ext_resource type="Texture2D" path="res://ui/game_screen/skins/pixel/bg_tile.png" id="2"]
 [ext_resource type="Script" path="res://ui/game_screen/top_bar.gd" id="3"]
 [ext_resource type="Script" path="res://ui/game_screen/stock_list.gd" id="4"]
@@ -164,3 +165,7 @@ mouse_filter = 2
 [node name="GameOverDialog" parent="Overlays" instance=ExtResource("13")]
 
 [node name="AudioFeedback" parent="." instance=ExtResource("14")]
+
+[node name="MusicPlayer" parent="." instance=ExtResource("music")]
+track = "res://audio/music/gameplay.ogg"
+hurry_from_day = 50
