@@ -15,7 +15,9 @@ const SLICES: Array[String] = [
 ]
 const COIN: Array[String] = ["..yyyy..", ".yooooy.", "yoyyyyoy", "yoyooyoy", "yoyooyoy", "yoyyyyoy", ".yooooy.", "..yyyy.."]
 const PLUS: Array[String] = ["...bb...", "...bb...", ".bbbbbb.", ".bbbbbb.", ".bbbbbb.", ".bbbbbb.", "...bb...", "...bb..."]
-const BG := Color("#0a1a14")
+## Lighter, calmer background: sprites are only slightly different from it, so panels stand out.
+const BG := Color("#2d5a4c")
+const SPRITE_BLEND := 0.35  ## 0 = invisible (BG colour), 1 = full sprite colour
 
 
 func _init() -> void:
@@ -54,12 +56,12 @@ func _pixmap(rows: Array[String], palette: Dictionary) -> Image:
 	return img
 
 
-func _blit(dst: Image, src: Image, at: Vector2i, dim: float) -> void:
+func _blit(dst: Image, src: Image, at: Vector2i, _dim: float) -> void:
 	for y in src.get_height():
 		for x in src.get_width():
 			var c := src.get_pixel(x, y)
 			if c.a > 0.0:
-				dst.set_pixel(at.x + x, at.y + y, Color(c.r * dim, c.g * dim, c.b * dim, 1.0))
+				dst.set_pixel(at.x + x, at.y + y, BG.lerp(Color(c.r, c.g, c.b, 1.0), SPRITE_BLEND))
 
 
 ## Native tile is 48px (sprites are 16px); stored 2x so it matches the 2x UI art at 1280x720.
