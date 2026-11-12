@@ -1,0 +1,11 @@
+# Godot 4 (official template)
+.godot/
+/android/
+
+# export_presets.cfg is committed on purpose: it holds no secrets in this project.
+
+# Local builds and tool output
+build/
+
+# OS
+.DS_Store
