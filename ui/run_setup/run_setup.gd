@@ -13,6 +13,7 @@ var _difficulty_group := ButtonGroup.new()
 @onready var _character_row: HBoxContainer = %CharacterRow
 @onready var _difficulty_row: HBoxContainer = %DifficultyRow
 @onready var _difficulty_label: Label = %DifficultyLabel
+@onready var _margin_label: Label = %MarginLabel
 @onready var _back_button: Button = %BackButton
 @onready var _start_button: Button = %StartButton
 
@@ -23,6 +24,8 @@ func _ready() -> void:
 	_build_characters()
 	_build_difficulties()
 	_update_difficulty_text()
+	# Read-only: the margin switch lives in Settings and is fixed for the whole run.
+	_margin_label.text = tr("UI_FLOW_SETUP_MARGIN_ON" if GameSettings.margin_enabled() else "UI_FLOW_SETUP_MARGIN_OFF")
 	_start_button.disabled = _character == null
 	var selected := _character_group.get_pressed_button()
 	if selected != null:
