@@ -29,7 +29,7 @@ func test_session_can_be_constructed() -> void:
 	var config := RunConfig.make(ContentDb.character_by_id(&"rookie"), 1, 123)
 	var s := GameSession.new(config, ContentDb.companies(), ContentDb.perks(), ContentDb.news())
 	assert_eq(s.day, 0)
-	assert_eq(s.market.has_symbol("NOVA"), true)
+	assert_eq(s.market.symbols().size(), RunConfig.COMPANIES_PER_RUN)
 
 
 func test_all_scenes_load() -> void:

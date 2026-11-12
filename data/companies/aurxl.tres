@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "AURXL"
+display_name = "COMPANY_AURXL"
+sector = "health"
+start_price = 85.0
+annual_drift = 0.08
+annual_volatility = 0.45
+unlock_id = &"co_aurelix"

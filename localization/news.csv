@@ -1,2 +1,36 @@
 keys,en
 NEWS_TECH_BREAKTHROUGH,Rumor: a tech lab is close to a major breakthrough
+NEWS_TECH_CHIP_DEMAND,Rumor: chip orders surge as AI data centers expand
+NEWS_TECH_ANTITRUST,Rumor: regulators prepare antitrust action against big software firms
+NEWS_TECH_DATA_BREACH,Rumor: a massive data breach is about to hit cloud providers
+NEWS_ENERGY_OIL_CUT,"Rumor: producers agree to cut output, supply tightens"
+NEWS_ENERGY_GREEN_SUBSIDY,Rumor: a big green energy subsidy is on the table
+NEWS_ENERGY_PIPELINE_LEAK,Rumor: a major pipeline leak will force shutdowns
+NEWS_ENERGY_MILD_WINTER,Rumor: a mild winter will crush fuel demand
+NEWS_CONSUMER_HOLIDAY_BOOM,Rumor: holiday shopping is shaping up to be a record
+NEWS_CONSUMER_VIRAL_TREND,Rumor: a viral trend is sending shoppers to stores
+NEWS_CONSUMER_RECALL,Rumor: a product recall is about to spread across retailers
+NEWS_CONSUMER_SPENDING_DIP,Rumor: households are quietly cutting back spending
+NEWS_FINANCE_RATE_CUT,Rumor: central bank hints at a rate decision that favors lenders
+NEWS_FINANCE_RECORD_PROFITS,Rumor: banks are about to report record profits
+NEWS_FINANCE_STRESS_TEST,Rumor: a harsh stress test will force banks to raise capital
+NEWS_FINANCE_LOAN_DEFAULTS,Rumor: loan defaults are climbing faster than reported
+NEWS_HEALTH_TRIAL_WAVE,Rumor: a wave of promising trial results is coming
+NEWS_HEALTH_FAST_APPROVAL,Rumor: regulators will fast track new treatments
+NEWS_HEALTH_PRICE_CAPS,Rumor: lawmakers push price caps on medicines
+NEWS_HEALTH_SUPPLY_SHORTAGE,Rumor: a supply shortage will hit hospitals and drug makers
+NEWS_MARKET_RATE_CUT,Rumor: surprise rate cut could lift the whole market
+NEWS_MARKET_RATE_HIKE,Rumor: a surprise rate hike could shake the whole market
+NEWS_MARKET_RALLY,Rumor: big investors are piling into stocks across the board
+NEWS_MARKET_SELLOFF,"Rumor: a global selloff is brewing, nerves are high"
+NEWS_NOVA_MEGA_CONTRACT,Rumor: Nova Systems is about to land a giant contract
+NEWS_ZYRN_PRODUCT_FLOP,Rumor: Zyron Labs' new product is a flop
+NEWS_CURELIA_TRIAL_SUCCESS,Rumor: Curelia Therapeutics' key drug trial succeeded
+NEWS_CURELIA_TRIAL_FAILURE,Rumor: Curelia Therapeutics' key drug trial failed
+NEWS_GENOVIA_BUYOUT,Rumor: a giant pharma firm wants to buy Genovia Biotech
+NEWS_VOLTARA_OUTAGE,Rumor: Voltara Power faces costly fallout from a grid outage
+NEWS_PICK_TECH_BIG_CONTRACT,Rumor: a tech company is about to land a giant contract
+NEWS_PICK_ENERGY_ACCIDENT,Rumor: an energy company is hit by a serious plant accident
+NEWS_PICK_CONSUMER_TAKEOVER,Rumor: a consumer brand is the target of a takeover bid
+NEWS_PICK_FINANCE_FRAUD,Rumor: a financial firm is under fraud investigation
+NEWS_PICK_HEALTH_TRIAL_FAIL,Rumor: a drug maker's flagship trial is failing

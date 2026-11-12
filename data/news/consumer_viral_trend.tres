@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="NewsEventDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/news_event_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "consumer_viral_trend"
+headline_key = "NEWS_CONSUMER_VIRAL_TREND"
+target_sector = "consumer"
+target_symbol = ""
+total_impact = 0.14
+duration_days = 3
+daily_chance = 0.045
+cooldown_days = 20
+min_day = 0
+truth_chance = 0.5
+denial_impact_ratio = -0.3

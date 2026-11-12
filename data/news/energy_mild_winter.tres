@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="NewsEventDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/news_event_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "energy_mild_winter"
+headline_key = "NEWS_ENERGY_MILD_WINTER"
+target_sector = "energy"
+target_symbol = ""
+total_impact = -0.1
+duration_days = 5
+daily_chance = 0.053
+cooldown_days = 20
+min_day = 0
+truth_chance = 0.6
+denial_impact_ratio = -0.2

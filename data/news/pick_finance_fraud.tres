@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="NewsEventDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/news_event_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pick_finance_fraud"
+headline_key = "NEWS_PICK_FINANCE_FRAUD"
+target_sector = "finance"
+target_symbol = "any"
+total_impact = -0.28
+duration_days = 3
+daily_chance = 0.03
+cooldown_days = 40
+min_day = 5
+truth_chance = 0.5
+denial_impact_ratio = -0.3
