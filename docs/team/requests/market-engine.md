@@ -1,9 +1,7 @@
 # Requests from market-engine
 
-1. **`tests/unit/test_foundation.gd` (lead, frozen) is red.** It asserts `s.market.has_symbol("NOVA")`, but the
-   sample company NOVA was renamed to `NOVAN` (all tickers are 5 letters now), and `draw_companies` really draws
-   6 of the pool, so no fixed ticker is guaranteed. Please change the assertion to something seed independent,
-   e.g. `s.market.symbols().size() == RunConfig.COMPANIES_PER_RUN`.
+1. **Done with the lead's approval:** `tests/unit/test_foundation.gd` asserted `has_symbol("NOVA")`, which depends
+   on the seed now that `draw_companies` really draws; it now checks the number of drawn companies instead.
 2. **Unlock ids (meta-progression / session-integration):** the 5 unlockable companies use
    `co_lunaris` (LNRVS), `co_oldegate` (OLDGT), `co_quantora` (QNTRM), `co_tidalon` (TDLNH), `co_aurelix` (AURXL).
    `Profile.record_run` must grant them or they never appear (`GameSession` passes the unlocked ids to
