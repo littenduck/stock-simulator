@@ -1,4 +1,92 @@
 keys,en
 UI_GAME_NEXT_DAY,Next Day
+UI_GAME_FINAL_DAY,Final Day
 UI_GAME_DAY,Day
 UI_GAME_CASH,Cash
+UI_GAME_NET_WORTH,Net worth
+UI_GAME_RETURN,Return
+UI_GAME_MENU,Menu
+UI_GAME_RESUME,Resume
+UI_GAME_ABANDON,Abandon run
+UI_GAME_ABANDON_CONFIRM,Really abandon? Click again
+UI_GAME_MARGIN_CALL,MARGIN CALL: positions were liquidated
+UI_GAME_STOCKS,STOCKS
+UI_GAME_HELD_LONG,%d held
+UI_GAME_HELD_SHORT,%d short
+UI_GAME_HIGH_LOW,High %.2f · Low %.2f
+UI_GAME_NO_HISTORY,No price history yet
+UI_GAME_AVG_COST_SHORT,Avg cost
+UI_GAME_BUY,Buy
+UI_GAME_SELL,Sell
+UI_GAME_SELL_SHORT,Sell / Short
+UI_GAME_BOUGHT,Bought
+UI_GAME_SOLD,Sold
+UI_GAME_KIND_MARKET,Market
+UI_GAME_KIND_LIMIT,Limit
+UI_GAME_KIND_STOP,Stop
+UI_GAME_ORDER_TYPE,Order
+UI_GAME_SHARES,Shares
+UI_GAME_TRIGGER_PRICE,Price
+UI_GAME_MAX,Max
+UI_GAME_MAX_TIP,Estimate of the most you can trade. The market checks the real limit.
+UI_GAME_HINT_LIMIT_BUY,Fills at the close if the price is at or below this.
+UI_GAME_HINT_LIMIT_SELL,Fills at the close if the price is at or above this.
+UI_GAME_HINT_STOP_BUY,Triggers at the close if the price is at or above this (cover a short).
+UI_GAME_HINT_STOP_SELL,Triggers at the close if the price is at or below this (cut a loss).
+UI_GAME_EFFECT_OPEN_LONG,Opens or adds to a long position
+UI_GAME_EFFECT_COVER_SHORT,Covers (reduces) your short
+UI_GAME_EFFECT_COVER_THEN_LONG,"Covers your short, then goes long"
+UI_GAME_EFFECT_OPEN_SHORT,Opens or adds to a short position
+UI_GAME_EFFECT_CLOSE_LONG,Reduces or closes your long
+UI_GAME_EFFECT_CLOSE_THEN_SHORT,"Closes your long, then goes short"
+UI_GAME_SHORT_DISABLED,Short selling is disabled for this run
+UI_GAME_ESTIMATE,Est. value %s · fee %s
+UI_GAME_ERR_SHARES,Enter at least 1 share.
+UI_GAME_ORDER_QUEUED,Order #%d queued for %s. It is checked at each close.
+UI_GAME_FILLED,%s %d %s @ %s (fee %s)
+UI_GAME_POSITION_LONG,Long %d @ avg %s
+UI_GAME_POSITION_SHORT,Short %d @ avg %s
+UI_GAME_POSITION_NONE,No position
+UI_GAME_PORTFOLIO,PORTFOLIO
+UI_GAME_SUM_CASH,Cash
+UI_GAME_SUM_LONG,Long value
+UI_GAME_SUM_SHORT,Short value
+UI_GAME_SUM_WORTH,Net worth
+UI_GAME_MARGIN_STATUS,Margin %.0f%% (liquidation below %.0f%%) · exposure %.1fx
+UI_GAME_MARGIN_NONE,No margin used
+UI_GAME_COL_SYMBOL,Stock
+UI_GAME_COL_SHARES,Shares
+UI_GAME_COL_AVG,Avg cost
+UI_GAME_COL_PRICE,Price
+UI_GAME_COL_PNL,Profit / loss
+UI_GAME_SHORT_TAG,short
+UI_GAME_NO_POSITIONS,No open positions. Pick a stock and place an order.
+UI_GAME_PENDING_ORDERS,PENDING ORDERS
+UI_GAME_NO_PENDING,No pending orders
+UI_GAME_CANCEL,Cancel
+UI_GAME_CANCEL_TIP,Cancel order #%d
+UI_GAME_RUMORS,RUMORS
+UI_GAME_NO_RUMORS,No rumors yet. Advance a day.
+UI_GAME_BULLISH,Bullish
+UI_GAME_BEARISH,Bearish
+UI_GAME_INSIDER,Insider tip
+UI_GAME_INSIDER_TIP,Insider Friend: this rumor is guaranteed to be true.
+UI_GAME_CONFIRMED,Confirmed
+UI_GAME_DEBUNKED,Debunked
+UI_GAME_REVEALS_IN,Resolves in %d d
+UI_GAME_CRED_TIP,Credibility shown to you. The truth may differ.
+UI_GAME_CRED_TIP_RANGE,Fact Checker: the true credibility lies in this range.
+UI_GAME_PERKS,PERKS
+UI_GAME_NO_PERKS,None yet. A pick is offered every 10 days.
+UI_GAME_DEV_NEWS_1,NovaTech unveils a battery breakthrough
+UI_GAME_DEV_NEWS_2,Regulators probe the energy sector
+UI_GAME_DEV_NEWS_3,Retail spending slows across the market
+UI_GAME_DEV_NEWS_4,Rival bank rumored to buy FINX
+UI_GAME_DEV_PERK_FACT,Fact Checker
+UI_GAME_DEV_PERK_FACT_DESC,Shows a credibility range on rumors.
+UI_GAME_DEV_PERK_FEES,Low Fees
+UI_GAME_DEV_PERK_FEES_DESC,Trading fees are halved.
+UI_GAME_DEV_PERK_INSIDER,Insider Friend
+UI_GAME_DEV_PERK_INSIDER_DESC,"Every 10 days, one guaranteed-true rumor."
+UI_GAME_DEV_ERR_CASH,Not enough cash for this order (dev harness rule)
+UI_GAME_DEV_ERR_SHORT,Short selling is not allowed (dev harness rule)
