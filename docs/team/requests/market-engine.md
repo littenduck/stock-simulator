@@ -1,14 +1,19 @@
 # Requests from market-engine
 
-1. **Unlock ids (meta-progression / session-integration):** the 5 unlockable companies use these
-   `unlock_id`s: `co_lunaris` (LNRV, wild), `co_oldegate` (OLDG, ultra stable), `co_quantora` (QNTR),
-   `co_tidalon` (TDLN), `co_aurelix` (AURX). `Profile.record_run` must grant them for them to ever appear
-   (`GameSession` passes `profile.unlocked` keys to `MarketSim.draw_companies`).
-2. **Ticker check:** tickers are invented, but I could not check them against a live exchange list offline.
-   Please do a quick real-world lookup before release.
-3. **Draw changes the stub order:** `draw_companies` now shuffles (sorted by symbol first, then Fisher-Yates
-   with the run rng). Tests must not assume the first N pool companies, e.g. `test_foundation`'s `has_symbol("NOVA")`
-   passes today only because the stub session builds the market from the full pool.
-4. **Resolving rumors (session-integration):** on reveal call `market.apply_news(r.event, r.impact_scale())`;
-   `due(day)` uses `reveal_day <= day`. Single-stock templates carry fixed tickers and only fire when that
-   ticker is in the drawn market.
+1. **`tests/unit/test_foundation.gd` (lead, frozen) is red because of `has_symbol("NOVA")`.**
+   `draw_companies` now really draws 6 of the pool, so a given seed does not always contain NOVA
+   (it passed before only by luck). Please make that assertion seed independent, e.g. check
+   `s.market.symbols().size() == RunConfig.COMPANIES_PER_RUN`. Once it is changed, NOVA (the only 4-letter
+   ticker, kept just because of that test) can be renamed to a 5-letter code (`NOVAN`) in
+   `data/companies/nova.tres`, `data/news/nova_mega_contract.tres` and `localization/companies.csv`.
+2. **Unlock ids (meta-progression / session-integration):** the 5 unlockable companies use
+   `co_lunaris` (LNRVS), `co_oldegate` (OLDGT), `co_quantora` (QNTRM), `co_tidalon` (TDLNH), `co_aurelix` (AURXL).
+   `Profile.record_run` must grant them or they never appear (`GameSession` passes the unlocked ids to
+   `MarketSim.draw_companies`).
+3. **Tickers:** all invented, 5 letters (real common stocks practically never have 5 letters), but nobody
+   has checked them against a live exchange list. Do a quick lookup before release.
+4. **Resolving rumors (session-integration):** on reveal call `market.apply_news(r.event, r.impact_scale())`
+   (use `r.event`, not the pool template: for "pick a random stock of the sector" templates `r.event` is a copy
+   carrying the chosen ticker, also after a save/load). `due(day)` uses `reveal_day <= day`.
+5. **Template convention:** `target_symbol == "any"` (`NewsDirector.ANY_SYMBOL`) with a `target_sector` means
+   "one random stock of that sector in the market". Fixed tickers only fire when that ticker was drawn.
