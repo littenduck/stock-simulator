@@ -1,0 +1,20 @@
+# Paths only the lead may change (contracts and shared infrastructure). One prefix per line.
+project.godot
+icon.svg
+README.md
+.gitignore
+.gitattributes
+.editorconfig
+autoload/event_bus.gd
+core/run_config.gd
+core/perks/run_modifiers.gd
+core/trading/order.gd
+core/trading/trade_result.gd
+core/news/rumor.gd
+data/defs/
+tests/test_case.gd
+tests/run_tests.gd
+tests/contract/
+tests/unit/test_foundation.gd
+scripts/
+docs/
