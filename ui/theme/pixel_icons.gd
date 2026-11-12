@@ -26,6 +26,7 @@ const TILE := {
 	"soda": "#0b2a5b", "bank": "#1d3557", "card": "#e9e4d6", "coin": "#1a56db",
 	"chart": "#5d6270",
 	"ticket": "#7a1f2b", "blocks": "#2b2f45", "satellite": "#1c2340", "game": "#3b2f6b", "moon": "#241c4a", "disk": "#2a2f3a", "bear": "#6fb7e6",
+	"sun": "#274c77", "star": "#5b3b8c", "bolt": "#2a3358", "shield": "#233a2f", "clover": "#3a2a52", "gem": "#1f2a4d",
 }
 
 const ICONS := {
@@ -443,6 +444,114 @@ const ICONS := {
 		"................",
 		"................",
 	],
+	"star": [
+		"................",
+		"................",
+		".......kk.......",
+		"......kyyk......",
+		"......kyyk......",
+		".kkkkkywyykkkkk.",
+		"kyyyyywwyyyYYYYk",
+		".kkyyyyyyyyYYkk.",
+		"...kyyyyyyyYk...",
+		"....kyyyyyYk....",
+		"....kyyyyYYk....",
+		"....kyyyYYYk....",
+		"...kyyykkYYYk...",
+		"...kykk..kkYk...",
+		"....k......k....",
+		"................",
+	],
+	"bolt": [
+		"..........k.....",
+		".........kyk....",
+		"........kwyk....",
+		".......kwyk.....",
+		"......kyyyk.....",
+		".....kyyykkkk...",
+		".....kyyyyyyok..",
+		"....kyyyyyyok...",
+		"...kyyyyyyok....",
+		"....kkkyyok.....",
+		"......kyok......",
+		"......kok.......",
+		".....kook.......",
+		".....kok........",
+		"....kok.........",
+		".....k..........",
+	],
+	"shield": [
+		"..kkkkkkkkkkkk..",
+		".kbbbbbbBBBBBBk.",
+		".kbbbbbbBBBBBBk.",
+		".kbbbbbwwBBBBBk.",
+		".kbbbbbwwBBBBBk.",
+		".kbbbbbwwBBBBBk.",
+		".kbbbwwwwwwBBBk.",
+		".kbbbbbwwBBBBBk.",
+		".kbbbbbwwBBBBBk.",
+		"..kbbbbwwBBBBk..",
+		"...kbbbbBBBBk...",
+		"....kbbbBBBk....",
+		".....kbbBBk.....",
+		".....kbbBBk.....",
+		"......kbBk......",
+		".......kk.......",
+	],
+	"clover": [
+		"................",
+		"...kkkk..kkkk...",
+		"..kllllkkllllk..",
+		".klllwllllllllk.",
+		".kllwllllwllllk.",
+		".klllllllllllnk.",
+		"..klllllllllnk..",
+		"...klllkkllnk...",
+		"..klllllllnnnk..",
+		".klllllllnnnnnk.",
+		".kllllllnnnnnnk.",
+		".klllllnTnnnnnk.",
+		"..klllnkTnnnnk..",
+		"...kkkkkTkkkk...",
+		"......kTTk......",
+		"......kTTk......",
+	],
+	"gem": [
+		"................",
+		"...kkkkkkkkkk...",
+		"..kcccccbbbbbk..",
+		".kccwwccbbbbbbk.",
+		".kcccwccbbbbbbk.",
+		"kcccccccbbbbbbbk",
+		"kBBBBBBBBBBBBBBk",
+		".kccccccbbbbbbk.",
+		"..kcccccbbbbbk..",
+		"...kccccbbbbk...",
+		"...kccccbbbbk...",
+		"....kcccbbbk....",
+		".....kccbbk.....",
+		"......kcbk......",
+		"......kcbk......",
+		".......kk.......",
+	],
+	"sun": [
+		"................",
+		".......oo.......",
+		"..o....oo....o..",
+		"...o........o...",
+		"......yyyy......",
+		".....yyyyyy.....",
+		"....yywyyyyy....",
+		"oo..yyyyyyyy..oo",
+		"oo..yyyyyyyy..oo",
+		"....yyyyyyyy....",
+		".....yyyyyy.....",
+		"......yyyy......",
+		"...o........o...",
+		"..o....oo....o..",
+		".......oo.......",
+		"................",
+	],
 	"chart": [
 		"................",
 		"................",
@@ -473,6 +582,19 @@ static func names() -> Array[String]:
 	for k: String in ICONS:
 		out.append(k)
 	return out
+
+
+## Pixel icon of a perk (by PerkDef.id). Unknown perks get a star.
+const PERK_ICONS := {
+	"low_fees": "coin", "savings_account": "bank", "early_bird": "bolt", "fact_checker": "magnifier",
+	"stop_guard": "shield", "sector_fan": "clover", "margin_account": "rocket", "cheap_borrow": "card",
+	"diversifier": "people", "dividend_hunter": "sun", "second_opinion": "eye", "insider_friend": "star",
+	"iron_hands": "shield", "compounder": "gem", "market_maker": "chip",
+}
+
+
+static func perk_icon(perk_id: String) -> String:
+	return String(PERK_ICONS.get(perk_id, "star"))
 
 
 static func has_icon(icon_name: String) -> bool:

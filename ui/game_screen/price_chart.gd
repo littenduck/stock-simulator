@@ -396,10 +396,7 @@ func _draw_hover(s: GameSession, bars: Dictionary, lo: float, hi: float, lookbac
 	else:
 		line2 = GameFmt.price(closes[i])
 	var tw: float = maxf(font.get_string_size(head, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x, font.get_string_size(line2, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x) + 18.0
-	var box := Rect2(x + 14.0, _plot.position.y + 4, tw, 44)
-	if box.end.x > _plot.end.x:
-		box.position.x = x - 14.0 - tw
-	box.position.x = maxf(box.position.x, _plot.position.x)
+	var box := _tooltip_box(x, tw, bars, lo, hi)
 	var sb := _pill(Color(0.1, 0.09, 0.14, 0.92), 6)
 	sb.set_border_width_all(1)
 	sb.border_color = Color(1, 1, 1, 0.25)
@@ -407,6 +404,33 @@ func _draw_hover(s: GameSession, bars: Dictionary, lo: float, hi: float, lookbac
 	_canvas.draw_string(font, box.position + Vector2(9, 17), head, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(1, 1, 1, 0.7))
 	var close_up: bool = closes[i] >= opens[i]
 	_canvas.draw_string(font, box.position + Vector2(9, 36), line2, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color("#7ee08a") if close_up else Color("#ff8a80"))
+
+
+## The tooltip sits on the half of the plot opposite the pointer (the newest candles are on the right, so a
+## pointer on the right never has the box on top of them), and at the top or bottom edge, whichever hides fewer
+## candles.
+func _tooltip_box(x: float, tw: float, bars: Dictionary, lo: float, hi: float) -> Rect2:
+	var h: float = 44.0
+	var left_side: bool = x > _plot.position.x + _plot.size.x * 0.5
+	var bx: float = _plot.position.x + 8.0 if left_side else _plot.end.x - tw - 8.0
+	var top := Rect2(bx, _plot.position.y + 4.0, tw, h)
+	var bottom := Rect2(bx, _plot.end.y - h - 4.0, tw, h)
+	var highs: PackedFloat32Array = bars["high"]
+	var lows: PackedFloat32Array = bars["low"]
+	var n: int = highs.size()
+	var hits_top: int = 0
+	var hits_bottom: int = 0
+	for j in n:
+		var cx: float = ChartMath.x_of(j, n, _plot.position.x, _plot.size.x)
+		if cx < top.position.x or cx > top.end.x:
+			continue
+		var y_high: float = ChartMath.y_of(highs[j], lo, hi, _plot.position.y, _plot.size.y)
+		var y_low: float = ChartMath.y_of(lows[j], lo, hi, _plot.position.y, _plot.size.y)
+		if y_high < top.end.y and y_low > top.position.y:
+			hits_top += 1
+		if y_high < bottom.end.y and y_low > bottom.position.y:
+			hits_bottom += 1
+	return top if hits_top <= hits_bottom else bottom
 
 
 func _dotted_vertical(x: float) -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://ui/game_screen/game_screen.gd" id="1"]
 [ext_resource type="PackedScene" path="res://ui/audio/music_player.tscn" id="music"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" path="res://ui/perk_draft/perk_draft_dialog.tscn" id="12"]
 [ext_resource type="PackedScene" path="res://ui/game_over/game_over_dialog.tscn" id="13"]
 [ext_resource type="PackedScene" path="res://ui/audio/audio_feedback.tscn" id="14"]
+[ext_resource type="Script" path="res://ui/game_screen/news_popups.gd" id="15"]
 
 [node name="GameScreen" type="Control"]
 script = ExtResource("1")
@@ -58,7 +59,7 @@ theme_override_constants/separation = 8
 unique_name_in_owner = true
 script = ExtResource("4")
 layout_mode = 2
-custom_minimum_size = Vector2(262, 0)
+custom_minimum_size = Vector2(266, 0)
 row_height = 56
 
 [node name="Center" type="VBoxContainer" parent="Layout/Rows/Body"]
@@ -89,7 +90,7 @@ unique_name_in_owner = true
 script = ExtResource("6")
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 3.0
+size_flags_stretch_ratio = 4.0
 
 [node name="PendingOrdersView" type="PanelContainer" parent="Layout/Rows/Body/Center/Lower"]
 unique_name_in_owner = true
@@ -97,7 +98,7 @@ script = ExtResource("7")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
-custom_minimum_size = Vector2(220, 0)
+custom_minimum_size = Vector2(176, 0)
 
 [node name="Right" type="VBoxContainer" parent="Layout/Rows/Body"]
 layout_mode = 2
@@ -133,6 +134,16 @@ grow_vertical = 2
 
 [node name="Overlays" type="Control" parent="."]
 layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="NewsPopups" type="Control" parent="Overlays"]
+script = ExtResource("15")
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

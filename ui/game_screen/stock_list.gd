@@ -93,18 +93,25 @@ func _add_row(symbol: String) -> void:
 	left.alignment = BoxContainer.ALIGNMENT_CENTER
 	left.add_theme_constant_override("separation", 0)
 	row.add_child(left)
-	left.add_child(GameFmt.label(symbol, Color.WHITE, 18))
+	var top_row := HBoxContainer.new()
+	top_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	top_row.add_theme_constant_override("separation", 6)
+	left.add_child(top_row)
+	var ticker := GameFmt.label(symbol, Color.WHITE, 18)
+	top_row.add_child(ticker)
+	var spark := _Spark.new()
+	spark.custom_minimum_size = Vector2(34, 18)
+	spark.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	spark.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	top_row.add_child(spark)
 	if show_names:
-		var name_label := GameFmt.label(tr(company.display_name) if company != null else "", GameColors.MUTED, 12)
+		var full_name: String = tr(company.display_name) if company != null else ""
+		var name_label := GameFmt.label(full_name, GameColors.MUTED, 12)
 		name_label.clip_text = true
 		name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		name_label.custom_minimum_size = Vector2(40, 0)
 		left.add_child(name_label)
-
-	var spark := _Spark.new()
-	spark.custom_minimum_size = Vector2(34, 22)
-	spark.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	row.add_child(spark)
+		button.tooltip_text = "%s (%s)" % [full_name, symbol]
 
 	var right := VBoxContainer.new()
 	right.mouse_filter = Control.MOUSE_FILTER_IGNORE

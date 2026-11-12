@@ -53,8 +53,8 @@ func _ready() -> void:
 		if i > 0:
 			_tree.set_column_title_alignment(i, HORIZONTAL_ALIGNMENT_RIGHT)
 	for i in titles.size():
-		_tree.set_column_expand_ratio(i, 3 if i == 4 else 2 if i == 0 else 2)
-		_tree.set_column_custom_minimum_width(i, 64 if i == 4 else 92 if i == 0 else 40)
+		_tree.set_column_expand_ratio(i, 3 if i == 4 else 3 if i == 0 else 2)
+		_tree.set_column_custom_minimum_width(i, 64 if i == 4 else 82 if i == 0 else 34 if i == 1 else 54)
 	_tree.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_tree.add_theme_constant_override("icon_max_width", PixelIcons.BADGE_SIZE)
 	_tree.item_selected.connect(_on_item_selected)

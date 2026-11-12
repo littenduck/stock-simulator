@@ -97,3 +97,14 @@ UI_GAME_PREGAME,Before the run
 UI_GAME_OHLC,O %s   H %s   L %s   C %s
 UI_GAME_DAY_DATE,Day %d/%d · %s
 UI_GAME_DAY_ONLY,Day %d/%d
+UI_GAME_ERR_EMPTY,Type how many shares.
+UI_GAME_ERR_NOT_NUMBER,Shares must be a whole number.
+UI_GAME_ERR_TOO_BIG,That is more than the game allows.
+UI_GAME_ERR_OVER_MAX,"Too many: your max is %d."
+UI_GAME_WARN_OVER_MAX,"Above the estimated max (%d). The market will check."
+UI_GAME_ERR_NOTHING,There is nothing to sell here.
+UI_NEWS_POPUP_RUMOR,New rumor
+UI_NEWS_POPUP_RESOLVED,Rumor resolved
+UI_NEWS_POPUP_TRUE,It was true.
+UI_NEWS_POPUP_FALSE,False alarm.
+UI_NEWS_POPUP_INSIDER,Insider tip

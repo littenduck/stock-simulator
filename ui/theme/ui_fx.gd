@@ -148,6 +148,41 @@ static func bounce_in(c: Control, delay: float = 0.0) -> void:
 	tw.tween_property(c, "scale", Vector2.ONE, 0.55).set_delay(delay).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 
+static var _changing: bool = false
+static var _pending_path: String = ""
+
+
+## Fades the screen to the backdrop colour, switches scene, then fades the new scene in. Await it when code
+## must run after the new scene exists. Skips the fade in headless runs (tests) and queues a different scene
+## requested while one change is under way.
+static func change_scene(tree: SceneTree, path: String, fade_out: float = 0.18) -> void:
+	if tree == null or (_changing and path == _pending_path):
+		return  # a double click must not load the scene twice
+	while _changing:
+		await tree.process_frame
+	_changing = true
+	_pending_path = path
+	var cover: CanvasLayer = null
+	if DisplayServer.get_name() != "headless" and tree.root != null:
+		cover = CanvasLayer.new()
+		cover.layer = 99
+		var rect := ColorRect.new()
+		rect.color = Color("#1d1630")
+		rect.color.a = 0.0
+		rect.mouse_filter = Control.MOUSE_FILTER_STOP  # no clicks while the old scene leaves
+		rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+		cover.add_child(rect)
+		tree.root.add_child(cover)
+		var tw := rect.create_tween()
+		tw.tween_property(rect, "color:a", 1.0, fade_out).set_trans(Tween.TRANS_QUAD)
+		await tw.finished
+	tree.change_scene_to_file(path)
+	fade_from_black(tree)
+	if cover != null:
+		cover.queue_free()
+	_changing = false
+
+
 ## Covers the freshly loaded scene with a solid layer that fades out. Call right after changing scene.
 static func fade_from_black(tree: SceneTree, duration: float = 0.35) -> void:
 	if tree == null or tree.root == null:

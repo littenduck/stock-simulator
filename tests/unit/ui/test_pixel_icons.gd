@@ -1,5 +1,6 @@
 extends TestCase
 
+const PERK_EXTRAS := ["star", "bolt", "shield", "clover", "gem", "sun"]
 const COMPANY_ICONS := ["chip", "window", "fruit", "magnifier", "people", "eye", "rocket", "box", "car", "play", "cart", "coffee", "soda", "bank", "card", "coin", "ticket", "blocks", "satellite", "game", "moon", "disk", "bear"]
 
 
@@ -7,7 +8,15 @@ func test_every_company_icon_exists() -> void:
 	for n in COMPANY_ICONS:
 		assert_true(PixelIcons.has_icon(n), "bitmap for " + n)
 	assert_true(PixelIcons.has_icon(PixelIcons.FALLBACK), "fallback bitmap")
-	assert_eq(PixelIcons.names().size(), COMPANY_ICONS.size() + 1, "23 company icons + fallback")
+	assert_eq(PixelIcons.names().size(), COMPANY_ICONS.size() + PERK_EXTRAS.size() + 1, "company icons + perk extras + fallback")
+	for n in PERK_EXTRAS:
+		assert_true(PixelIcons.has_icon(n), "bitmap for " + n)
+
+
+func test_every_perk_maps_to_an_icon() -> void:
+	for perk in ContentDb.perks():
+		assert_true(PixelIcons.PERK_ICONS.has(String(perk.id)), "icon for perk " + String(perk.id))
+		assert_true(PixelIcons.has_icon(PixelIcons.perk_icon(String(perk.id))), "bitmap for perk " + String(perk.id))
 
 
 func test_bitmaps_are_16x16_and_use_known_colours() -> void:

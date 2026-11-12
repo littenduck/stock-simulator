@@ -19,8 +19,7 @@ var _position: Label
 var _buy: Button
 var _sell: Button
 var _kind: OptionButton
-var _shares: SpinBox
-var _max: Button
+var _shares: SharesInput
 var _trigger_row: HBoxContainer
 var _trigger: SpinBox
 var _trigger_touched: bool = false
@@ -68,23 +67,13 @@ func _ready() -> void:
 	_kind.item_selected.connect(_on_kind_selected)
 	box.add_child(_labelled_row(tr("UI_GAME_ORDER_TYPE"), _kind))
 
-	var shares_row := HBoxContainer.new()
-	shares_row.add_theme_constant_override("separation", 6)
-	_shares = SpinBox.new()
-	_shares.name = "SharesSpinBox"
-	_shares.min_value = 1
-	_shares.max_value = 1000000
-	_shares.step = 1
-	_shares.value = 1
+	_shares = SharesInput.new()
+	_shares.name = "SharesInput"
+	_shares.changed.connect(_on_shares_changed)
+	_shares.side_key.connect(_on_side_key)
+	_shares.submit_requested.connect(_on_enter_in_box)
 	_shares.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_shares.value_changed.connect(_on_shares_changed)
-	_shares.get_line_edit().text_submitted.connect(_on_shares_submitted)
-	_max = GameFmt.button(tr("UI_GAME_MAX"))
-	_max.tooltip_text = tr("UI_GAME_MAX_TIP")
-	_max.pressed.connect(_on_max_pressed)
-	shares_row.add_child(_shares)
-	shares_row.add_child(_max)
-	box.add_child(_labelled_row(tr("UI_GAME_SHARES"), shares_row))
+	box.add_child(_labelled_row(tr("UI_GAME_SHARES"), _shares, true))
 
 	_trigger = SpinBox.new()
 	_trigger.name = "TriggerSpinBox"
@@ -93,6 +82,7 @@ func _ready() -> void:
 	_trigger.step = 0.01
 	_trigger.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_trigger.value_changed.connect(_on_trigger_changed)
+	_trigger.get_line_edit().text_changed.connect(_on_trigger_text_changed)
 	_trigger_row = _labelled_row(tr("UI_GAME_TRIGGER_PRICE"), _trigger)
 	box.add_child(_trigger_row)
 	_hint = GameFmt.label("", GameColors.MUTED, 12)
@@ -125,8 +115,8 @@ func _ready() -> void:
 ## B / S shortcuts: choose the side and jump into the share box (Enter submits).
 func start_ticket(side: Order.Dir) -> void:
 	(_buy if side == Order.Dir.BUY else _sell).button_pressed = true
-	_shares.get_line_edit().grab_focus()
-	_shares.get_line_edit().select_all()
+	_shares.line_edit.grab_focus()
+	_shares.line_edit.select_all()
 
 
 func _side_button(group: ButtonGroup, text: String, pressed: bool) -> Button:
@@ -139,10 +129,14 @@ func _side_button(group: ButtonGroup, text: String, pressed: bool) -> Button:
 	return b
 
 
-func _labelled_row(caption: String, control: Control) -> HBoxContainer:
+func _labelled_row(caption: String, control: Control, top_aligned: bool = false) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	var l := GameFmt.label(caption, GameColors.MUTED, 14)
 	l.custom_minimum_size = Vector2(96, 0)
+	if top_aligned:
+		l.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		l.custom_minimum_size = Vector2(96, 34)
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	row.add_child(l)
 	control.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(control)
@@ -190,7 +184,7 @@ func _refresh() -> void:
 	if _kind.get_item_count() > 2 and _kind.is_item_disabled(2) and _kind.selected == 2:
 		_kind.select(0)
 	var kind: int = _kind_id()
-	var n: int = int(_shares.value)
+	var n: int = maxi(_shares.shares(), 0)
 
 	_title.text = "%s  @ %s" % [symbol, GameFmt.price(price)]
 	var co: CompanyDef = s.market.company_of(symbol)
@@ -236,12 +230,17 @@ func _refresh() -> void:
 	_effect.text = text
 	GameFmt.tint(_effect, effect_color)
 
-	var ref_price: float = price if kind == Order.Kind.MARKET else _trigger.value
+	var cap: Dictionary = _trade_cap()
+	_shares.hard_limit = bool(cap["hard"])
+	_shares.max_shares = int(cap["max"])
+	var ref_price: float = price if kind == Order.Kind.MARKET else _trigger_value()
 	var value: float = ref_price * n
 	_estimate.text = tr("UI_GAME_ESTIMATE") % [GameFmt.money(value), GameFmt.money(value * _fee_rate())]
 
 	var side_text: String = tr("UI_GAME_BUY") if is_buy else tr("UI_GAME_SELL")
-	_submit.text = "%s %d %s" % [side_text, n, symbol]
+	var valid: bool = _shares.is_submittable()
+	_submit.text = ("%s %d %s" % [side_text, n, symbol]) if _shares.shares() > 0 else ("%s %s" % [side_text, symbol])
+	_submit.disabled = not valid
 	_submit.theme_type_variation = &"BuyButton" if is_buy else &"SellButton"
 
 
@@ -262,8 +261,30 @@ func _on_kind_selected(_index: int) -> void:
 	_refresh()
 
 
-func _on_shares_changed(_value: float) -> void:
+func _on_shares_changed() -> void:
 	_refresh()
+
+
+## Enter inside the box: order, then give the keyboard back to the screen shortcuts.
+func _on_enter_in_box() -> void:
+	_on_submit_pressed()
+	_shares.line_edit.release_focus()
+
+
+func _on_side_key(dir: int) -> void:
+	(_buy if dir == Order.Dir.BUY else _sell).button_pressed = true
+
+
+## Typed trigger price: counts as touched at once, so the estimate follows the keystrokes.
+func _on_trigger_text_changed(_text: String) -> void:
+	_trigger_touched = true
+	_refresh()
+
+
+## The trigger price as typed right now (the SpinBox only commits on Enter / focus loss).
+func _trigger_value() -> float:
+	var text: String = _trigger.get_line_edit().text.strip_edges().replace(",", "")
+	return text.to_float() if text.is_valid_float() else _trigger.value
 
 
 func _on_trigger_changed(_value: float) -> void:
@@ -271,49 +292,49 @@ func _on_trigger_changed(_value: float) -> void:
 	_refresh()
 
 
-func _on_shares_submitted(_text: String) -> void:
-	_shares.apply()
-	_on_submit_pressed()
-	_shares.get_line_edit().release_focus()
-
-
 ## Estimate only: cash for buys, holdings (or leverage headroom for shorts) for sells.
-func _on_max_pressed() -> void:
+## `hard` = an order above `max` is certain to be rejected (no leverage in play).
+func _trade_cap() -> Dictionary:
 	var s: GameSession = GameManager.session
 	if s == null or symbol == "":
-		return
+		return {"max": -1, "hard": false}
 	var price: float = _price_now()
 	var unit: float = maxf(price * (1.0 + _fee_rate()), 0.0001)
 	var pos: int = s.portfolio.shares_of(symbol)
+	var leveraged: bool = s.mods.max_leverage > 1.0
 	var m: int
 	if _side == Order.Dir.BUY:
-		m = int(floor(maxf(s.portfolio.cash, 0.0) / unit))
+		if leveraged:
+			var room: float = s.portfolio.net_worth(s.market) * s.mods.max_leverage - s.portfolio.gross_exposure(s.market)
+			m = int(floor(maxf(room, 0.0) / unit))
+		else:
+			m = int(floor(maxf(s.portfolio.cash, 0.0) / unit))
 		if pos < 0:
 			m = maxi(m, -pos)
-	elif pos > 0:
+		return {"max": m, "hard": not leveraged}
+	if pos > 0:
 		m = pos
-	else:
-		var headroom: float = s.portfolio.net_worth(s.market) * s.mods.max_leverage - s.portfolio.gross_exposure(s.market)
-		m = int(floor(maxf(headroom, 0.0) / unit)) if s.mods.can_short else 0
-	_shares.value = maxi(m, 1)
+		if s.mods.can_short:
+			var room_s: float = s.portfolio.net_worth(s.market) * s.mods.max_leverage - s.portfolio.gross_exposure(s.market)
+			m = pos + int(floor(maxf(room_s, 0.0) / unit))
+		return {"max": m, "hard": not s.mods.can_short}
+	if not s.mods.can_short:
+		return {"max": 0, "hard": true}
+	var headroom: float = s.portfolio.net_worth(s.market) * s.mods.max_leverage - s.portfolio.gross_exposure(s.market)
+	return {"max": int(floor(maxf(headroom, 0.0) / unit)), "hard": false}
 
 
 func _on_submit_pressed() -> void:
 	if symbol == "":
 		return
-	var n: int = int(_shares.value)
+	# Read the box text itself: a click right after typing must not order the previous number.
 	var kind: int = _kind_id()
-	if n <= 0:
-		_set_status(tr("UI_GAME_ERR_SHARES"), GameColors.DOWN)
+	if not _shares.is_submittable():
+		return  # the inline message under the box already says why
+	_trigger.apply()
+	var order: Order = OrderEntry.build_order(_side, kind, symbol, _shares.line_edit.text, _trigger_value())
+	if order == null:
 		return
-	var order: Order
-	match kind:
-		Order.Kind.LIMIT:
-			order = Order.limit(_side, symbol, n, _trigger.value)
-		Order.Kind.STOP:
-			order = Order.stop(_side, symbol, n, _trigger.value)
-		_:
-			order = Order.market(_side, symbol, n)
 	var result: TradeResult = GameCommands.submit_order(order)
 	if result == null:
 		return
