@@ -19,10 +19,6 @@ func _init() -> void:
 
 
 func _ready() -> void:
-	var tabs := get_node_or_null("%Tabs") as TabContainer
-	if tabs != null:
-		for i in tabs.get_tab_count():
-			tabs.set_tab_title(i, tr(String(tabs.get_child(i).get_meta("title_key", "UI_GAME_PORTFOLIO"))))
 	_stock_list.stock_selected.connect(select_symbol)
 	_portfolio.stock_selected.connect(select_symbol)
 	_top_bar.menu_requested.connect(_menu.toggle)

@@ -77,7 +77,7 @@ static func pixel() -> Theme:
 	t.set_color("title_button_color", "Tree", ink)
 	t.set_color("font_selected_color", "Tree", ink)
 	t.set_color("guide_color", "Tree", Color(0, 0, 0, 0))
-	t.set_constant("v_separation", "Tree", 6)
+	t.set_constant("v_separation", "Tree", 2)
 
 	var tip := _tex("ancient_tan", 12, 10, 6)
 	t.set_stylebox("panel", "TooltipPanel", tip)

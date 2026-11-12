@@ -1,4 +1,4 @@
-## Fixed up/down colours and arrows (game design decision #14: green up, red down, arrows for colour-blind players).
+## Fixed up/down colours and icons (game design decision #14: green up, red down, arrow icons for colour-blind players).
 class_name GameColors
 extends RefCounted
 
@@ -15,10 +15,6 @@ static var CROSSHAIR := Color(1, 1, 1, 0.35)
 static var CARD := Color(1, 1, 1, 0.04)
 static var TRACK := Color(1, 1, 1, 0.12)
 
-const ARROW_UP := "▲"
-const ARROW_DOWN := "▼"
-const ARROW_FLAT := "–"
-
 const EPSILON := 0.00005
 
 
@@ -30,14 +26,15 @@ static func for_change(change: float) -> Color:
 	return FLAT
 
 
-static func arrow(change: float) -> String:
+## Icon name for GameIcons.
+static func icon_name(change: float) -> String:
 	if change > EPSILON:
-		return ARROW_UP
+		return "up"
 	if change < -EPSILON:
-		return ARROW_DOWN
-	return ARROW_FLAT
+		return "down"
+	return "flat"
 
 
-## "▲ 1.25%" for a fraction (0.0125).
-static func pct_text(change: float) -> String:
-	return "%s %.2f%%" % [arrow(change), absf(change) * 100.0]
+## "1.25%" for a fraction (0.0125); the direction is shown by an icon, not a sign.
+static func pct_value(change: float) -> String:
+	return "%.2f%%" % (absf(change) * 100.0)

@@ -63,7 +63,10 @@ func _make_row(order: Order) -> Control:
 	text.add_child(GameFmt.label("%s %d %s" % [head, order.shares, order.symbol], GameColors.UP if is_buy else GameColors.DOWN, 14))
 	text.add_child(GameFmt.label("%s @ %s" % [kind_text, GameFmt.price(order.trigger_price)], GameColors.MUTED, 13))
 	row.add_child(text)
-	var cancel := GameFmt.button("✕")
+	var cancel := GameFmt.button("")
+	cancel.icon = GameIcons.tex("cross")
+	cancel.expand_icon = true
+	cancel.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	cancel.custom_minimum_size = Vector2(36, 32)
 	cancel.tooltip_text = tr("UI_GAME_CANCEL_TIP") % order.id
 	cancel.pressed.connect(_on_cancel_pressed.bind(order.id))

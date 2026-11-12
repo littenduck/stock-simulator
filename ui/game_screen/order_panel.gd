@@ -22,6 +22,7 @@ var _shares: SpinBox
 var _max: Button
 var _trigger_row: HBoxContainer
 var _trigger: SpinBox
+var _trigger_touched: bool = false
 var _hint: Label
 var _effect: Label
 var _estimate: Label
@@ -150,7 +151,13 @@ func _price_now() -> float:
 
 
 func _reset_trigger() -> void:
-	if _trigger != null:
+	_trigger_touched = false
+	_follow_price()
+
+
+## Keeps the trigger box at today's price until the player types their own.
+func _follow_price() -> void:
+	if _trigger != null and not _trigger_touched:
 		_trigger.set_value_no_signal(snappedf(_price_now(), 0.01))
 
 
@@ -243,6 +250,7 @@ func _on_shares_changed(_value: float) -> void:
 
 
 func _on_trigger_changed(_value: float) -> void:
+	_trigger_touched = true
 	_refresh()
 
 
@@ -321,6 +329,7 @@ func _on_order_filled(order: Order, result: TradeResult) -> void:
 
 
 func _on_prices_updated() -> void:
+	_follow_price()
 	_refresh()
 
 

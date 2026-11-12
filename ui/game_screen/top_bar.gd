@@ -11,7 +11,7 @@ signal menu_requested
 var _day: Label
 var _cash: Label
 var _net_worth: Label
-var _return: Label
+var _return: GameDelta
 var _alert: Label
 var _next_day: Button
 var _alert_day: int = -1
@@ -24,9 +24,9 @@ func _ready() -> void:
 
 	_day = GameFmt.label("", Color.WHITE, 24)
 	row.add_child(_day)
-	_cash = _stat(row, "UI_GAME_CASH", value_size)
-	_net_worth = _stat(row, "UI_GAME_NET_WORTH", hero_size)
-	_return = _stat(row, "UI_GAME_RETURN", value_size)
+	_cash = _stat(row, "UI_GAME_CASH", value_size) as Label
+	_net_worth = _stat(row, "UI_GAME_NET_WORTH", hero_size) as Label
+	_return = _stat(row, "UI_GAME_RETURN", value_size, true) as GameDelta
 
 	_alert = GameFmt.label("", GameColors.DOWN, 18)
 	_alert.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -56,11 +56,11 @@ func _ready() -> void:
 
 
 ## Caption above a big value; returns the value label.
-func _stat(parent: Control, caption_key: String, size: int) -> Label:
+func _stat(parent: Control, caption_key: String, size: int, delta: bool = false) -> Control:
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 0)
 	box.add_child(GameFmt.label(tr(caption_key), GameColors.MUTED, 13))
-	var value := GameFmt.label("", Color.WHITE, size)
+	var value: Control = GameDelta.new(size) if delta else GameFmt.label("", Color.WHITE, size)
 	box.add_child(value)
 	parent.add_child(box)
 	return value
@@ -77,8 +77,7 @@ func _refresh() -> void:
 	_net_worth.text = GameFmt.money(nw)
 	var start: float = s.config.character.start_cash if s.config != null and s.config.character != null else nw
 	var ret: float = nw / start - 1.0 if start > 0.0 else 0.0
-	_return.text = GameColors.pct_text(ret)
-	_return.add_theme_color_override("font_color", GameColors.for_change(ret))
+	_return.show_change(ret)
 	if s.day != _alert_day:
 		_alert.text = ""
 	var blocked: bool = GameManager.state == GameManager.State.DRAFTING or GameManager.state == GameManager.State.GAME_OVER

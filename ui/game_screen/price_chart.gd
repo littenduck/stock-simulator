@@ -17,7 +17,7 @@ var symbol: String = "":
 var _title: Label
 var _company: Label
 var _price: Label
-var _change: Label
+var _change: GameDelta
 var _range: Label
 var _canvas: Control
 var _hover_index: int = -1
@@ -36,8 +36,8 @@ func _ready() -> void:
 	_company.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_company.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_price = GameFmt.label("", Color.WHITE, 28)
-	_change = GameFmt.label("", Color.WHITE, 18)
-	_change.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_change = GameDelta.new(18)
+	_change.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_range = GameFmt.label("", GameColors.MUTED, 13)
 	_range.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	for n: Control in [_title, _company, _range, _price, _change]:
@@ -73,8 +73,7 @@ func _refresh() -> void:
 		_title.text = symbol
 		_company.text = "%s · %s" % [tr(company.display_name), company.sector.capitalize()] if company != null else ""
 		_price.text = GameFmt.price(s.market.price_of(symbol))
-		_change.text = GameColors.pct_text(change)
-		_change.add_theme_color_override("font_color", GameColors.for_change(change))
+		_change.show_change(change)
 		var h: PackedFloat32Array = s.market.history_of(symbol)
 		if h.size() > 0:
 			_range.text = tr("UI_GAME_HIGH_LOW") % [_max_of(h), _min_of(h)]
@@ -149,8 +148,9 @@ func _on_canvas_draw() -> void:
 	var points := PackedVector2Array()
 	for i in n:
 		points.append(_point(i, n, history[i]))
-	var up: bool = history[n - 1] >= history[0]
-	var color: Color = GameColors.UP if up else GameColors.DOWN
+	var color: Color = GameColors.for_change(s.market.day_change(symbol))
+	if color == GameColors.FLAT:
+		color = GameColors.UP
 	var area := PackedVector2Array(points)
 	area.append(Vector2(points[n - 1].x, _plot.end.y))
 	area.append(Vector2(points[0].x, _plot.end.y))

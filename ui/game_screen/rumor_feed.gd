@@ -88,20 +88,26 @@ func _make_entry(r: Rumor) -> Control:
 	var meta := HBoxContainer.new()
 	meta.add_theme_constant_override("separation", 10)
 	box.add_child(meta)
-	meta.add_child(GameFmt.label(GameColors.arrow(impact) + " " + (tr("UI_GAME_BULLISH") if impact >= 0.0 else tr("UI_GAME_BEARISH")), GameColors.for_change(impact), 13))
+	var mood := GameDelta.new(13)
+	mood.show_icon(GameColors.icon_name(impact), tr("UI_GAME_BULLISH") if impact >= 0.0 else tr("UI_GAME_BEARISH"), GameColors.for_change(impact))
+	meta.add_child(mood)
 	if r.is_guaranteed:
-		var tip := GameFmt.label("★ " + tr("UI_GAME_INSIDER"), GameColors.GOLD, 13)
+		var tip := GameDelta.new(13)
+		tip.show_icon("star", tr("UI_GAME_INSIDER"), GameColors.GOLD)
 		tip.tooltip_text = tr("UI_GAME_INSIDER_TIP")
 		tip.mouse_filter = Control.MOUSE_FILTER_STOP
 		meta.add_child(tip)
-	var status: Label
+	var status: Control
 	if r.resolved:
-		status = GameFmt.label(("✔ " + tr("UI_GAME_CONFIRMED")) if r.is_true else ("✘ " + tr("UI_GAME_DEBUNKED")), GameColors.UP if r.is_true else GameColors.DOWN, 13)
+		var verdict := GameDelta.new(13, true)
+		verdict.show_icon("check" if r.is_true else "cross", tr("UI_GAME_CONFIRMED") if r.is_true else tr("UI_GAME_DEBUNKED"), GameColors.UP if r.is_true else GameColors.DOWN)
+		status = verdict
 	else:
 		var left: int = maxi(r.reveal_day - (s.day if s != null else 0), 0)
 		status = GameFmt.label(tr("UI_GAME_REVEALS_IN") % left, GameColors.MUTED, 13)
 	status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	status.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	if status is Label:
+		(status as Label).horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	meta.add_child(status)
 
 	var cred := _CredBar.new()

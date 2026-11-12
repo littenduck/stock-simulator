@@ -315,6 +315,24 @@ func _smoke() -> void:
 	panel._shares.value = 999999
 	panel._submit.pressed.emit()
 	fails += _check("failure is shown", panel._status.text != "" and panel._status.get_theme_color("font_color") == GameColors.DOWN)
+	# Real mouse path: click the actual controls.
+	var top: GameTopBar = _screen.get_node("%TopBar")
+	var d2: int = _session.day
+	await _click(top.get_node("NextDayButton") if top.has_node("NextDayButton") else top.find_child("NextDayButton", true, false))
+	fails += _check("click Next Day advances", _session.day == d2 + 1)
+	await _click(_screen.get_node("%StockList").find_child("Row_MEDI", true, false))
+	fails += _check("click stock row selects", _screen.selected_symbol == "MEDI")
+	await _click(panel._sell)
+	fails += _check("click Sell side", panel._side == Order.Dir.SELL)
+	var before: int = _session.portfolio.shares_of("MEDI")
+	panel._shares.value = 2
+	await _click(panel._submit)
+	fails += _check("click submit sells 2", _session.portfolio.shares_of("MEDI") == before - 2)
+	var trig_before: float = panel._trigger.value
+	panel._kind.select(1)
+	panel._on_kind_selected(1)
+	await _next_frame_days(2)
+	fails += _check("trigger follows price when untouched", is_equal_approx(panel._trigger.value, snappedf(_session.market.price_of("MEDI"), 0.01)))
 	print("SMOKE %s" % ("OK" if fails == 0 else "%d FAILED" % fails))
 
 
@@ -366,3 +384,26 @@ func _tour(dir: String) -> void:
 	await _snap(dir, "tour_4_insider_margin")
 	await _press("open_menu")
 	await _snap(dir, "tour_5_menu")
+
+
+func _next_frame_days(n: int) -> void:
+	for i in n:
+		_next_day()
+	await get_tree().process_frame
+
+
+func _click(c: Control) -> void:
+	var pos: Vector2 = c.get_global_rect().get_center()
+	var move := InputEventMouseMotion.new()
+	move.position = pos
+	move.global_position = pos
+	Input.parse_input_event(move)
+	await get_tree().process_frame
+	for down in [true, false]:
+		var e := InputEventMouseButton.new()
+		e.button_index = MOUSE_BUTTON_LEFT
+		e.pressed = down
+		e.position = pos
+		e.global_position = pos
+		Input.parse_input_event(e)
+		await get_tree().process_frame
