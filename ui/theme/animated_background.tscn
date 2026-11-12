@@ -13,6 +13,7 @@ shader_parameter/speed = 24.0
 
 [node name="AnimatedBackground" type="ColorRect"]
 material = SubResource("ShaderMaterial_bg")
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
