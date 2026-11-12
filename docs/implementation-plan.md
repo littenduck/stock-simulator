@@ -2375,3 +2375,15 @@ python3 -m http.server 8060 --directory /Users/kevin/stock-simulator/build/web
 | M6 手感 + 音频 | Theme、动效、素材包音效 | 自己试玩 3 局想再来 | 3–5M |
 | M7 平衡 + 发布 | 平衡工具（含天赋组合）、CI、GitHub Pages | 简单策略的分数分布合理；网页链接能玩 | 4–6M |
 | **合计** | | | **约 27–40M** |
+
+---
+
+## 14. v0.2 数据与内容变更（覆盖前面各节里关于公司和行情的描述）
+
+- 行情：不再只用 GBM。`HistoricalPriceModel` 回放 `data/market/history.csv` 的真实日线（`HistoryData` 解析），新闻冲击乘在真实走势上；GBM 保留给测试、平衡工具和旧存档。
+- 公司：30 家（`CompanyDef` 新增 `icon`、`history_key`），行业改为 tech / space / consumer / finance；晚上市的股票在 CSV 里前面是空格，`HistoryData.first_row(key)` 给出第一行有数据的位置。
+- 开局顺序（`GameSession`）：先抽公司，再按这些公司都有数据的范围选窗口；每局至少 1 家太空或金融公司（`GUARANTEED_SECTORS`）。存档保存 `window_start` 和 `start_date`，对不上时退回 GBM。
+- `MarketSim`：新增 `candles_of`、`lookback_of`、`step_count`、`init_series`；历史上限 `MAX_HISTORY = 91`（30 天赛前 + 第 0 天 + 60 天）。
+- 新闻：64 个模板（见 game-design 5.2.1），`NewsEventDef` 新增 `icon`。
+- 数据维护：`python3 tools/fetch_history.py` 重新抓取并重写 CSV；导出预设的 `include_filter` 必须包含 `data/market/*.csv`。
+
