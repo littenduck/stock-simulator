@@ -5,16 +5,23 @@
 ## is triggered (menu -> run setup -> game), so no extra unlock code is needed. See tools/release/web-audio.md.
 extends Node
 
-const SFX_DIR := "res://audio/"
+const IFACE := "res://audio/kenney_interface-sounds/Audio/"
+## Event -> file. All effects come from Kenney "Interface Sounds" so the style stays consistent.
+## The other Kenney packs in audio/ are bundled unused for now (see CREDITS.md).
 const SFX: Dictionary = {
-	&"buy": "buy.wav",
-	&"sell": "sell.wav",
-	&"next_day": "next_day.wav",
-	&"perk": "perk.wav",
-	&"margin_call": "margin_call.wav",
-	&"error": "error.wav",
-	&"win": "win.wav",
-	&"lose": "lose.wav",
+	&"buy": IFACE + "confirmation_001.ogg",
+	&"sell": IFACE + "drop_001.ogg",
+	&"next_day": IFACE + "toggle_001.ogg",
+	&"perk": IFACE + "maximize_001.ogg",
+	&"perk_picked": IFACE + "pluck_001.ogg",
+	&"margin_call": IFACE + "glitch_001.ogg",
+	&"error": IFACE + "error_001.ogg",
+	&"win": IFACE + "glass_001.ogg",
+	&"lose": IFACE + "scratch_001.ogg",
+	&"order_placed": IFACE + "open_001.ogg",
+	&"order_cancelled": IFACE + "close_001.ogg",
+	&"rumor_posted": IFACE + "question_001.ogg",
+	&"rumor_resolved": IFACE + "bong_001.ogg",
 }
 const POLYPHONY := 4
 
@@ -31,7 +38,7 @@ func _ready() -> void:
 		add_child(p)
 		_players.append(p)
 	for key: StringName in SFX:
-		var path: String = SFX_DIR + String(SFX[key])
+		var path: String = SFX[key]
 		if ResourceLoader.exists(path):
 			_streams[key] = load(path)
 	if is_inside_tree():
@@ -49,6 +56,11 @@ func bind_bus(bus: Node) -> void:
 	bus.connect("margin_called", _on_margin_called)
 	bus.connect("run_finished", _on_run_finished)
 	bus.connect("trade_failed", _on_trade_failed)
+	bus.connect("order_placed", _on_order_placed)
+	bus.connect("order_cancelled", _on_order_cancelled)
+	bus.connect("rumor_posted", _on_rumor_posted)
+	bus.connect("rumor_resolved", _on_rumor_resolved)
+	bus.connect("perks_changed", _on_perks_changed)
 
 
 ## Plays an effect by name. Unknown names and missing files are ignored.
@@ -92,3 +104,23 @@ func _on_run_finished(score: float) -> void:
 
 func _on_trade_failed(_reason: String) -> void:
 	play(&"error")
+
+
+func _on_order_placed(_order: Order) -> void:
+	play(&"order_placed")
+
+
+func _on_order_cancelled(_order_id: int) -> void:
+	play(&"order_cancelled")
+
+
+func _on_rumor_posted(_rumor: Rumor) -> void:
+	play(&"rumor_posted")
+
+
+func _on_rumor_resolved(_rumor: Rumor) -> void:
+	play(&"rumor_resolved")
+
+
+func _on_perks_changed() -> void:
+	play(&"perk_picked")

@@ -4,6 +4,6 @@
   first click/key press. Every sound in the game is triggered after at least one click (menu -> run setup ->
   game), so `AudioFeedback` needs no unlock code. Do not add background music that autoplays from the main menu
   scene's `_ready` without a click first.
-- Effects are 22.05 kHz mono WAV (about 140 KB in total) so the Web build stays small.
+- Effects are Kenney OGG files (about 6 MB for all four packs; unused packs can be deleted before release).
 - `AudioFeedback` skips any effect whose file is missing; it never errors.
-- Regenerate the effects with `python3 tools/make_sfx.py` (deterministic).
+- Mapping from game events to files is the SFX constant in ui/audio/audio_feedback.gd.

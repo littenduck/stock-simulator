@@ -62,5 +62,20 @@ func test_all_sfx_files_exist() -> void:
 	var node: Node = load("res://ui/audio/audio_feedback.tscn").instantiate()
 	var sfx: Dictionary = node.get("SFX")
 	for key in sfx:
-		assert_true(ResourceLoader.exists("res://audio/" + String(sfx[key])), "missing audio " + String(sfx[key]))
+		assert_true(ResourceLoader.exists(String(sfx[key])), "missing audio " + String(sfx[key]))
 	node.free()
+
+
+func test_new_event_sounds_play() -> void:
+	var node: Node = load("res://ui/audio/audio_feedback.tscn").instantiate()
+	var bus: Node = load("res://autoload/event_bus.gd").new()
+	node.call("_ready")
+	node.set("_streams", {})
+	node.call("bind_bus", bus)
+	bus.order_cancelled.emit(3)
+	bus.perks_changed.emit()
+	var played: Dictionary = node.get("played")
+	assert_eq(played.get(&"order_cancelled"), 1, "cancel sound")
+	assert_eq(played.get(&"perk_picked"), 1, "perk picked sound")
+	node.free()
+	bus.free()
