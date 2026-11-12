@@ -83,3 +83,50 @@ func test_fee_uses_mods() -> void:
 	a[2].fee_mult = 0.0
 	var r := TradeService.execute(Order.market(Order.Dir.BUY, "AAA", 10), a[0], a[1], a[2])
 	assert_almost(r.fee, 0.0)
+
+
+func test_flip_long_to_short_in_one_order() -> void:
+	var a := _setup()
+	TradeService.execute(Order.market(Order.Dir.BUY, "AAA", 10), a[0], a[1], a[2])
+	var r := TradeService.execute(Order.market(Order.Dir.SELL, "AAA", 30), a[0], a[1], a[2])
+	assert_true(r.ok)
+	assert_eq(a[1].shares_of("AAA"), -20)
+	assert_almost(a[1].positions["AAA"]["avg_cost"], 100.0)
+
+
+func test_flip_blocked_when_short_disabled() -> void:
+	var a := _setup()
+	a[2].can_short = false
+	TradeService.execute(Order.market(Order.Dir.BUY, "AAA", 10), a[0], a[1], a[2])
+	var r := TradeService.execute(Order.market(Order.Dir.SELL, "AAA", 11), a[0], a[1], a[2])
+	assert_eq(r.reason, TradeService.ERR_SHORT_DISABLED)
+	assert_eq(a[1].shares_of("AAA"), 10)
+
+
+func test_reducing_exposure_allowed_when_already_over_limit() -> void:
+	var a := _setup()
+	a[2].max_leverage = 2.0
+	TradeService.execute(Order.market(Order.Dir.BUY, "AAA", 150), a[0], a[1], a[2])
+	a[0].set_price("AAA", 50.0)  # equity dropped, now over the 2x limit
+	var r := TradeService.execute(Order.market(Order.Dir.SELL, "AAA", 10), a[0], a[1], a[2])
+	assert_true(r.ok)
+	r = TradeService.execute(Order.market(Order.Dir.BUY, "AAA", 1), a[0], a[1], a[2])
+	assert_false(r.ok, "adding exposure still blocked")
+
+
+func test_covering_short_with_exact_cash_and_fee_included_in_leverage() -> void:
+	var a := _setup(1000.0)
+	a[2].fee_rate = 0.01
+	# 10 shares = 1000 cost + 10 fee > 1000 cash: must fail
+	var r := TradeService.execute(Order.market(Order.Dir.BUY, "AAA", 10), a[0], a[1], a[2])
+	assert_eq(r.reason, TradeService.ERR_NOT_ENOUGH_CASH)
+	r = TradeService.execute(Order.market(Order.Dir.BUY, "AAA", 9), a[0], a[1], a[2])
+	assert_true(r.ok)
+
+
+func test_second_symbol_leverage_counts_existing_positions() -> void:
+	var a := _setup()
+	TradeService.execute(Order.market(Order.Dir.BUY, "AAA", 90), a[0], a[1], a[2])  # 9000 long
+	var r := TradeService.execute(Order.market(Order.Dir.SELL, "BBB", 40), a[0], a[1], a[2])  # +2000 short
+	assert_false(r.ok, "gross 11000 > equity ~9991")
+	assert_eq(r.reason, TradeService.ERR_OVER_LEVERAGE)

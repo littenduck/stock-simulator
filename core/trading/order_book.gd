@@ -9,7 +9,10 @@ var _next_id: int = 1
 
 
 ## Adds a LIMIT/STOP order, assigns order.id and returns it.
+## Returns 0 (and does not queue) for a null order, a MARKET order, shares <= 0 or a trigger_price <= 0.
 func place(order: Order) -> int:
+	if order == null or order.kind == Order.Kind.MARKET or order.shares <= 0 or order.trigger_price <= 0.0:
+		return 0
 	order.id = _next_id
 	_next_id += 1
 	_orders.append(order)

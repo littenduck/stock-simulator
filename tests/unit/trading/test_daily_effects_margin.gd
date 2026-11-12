@@ -94,3 +94,34 @@ func test_iron_hands_once() -> void:
 	assert_true(a[3].iron_hands_used)
 	assert_eq(a[1].shares_of("AAA"), -20)
 	assert_true(Margin.check(a[1], a[0], a[2], a[3]), "second time liquidates")
+
+
+func test_all_effects_together_and_no_effects_when_empty() -> void:
+	var mods := RunModifiers.new()
+	var r := DailyEffects.apply(Portfolio.new(0.0), _m(), mods)
+	assert_almost(r["interest"] + r["borrow_fee"] + r["dividends"] + r["bonus"], 0.0)
+	mods.long_dividend_daily = 0.001
+	mods.cash_interest_daily = 0.001
+	var p := Portfolio.new(1000.0)
+	p.apply_fill("AAA", 10, 100.0, 0.0)   # cash 0, long 1000
+	p.apply_fill("BBB", -20, 50.0, 0.0)   # cash 1000, short 1000
+	var before := p.cash
+	r = DailyEffects.apply(p, _m(), mods)
+	assert_almost(p.cash - before, 1.0 - 0.2 + 1.0, 0.0001, "interest+div-borrow")
+
+
+func test_liquidation_when_equity_negative() -> void:
+	var a := _risky()
+	a[0].set_price("AAA", 200.0)  # short 4000 vs cash 3000: equity negative
+	assert_true(Margin.check(a[1], a[0], a[2], a[3]))
+	assert_true(a[1].cash < 0.0, "game continues with negative cash")
+
+
+func test_liquidation_closes_long_positions_too() -> void:
+	var m := _m()
+	var p := Portfolio.new(100.0)
+	p.apply_fill("AAA", 10, 100.0, 0.0)   # cash -900, long 1000, equity 100, ratio 0.1
+	var b := OrderBook.new()
+	assert_true(Margin.check(p, m, b, RunModifiers.new()))
+	assert_almost(p.cash, 100.0)
+	assert_true(p.positions.is_empty())

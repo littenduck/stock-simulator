@@ -101,3 +101,49 @@ func test_cancel_and_round_trip() -> void:
 	assert_false(a[3].cancel(id))
 	a[3].cancel_all()
 	assert_eq(a[3].pending().size(), 0)
+
+
+func test_place_rejects_invalid() -> void:
+	var a := _setup()
+	assert_eq(a[3].place(null), 0)
+	assert_eq(a[3].place(Order.market(Order.Dir.BUY, "AAA", 1)), 0, "market orders never queue")
+	assert_eq(a[3].place(Order.limit(Order.Dir.BUY, "AAA", 0, 90.0)), 0)
+	assert_eq(a[3].place(Order.stop(Order.Dir.SELL, "AAA", 1, 0.0)), 0)
+	assert_eq(a[3].pending().size(), 0)
+	assert_eq(a[3].place(Order.limit(Order.Dir.BUY, "AAA", 1, 90.0)), 1, "ids not burned by rejects")
+
+
+func test_void_when_over_leverage() -> void:
+	var a := _setup()
+	a[3].place(Order.limit(Order.Dir.SELL, "AAA", 150, 90.0))  # short 15000 vs equity 10000, leverage 1
+	var res := _run(a)
+	assert_false(res[0].ok)
+	assert_eq(res[0].reason, TradeService.ERR_OVER_LEVERAGE)
+	assert_eq(a[1].shares_of("AAA"), 0)
+
+
+func test_void_when_short_disabled_and_unknown_symbol() -> void:
+	var a := _setup()
+	a[2].can_short = false
+	a[3].place(Order.stop(Order.Dir.SELL, "AAA", 1, 200.0))
+	a[3].place(Order.stop(Order.Dir.BUY, "NOPE", 1, 1.0))
+	var res := _run(a)
+	assert_eq(res[0].reason, TradeService.ERR_SHORT_DISABLED)
+	assert_eq(res[1].reason, TradeService.ERR_UNKNOWN_SYMBOL)
+	assert_eq(a[3].pending().size(), 0)
+
+
+func test_deterministic_same_inputs_same_results() -> void:
+	var out: Array = []
+	for i in 2:
+		var a := _setup()
+		a[3].place(Order.limit(Order.Dir.BUY, "AAA", 10, 105.0))
+		a[3].place(Order.stop(Order.Dir.BUY, "AAA", 5, 90.0))
+		a[3].place(Order.limit(Order.Dir.SELL, "AAA", 5, 50.0))
+		var res := _run(a)
+		var sig: Array = []
+		for r in res:
+			sig.append([r.order.id, r.ok, r.reason, r.price, r.fee])
+		sig.append(a[1].cash)
+		out.append(sig)
+	assert_eq(out[0], out[1])
