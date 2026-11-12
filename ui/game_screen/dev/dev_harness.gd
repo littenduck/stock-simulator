@@ -112,6 +112,10 @@ func _ready() -> void:
 	_seed_demo(int(args.get("days", 22)))
 	_screen = SCREEN.instantiate()
 	add_child(_screen)
+	if args.has("tour"):
+		await _tour(String(args["tour"]))
+		get_tree().quit()
+		return
 	if args.has("smoke"):
 		await _smoke()
 	if args.has("shot"):
@@ -324,3 +328,40 @@ func _press(action: String) -> void:
 func _check(label: String, ok: bool) -> int:
 	print("%s: %s" % ["PASS" if ok else "FAIL", label])
 	return 0 if ok else 1
+
+
+func _snap(dir: String, name: String) -> void:
+	await get_tree().create_timer(0.4).timeout
+	get_viewport().get_texture().get_image().save_png(dir.path_join(name + ".png"))
+	print("saved ", name)
+
+
+## Plays a short session with real input: trades, 8 days, perks, margin call, menu.
+func _tour(dir: String) -> void:
+	await get_tree().process_frame
+	await _snap(dir, "tour_1_start")
+	await _press("select_stock_6")
+	var panel: GameOrderPanel = _screen.get_node("%OrderPanel")
+	await _press("buy")
+	panel._shares.value = 10
+	panel._submit.pressed.emit()
+	panel._kind.select(1)
+	panel._on_kind_selected(1)
+	await _press("sell")
+	panel._trigger.value = snappedf(_session.market.price_of("CLDX") * 1.1, 0.01)
+	panel._shares.value = 5
+	panel._submit.pressed.emit()
+	await _snap(dir, "tour_2_after_orders")
+	for i in 8:
+		await _press("next_day")
+	await _snap(dir, "tour_3_day_30")
+	await _press("buy")
+	var f2 := InputEventKey.new()
+	f2.keycode = KEY_F3
+	f2.pressed = true
+	Input.parse_input_event(f2)
+	await get_tree().process_frame
+	EventBus.margin_called.emit()
+	await _snap(dir, "tour_4_insider_margin")
+	await _press("open_menu")
+	await _snap(dir, "tour_5_menu")
