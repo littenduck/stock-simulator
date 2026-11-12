@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1")
-symbol = "PWSM"
-display_name = "COMPANY_PWSM"
-sector = "consumer"
-start_price = 30.0
-annual_drift = 0.08
-annual_volatility = 0.38
+symbol = "GNVBO"
+display_name = "COMPANY_GNVBO"
+sector = "health"
+start_price = 28.0
+annual_drift = 0.12
+annual_volatility = 0.6
 unlock_id = &""

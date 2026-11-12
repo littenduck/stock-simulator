@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1")
-symbol = "OLDG"
-display_name = "COMPANY_OLDG"
-sector = "finance"
-start_price = 110.0
-annual_drift = 0.04
-annual_volatility = 0.12
-unlock_id = &"co_oldegate"
+symbol = "MNCHL"
+display_name = "COMPANY_MNCHL"
+sector = "consumer"
+start_price = 40.0
+annual_drift = 0.07
+annual_volatility = 0.28
+unlock_id = &""

@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1")
-symbol = "AURX"
-display_name = "COMPANY_AURX"
-sector = "health"
-start_price = 85.0
-annual_drift = 0.08
-annual_volatility = 0.45
-unlock_id = &"co_aurelix"
+symbol = "HRBVL"
+display_name = "COMPANY_HRBVL"
+sector = "finance"
+start_price = 90.0
+annual_drift = 0.06
+annual_volatility = 0.28
+unlock_id = &""

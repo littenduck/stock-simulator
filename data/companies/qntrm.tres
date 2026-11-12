@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1")
-symbol = "VLTR"
-display_name = "COMPANY_VLTR"
-sector = "energy"
-start_price = 60.0
-annual_drift = 0.06
-annual_volatility = 0.4
-unlock_id = &""
+symbol = "QNTRM"
+display_name = "COMPANY_QNTRM"
+sector = "tech"
+start_price = 95.0
+annual_drift = 0.18
+annual_volatility = 0.8
+unlock_id = &"co_quantora"

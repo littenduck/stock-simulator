@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1")
-symbol = "BRTB"
-display_name = "COMPANY_BRTB"
-sector = "tech"
-start_price = 45.0
-annual_drift = 0.1
-annual_volatility = 0.5
+symbol = "GRDWL"
+display_name = "COMPANY_GRDWL"
+sector = "energy"
+start_price = 35.0
+annual_drift = 0.05
+annual_volatility = 0.3
 unlock_id = &""
