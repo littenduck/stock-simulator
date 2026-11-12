@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "PEPY"
+display_name = "COMPANY_PEPY"
+sector = "consumer"
+icon = "soda"
+history_key = "PEP"
+start_price = 143.94
+annual_drift = -0.038
+annual_volatility = 0.194
+unlock_id = &""

@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "consumer_spending_dip"
 headline_key = "NEWS_CONSUMER_SPENDING_DIP"
+icon = "cart"
 target_sector = "consumer"
 target_symbol = ""
 total_impact = -0.1

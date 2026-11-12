@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "CVN"
+display_name = "COMPANY_CVN"
+sector = "energy"
+icon = "barrel"
+history_key = "CVX"
+start_price = 213.28
+annual_drift = 0.120
+annual_volatility = 0.256
+unlock_id = &""

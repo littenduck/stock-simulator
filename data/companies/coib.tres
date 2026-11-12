@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "COIB"
+display_name = "COMPANY_COIB"
+sector = "finance"
+icon = "coin"
+history_key = "COIN"
+start_price = 136.27
+annual_drift = -0.126
+annual_volatility = 0.869
+unlock_id = &""

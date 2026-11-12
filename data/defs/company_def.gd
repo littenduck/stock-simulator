@@ -9,6 +9,11 @@ extends Resource
 @export var display_name: String = ""
 ## "tech" / "energy" / "consumer" / "finance" / "health"
 @export var sector: String = ""
+## Pixel icon id drawn by the UI (e.g. "chip", "rocket"). Purely visual.
+@export var icon: String = ""
+## Column prefix of the real stock in data/market/history.csv (e.g. "NVDA"). Empty = no real data (GBM fallback).
+@export var history_key: String = ""
+## Placeholder / fallback only: runs with real history start at the real close of the window's first day.
 @export_range(1.0, 10000.0) var start_price: float = 50.0
 ## Annualised drift. 0.08 = +8% per year on average.
 @export_range(-0.5, 0.5) var annual_drift: float = 0.06

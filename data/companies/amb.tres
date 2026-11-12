@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "AMB"
+display_name = "COMPANY_AMB"
+sector = "tech"
+icon = "chip"
+history_key = "AMD"
+start_price = 552.9
+annual_drift = 0.269
+annual_volatility = 0.586
+unlock_id = &""

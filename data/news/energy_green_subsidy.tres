@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "energy_green_subsidy"
 headline_key = "NEWS_ENERGY_GREEN_SUBSIDY"
+icon = "sun"
 target_sector = "energy"
 target_symbol = ""
 total_impact = 0.12

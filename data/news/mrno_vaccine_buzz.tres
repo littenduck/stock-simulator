@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="NewsEventDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/news_event_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "mrno_vaccine_buzz"
+headline_key = "NEWS_MRNO_VACCINE_BUZZ"
+icon = "dna"
+target_sector = "health"
+target_symbol = "MRNO"
+total_impact = 0.42
+duration_days = 3
+daily_chance = 0.026
+cooldown_days = 45
+min_day = 0
+truth_chance = 0.4
+denial_impact_ratio = -0.3

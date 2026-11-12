@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "market_selloff"
 headline_key = "NEWS_MARKET_SELLOFF"
+icon = "coin"
 target_sector = "all"
 target_symbol = ""
 total_impact = -0.09

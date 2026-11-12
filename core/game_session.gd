@@ -6,6 +6,8 @@ extends RefCounted
 
 const SAVE_VERSION := 1
 const SECTOR_FAN_BONUS := 0.15
+## Real trading days shown as chart history before day 0 (clamped by the start of the data).
+const PRE_GAME_DAYS := 30
 
 var config: RunConfig
 var day: int = 0
@@ -19,12 +21,16 @@ var owned_perks: Array[PerkDef] = []
 var pending_draft: Array[PerkDef] = []
 ## One entry per executed trade: {"day","side","symbol","shares","price","fee"}.
 var trade_log: Array[Dictionary] = []
+## Row of data/market/history.csv that is day 0 of this run (same calendar window for every company);
+## -1 = no real data (pure GBM run, e.g. loaded from an old save or missing history file).
+var window_start: int = -1
 
 var _rng := RandomNumberGenerator.new()
 var _perk_pool: Array[PerkDef] = []
 var _drafter: PerkDrafter
 var _finished: bool = false
 var _sector_fan_sector: String = ""
+var _history: HistoryData
 
 
 func _init(p_config: RunConfig, company_pool: Array[CompanyDef], perk_pool: Array[PerkDef], news_pool: Array[NewsEventDef], unlocked: Array[StringName] = []) -> void:
@@ -33,11 +39,52 @@ func _init(p_config: RunConfig, company_pool: Array[CompanyDef], perk_pool: Arra
 	_perk_pool = perk_pool
 	_drafter = PerkDrafter.new(perk_pool, _rng)
 	mods = ModifiersBuilder.build(p_config, owned_perks)
-	market = MarketSim.new(MarketSim.draw_companies(company_pool, RunConfig.COMPANIES_PER_RUN, _rng, unlocked), GbmPriceModel.new(), _rng)
+	# The window is drawn first so it depends on the seed only (not on which companies are unlocked).
+	_history = HistoryData.default()
+	window_start = _pick_window(_history, _rng)
+	_build_market(MarketSim.draw_companies(company_pool, RunConfig.COMPANIES_PER_RUN, _rng, unlocked))
 	market.volatility_mult = mods.volatility_mult
 	portfolio = Portfolio.new(p_config.character.start_cash)
 	book = OrderBook.new()
 	news = NewsDirector.new(news_pool, _rng)
+
+
+## Deterministic start row from the run rng: leaves PRE_GAME_DAYS of lookback before it and TRADING_DAYS rows after it.
+## Returns -1 when there is no (or too little) history.
+static func _pick_window(history: HistoryData, rng: RandomNumberGenerator) -> int:
+	if history == null:
+		return -1
+	var lo := PRE_GAME_DAYS
+	var hi := history.row_count() - 1 - RunConfig.TRADING_DAYS
+	if hi < lo:
+		return -1
+	return rng.randi_range(lo, hi)
+
+
+## Creates the MarketSim for `companies` using the real-history model when a window is set, GBM otherwise,
+## and loads the real closes (plus lookback candles) as the starting series.
+func _build_market(companies: Array[CompanyDef]) -> void:
+	if window_start >= 0 and _history != null:
+		market = MarketSim.new(companies, HistoricalPriceModel.new(_history, window_start), _rng)
+		for c in companies:
+			if c.history_key == "" or not _history.has_key(c.history_key):
+				continue
+			var bars: Array = []
+			for row in range(window_start - PRE_GAME_DAYS, window_start + 1):
+				var b := _history.bar(c.history_key, row)
+				bars.append(PackedFloat32Array([b[0], b[1], b[2], b[3]]))
+			market.init_series(c.symbol, bars)
+	else:
+		market = MarketSim.new(companies, GbmPriceModel.new(), _rng)
+	market.volatility_mult = mods.volatility_mult if mods != null else 1.0
+
+
+## ISO date (YYYY-MM-DD) of a trading day of this run (0 = start date; negative = pre-game lookback).
+## "" when the run has no real calendar (GBM fallback).
+func date_of_day(day_index: int) -> String:
+	if window_start < 0 or _history == null:
+		return ""
+	return _history.date_at(window_start + clampi(day_index, -PRE_GAME_DAYS, RunConfig.TRADING_DAYS))
 
 
 ## Opens the day-0 perk draft and returns its options.
@@ -154,6 +201,8 @@ func to_dict() -> Dictionary:
 		"sector_fan_sector": _sector_fan_sector,
 		"iron_hands_used": mods.iron_hands_used,
 		"finished": _finished,
+		"window_start": window_start,
+		"start_date": date_of_day(0),
 		"market": market.to_dict(),
 		"portfolio": portfolio.to_dict(),
 		"book": book.to_dict(),
@@ -196,7 +245,13 @@ static func from_dict(data: Dictionary, config: RunConfig, company_pool: Array[C
 				break
 	if drawn.is_empty():
 		return null
-	s.market = MarketSim.new(drawn, GbmPriceModel.new(), s._rng)
+	# Saves from before real history have no window: they continue as GBM runs (market.load_dict synthesizes candles).
+	var ws := int(d.get("window_start", -1))
+	if s._history == null or ws < PRE_GAME_DAYS or ws + RunConfig.TRADING_DAYS >= s._history.row_count() \
+			or (d.has("start_date") and s._history.date_at(ws) != String(d["start_date"])):
+		ws = -1
+	s.window_start = ws
+	s._build_market(drawn)
 	s._sector_fan_sector = String(d.get("sector_fan_sector", ""))
 	for id in d.get("perks", []):
 		var p := _find_perk(perk_pool, StringName(String(id)))

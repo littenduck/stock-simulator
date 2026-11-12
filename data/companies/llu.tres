@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "LLU"
+display_name = "COMPANY_LLU"
+sector = "health"
+icon = "pill"
+history_key = "LLY"
+start_price = 1437.29
+annual_drift = 0.344
+annual_volatility = 0.328
+unlock_id = &""

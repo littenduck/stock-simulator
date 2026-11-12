@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "tech_data_breach"
 headline_key = "NEWS_TECH_DATA_BREACH"
+icon = "chip"
 target_sector = "tech"
 target_symbol = ""
 total_impact = -0.1

@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "health_price_caps"
 headline_key = "NEWS_HEALTH_PRICE_CAPS"
+icon = "pill"
 target_sector = "health"
 target_symbol = ""
 total_impact = -0.13

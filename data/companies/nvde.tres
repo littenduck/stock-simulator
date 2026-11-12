@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "NVDE"
+display_name = "COMPANY_NVDE"
+sector = "tech"
+icon = "chip"
+history_key = "NVDA"
+start_price = 173.73
+annual_drift = 0.362
+annual_volatility = 0.512
+unlock_id = &""

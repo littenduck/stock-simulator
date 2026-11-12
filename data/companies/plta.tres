@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "PLTA"
+display_name = "COMPANY_PLTA"
+sector = "tech"
+icon = "eye"
+history_key = "PLTR"
+start_price = 172.4
+annual_drift = 0.400
+annual_volatility = 0.664
+unlock_id = &"company_extra_1"

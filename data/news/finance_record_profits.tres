@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "finance_record_profits"
 headline_key = "NEWS_FINANCE_RECORD_PROFITS"
+icon = "card"
 target_sector = "finance"
 target_symbol = ""
 total_impact = 0.1

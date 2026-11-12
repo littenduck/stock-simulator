@@ -3,7 +3,7 @@ extends TestCase
 
 const RUNS := 500
 const DAYS := 60
-const UNLOCKED: Array[StringName] = [&"co_lunaris", &"co_oldegate", &"co_quantora", &"co_tidalon", &"co_aurelix"]
+const UNLOCKED: Array[StringName] = [&"company_moon", &"company_olde", &"company_extra_1", &"company_extra_2", &"company_extra_3"]
 
 
 func _simulate(seed_value: int, unlocked: Array[StringName]) -> Dictionary:

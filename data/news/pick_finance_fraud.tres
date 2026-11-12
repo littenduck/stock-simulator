@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "pick_finance_fraud"
 headline_key = "NEWS_PICK_FINANCE_FRAUD"
+icon = "bank"
 target_sector = "finance"
 target_symbol = "any"
 total_impact = -0.28

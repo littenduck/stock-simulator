@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "consumer_viral_trend"
 headline_key = "NEWS_CONSUMER_VIRAL_TREND"
+icon = "coffee"
 target_sector = "consumer"
 target_symbol = ""
 total_impact = 0.14

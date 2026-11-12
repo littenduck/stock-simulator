@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "health_supply_shortage"
 headline_key = "NEWS_HEALTH_SUPPLY_SHORTAGE"
+icon = "pill"
 target_sector = "health"
 target_symbol = ""
 total_impact = -0.1

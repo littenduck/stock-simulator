@@ -1,36 +1,53 @@
 keys,en
-NEWS_TECH_BREAKTHROUGH,Rumor: a tech lab is close to a major breakthrough
-NEWS_TECH_CHIP_DEMAND,Rumor: chip orders surge as AI data centers expand
-NEWS_TECH_ANTITRUST,Rumor: regulators prepare antitrust action against big software firms
-NEWS_TECH_DATA_BREACH,Rumor: a massive data breach is about to hit cloud providers
-NEWS_ENERGY_OIL_CUT,"Rumor: producers agree to cut output, supply tightens"
-NEWS_ENERGY_GREEN_SUBSIDY,Rumor: a big green energy subsidy is on the table
-NEWS_ENERGY_PIPELINE_LEAK,Rumor: a major pipeline leak will force shutdowns
-NEWS_ENERGY_MILD_WINTER,Rumor: a mild winter will crush fuel demand
-NEWS_CONSUMER_HOLIDAY_BOOM,Rumor: holiday shopping is shaping up to be a record
-NEWS_CONSUMER_VIRAL_TREND,Rumor: a viral trend is sending shoppers to stores
-NEWS_CONSUMER_RECALL,Rumor: a product recall is about to spread across retailers
-NEWS_CONSUMER_SPENDING_DIP,Rumor: households are quietly cutting back spending
-NEWS_FINANCE_RATE_CUT,Rumor: central bank hints at a rate decision that favors lenders
-NEWS_FINANCE_RECORD_PROFITS,Rumor: banks are about to report record profits
-NEWS_FINANCE_STRESS_TEST,Rumor: a harsh stress test will force banks to raise capital
-NEWS_FINANCE_LOAN_DEFAULTS,Rumor: loan defaults are climbing faster than reported
-NEWS_HEALTH_TRIAL_WAVE,Rumor: a wave of promising trial results is coming
-NEWS_HEALTH_FAST_APPROVAL,Rumor: regulators will fast track new treatments
-NEWS_HEALTH_PRICE_CAPS,Rumor: lawmakers push price caps on medicines
-NEWS_HEALTH_SUPPLY_SHORTAGE,Rumor: a supply shortage will hit hospitals and drug makers
-NEWS_MARKET_RATE_CUT,Rumor: surprise rate cut could lift the whole market
-NEWS_MARKET_RATE_HIKE,Rumor: a surprise rate hike could shake the whole market
-NEWS_MARKET_RALLY,Rumor: big investors are piling into stocks across the board
-NEWS_MARKET_SELLOFF,"Rumor: a global selloff is brewing, nerves are high"
-NEWS_NOVA_MEGA_CONTRACT,Rumor: Nova Systems is about to land a giant contract
-NEWS_ZYRN_PRODUCT_FLOP,Rumor: Zyron Labs' new product is a flop
-NEWS_CURELIA_TRIAL_SUCCESS,Rumor: Curelia Therapeutics' key drug trial succeeded
-NEWS_CURELIA_TRIAL_FAILURE,Rumor: Curelia Therapeutics' key drug trial failed
-NEWS_GENOVIA_BUYOUT,Rumor: a giant pharma firm wants to buy Genovia Biotech
-NEWS_VOLTARA_OUTAGE,Rumor: Voltara Power faces costly fallout from a grid outage
-NEWS_PICK_TECH_BIG_CONTRACT,Rumor: a tech company is about to land a giant contract
-NEWS_PICK_ENERGY_ACCIDENT,Rumor: an energy company is hit by a serious plant accident
-NEWS_PICK_CONSUMER_TAKEOVER,Rumor: a consumer brand is the target of a takeover bid
-NEWS_PICK_FINANCE_FRAUD,Rumor: a financial firm is under fraud investigation
-NEWS_PICK_HEALTH_TRIAL_FAIL,Rumor: a drug maker's flagship trial is failing
+NEWS_TECH_BREAKTHROUGH,Rumor: a chip lab is said to be close to an AI breakthrough
+NEWS_TECH_CHIP_DEMAND,Rumor: AI chip orders are said to be sold out through next year
+NEWS_TECH_ANTITRUST,Rumor: regulators are said to be sharpening their pencils for Big Tech
+NEWS_TECH_DATA_BREACH,Rumor: a cloud outage and data leak is said to be brewing
+NEWS_ENERGY_OIL_CUT,Rumor: oil producers are said to agree on a surprise output cut
+NEWS_ENERGY_GREEN_SUBSIDY,Rumor: a fat solar and wind subsidy is said to be on the table
+NEWS_ENERGY_PIPELINE_LEAK,Rumor: a big pipeline leak is said to be forcing shutdowns
+NEWS_ENERGY_MILD_WINTER,Rumor: a warm winter is said to be crushing fuel demand
+NEWS_CONSUMER_HOLIDAY_BOOM,Rumor: holiday shoppers are said to be spending like never before
+NEWS_CONSUMER_VIRAL_TREND,Rumor: a viral trend is said to be emptying shelves and coffee cups
+NEWS_CONSUMER_RECALL,Rumor: a product recall is said to be spreading across big retailers
+NEWS_CONSUMER_SPENDING_DIP,Rumor: households are said to be quietly skipping streaming and takeout
+NEWS_FINANCE_RATE_CUT,Rumor: the central bank is said to hint at a rate move that favors banks
+NEWS_FINANCE_RECORD_PROFITS,Rumor: banks and card networks are said to be heading for record profits
+NEWS_FINANCE_STRESS_TEST,Rumor: a harsh stress test is said to force banks to raise cash
+NEWS_FINANCE_LOAN_DEFAULTS,Rumor: loan defaults are said to be climbing faster than reported
+NEWS_HEALTH_TRIAL_WAVE,Rumor: a wave of promising pharma trial results is said to be coming
+NEWS_HEALTH_FAST_APPROVAL,Rumor: regulators are said to fast track new treatments
+NEWS_HEALTH_PRICE_CAPS,Rumor: lawmakers are said to push price caps on medicines
+NEWS_HEALTH_SUPPLY_SHORTAGE,Rumor: a supply shortage is said to be hitting hospitals and drug makers
+NEWS_MARKET_RATE_CUT,Rumor: a surprise rate cut is said to be coming for the whole market
+NEWS_MARKET_RATE_HIKE,Rumor: a surprise rate hike is said to be shaking the whole market
+NEWS_MARKET_RALLY,Rumor: big investors are said to be piling into stocks across the board
+NEWS_MARKET_SELLOFF,"Rumor: a global selloff is said to be brewing, nerves are high"
+NEWS_PICK_TECH_BIG_CONTRACT,"Rumor: a chip, cloud or space firm is said to be about to land a giant contract"
+NEWS_PICK_ENERGY_ACCIDENT,Rumor: an oil or solar firm is said to be hit by a serious plant accident
+NEWS_PICK_CONSUMER_TAKEOVER,Rumor: a famous consumer brand is said to be the target of a takeover bid
+NEWS_PICK_FINANCE_FRAUD,Rumor: a bank or crypto firm is said to be under a fraud investigation
+NEWS_PICK_HEALTH_TRIAL_FAIL,Rumor: a drug maker is said to see its flagship trial fail
+NEWS_NVDE_CHIP_FLOP,Rumor: Nvidea's next chip is said to run hot enough to fry eggs
+NEWS_NVDE_CHIP_SELLOUT,Rumor: Nvidea's next chip is said to sell out before launch
+NEWS_MSFS_MEGA_CONTRACT,Rumor: Microsaft is said to be closing a giant cloud contract
+NEWS_PEAR_PHONE_HYPE,Rumor: Pear's next phone is said to have a battery that lasts a week
+NEWS_PLTA_GOV_DEAL,Rumor: Palantar is said to be watching a mystery government deal land
+NEWS_RKLP_LAUNCH_SUCCESS,Rumor: Rocket Lap is said to have a flawless launch lined up
+NEWS_MEGA_AD_SLUMP,Rumor: advertisers are said to be quietly ditching Mega Platforms
+NEWS_TXLA_ROBOTAXI_DELAY,Rumor: Texla's robotaxi launch is said to slip yet again
+NEWS_TXLA_CHEAP_MODEL,Rumor: Texla is said to be readying a budget car for everyone
+NEWS_NFLE_SUBSCRIBER_SURGE,Rumor: Netflex is said to be adding binge-watchers faster than expected
+NEWS_AMZI_WAREHOUSE_STRIKE,Rumor: Amazin warehouse workers are said to be planning a strike
+NEWS_SBNX_LATTE_CRAZE,Rumor: Starbunks is said to have a new latte that people queue for
+NEWS_COIB_ETF_RUSH,Rumor: Coinbace is said to be swamped by a flood of new coin traders
+NEWS_COIB_EXCHANGE_HACK,Rumor: hackers are said to be poking at Coinbace's vault
+NEWS_JPN_TRADING_LOSS,Rumor: JPMorgen is said to have lost big on a trader's wild bet
+NEWS_LLU_TRIAL_SUCCESS,Rumor: Eli Lully's wonder pill trial is said to have beaten every forecast
+NEWS_LLU_TRIAL_FAILURE,Rumor: Eli Lully's key trial is said to have missed its goal
+NEWS_PFX_BUYOUT,Rumor: a pharma giant is said to be sniffing around Pfixer for a buyout
+NEWS_MRNO_VACCINE_BUZZ,Rumor: Moderno is said to have a surprise shot in late trials
+NEWS_XOL_OIL_DISCOVERY,Rumor: Exxon Mobel is said to have struck a gigantic oil field
+NEWS_XOL_CLEANUP_BILL,Rumor: Exxon Mobel is said to face a hefty cleanup bill
+NEWS_CVN_REFINERY_OUTAGE,Rumor: a grid outage is said to leave a Chevran refinery in the dark
+NEWS_ENPS_SOLAR_ORDERS,Rumor: Enphasa is said to be drowning in rooftop solar orders

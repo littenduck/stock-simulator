@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "finance_rate_cut"
 headline_key = "NEWS_FINANCE_RATE_CUT"
+icon = "bank"
 target_sector = "finance"
 target_symbol = ""
 total_impact = 0.12

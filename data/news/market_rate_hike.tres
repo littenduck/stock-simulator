@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "market_rate_hike"
 headline_key = "NEWS_MARKET_RATE_HIKE"
+icon = "coin"
 target_sector = "all"
 target_symbol = ""
 total_impact = -0.08

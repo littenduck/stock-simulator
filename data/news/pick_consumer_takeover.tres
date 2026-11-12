@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "pick_consumer_takeover"
 headline_key = "NEWS_PICK_CONSUMER_TAKEOVER"
+icon = "cart"
 target_sector = "consumer"
 target_symbol = "any"
 total_impact = 0.3

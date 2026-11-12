@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "tech_antitrust"
 headline_key = "NEWS_TECH_ANTITRUST"
+icon = "chip"
 target_sector = "tech"
 target_symbol = ""
 total_impact = -0.14

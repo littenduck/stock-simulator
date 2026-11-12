@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "pick_health_trial_fail"
 headline_key = "NEWS_PICK_HEALTH_TRIAL_FAIL"
+icon = "pill"
 target_sector = "health"
 target_symbol = "any"
 total_impact = -0.35

@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "consumer_recall"
 headline_key = "NEWS_CONSUMER_RECALL"
+icon = "cart"
 target_sector = "consumer"
 target_symbol = ""
 total_impact = -0.12

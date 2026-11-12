@@ -1,11 +1,12 @@
 ## A rumor template. Becomes a Rumor at runtime; resolves 1-3 days later.
-## CONTRACT: frozen. Fields may only be added by the lead.
 class_name NewsEventDef
 extends Resource
 
 @export var id: String = ""
 ## Localization key of the headline, e.g. "NEWS_TECH_BREAKTHROUGH".
 @export var headline_key: String = ""
+## Optional pixel icon name for popups (same names as CompanyDef.icon); "" = none.
+@export var icon: String = ""
 ## Sector hit by the event; "" = not sector based, "all" = whole market.
 @export var target_sector: String = ""
 ## Single ticker hit; if not empty it wins over target_sector.

@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "consumer_holiday_boom"
 headline_key = "NEWS_CONSUMER_HOLIDAY_BOOM"
+icon = "box"
 target_sector = "consumer"
 target_symbol = ""
 total_impact = 0.12

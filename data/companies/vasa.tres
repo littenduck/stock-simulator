@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "VASA"
+display_name = "COMPANY_VASA"
+sector = "finance"
+icon = "card"
+history_key = "V"
+start_price = 425.55
+annual_drift = 0.135
+annual_volatility = 0.224
+unlock_id = &""

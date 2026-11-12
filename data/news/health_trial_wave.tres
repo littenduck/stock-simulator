@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = "health_trial_wave"
 headline_key = "NEWS_HEALTH_TRIAL_WAVE"
+icon = "dna"
 target_sector = "health"
 target_symbol = ""
 total_impact = 0.13
