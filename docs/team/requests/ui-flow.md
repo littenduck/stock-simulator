@@ -8,3 +8,5 @@
    `profile.is_unlocked(&"difficulty_N")`. Characters use `CharacterDef.unlock_id`. Unlock hint text is looked up
    as `UI_FLOW_UNLOCK_HINT_<CHARACTER_ID upper>` (day_trader, value_investor exist); other ids get a generic text.
 3. **Optional**: `GameManager.start_run` must also switch to `GAME_SCENE` (the setup screen only calls it).
+4. **CREDITS.md (release-qa):** please credit "Pixel UI Pack" by Kenney (www.kenney.nl), CC0, used in `ui/theme/assets/kenney_pixel-ui-pack/`
+   (and the 2x copies in `ui/theme/assets/ui_2x/`). Kenney's other downloaded packs (audio, icons, emotes) are not in this branch.
