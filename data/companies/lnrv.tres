@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "LNRV"
+display_name = "COMPANY_LNRV"
+sector = "tech"
+start_price = 15.0
+annual_drift = 0.15
+annual_volatility = 1.2
+unlock_id = &"co_lunaris"

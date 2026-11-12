@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="NewsEventDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/news_event_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "consumer_recall"
+headline_key = "NEWS_CONSUMER_RECALL"
+target_sector = "consumer"
+target_symbol = ""
+total_impact = -0.12
+duration_days = 3
+daily_chance = 0.03
+cooldown_days = 25
+min_day = 0
+truth_chance = 0.6
+denial_impact_ratio = -0.25

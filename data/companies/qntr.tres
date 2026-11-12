@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CompanyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/company_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+symbol = "QNTR"
+display_name = "COMPANY_QNTR"
+sector = "tech"
+start_price = 95.0
+annual_drift = 0.18
+annual_volatility = 0.8
+unlock_id = &"co_quantora"
