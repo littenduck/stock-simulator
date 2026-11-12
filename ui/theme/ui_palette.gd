@@ -1,18 +1,8 @@
-## Colours shared by the flat theme and by code that tints things (rarity, up/down).
+## Colours used by code and the theme generator (the panels/buttons themselves come from the Kenney art).
 class_name UiPalette
 extends RefCounted
 
 const BG := Color("#0f141a")
-const PANEL := Color("#1a222c")
-const PANEL_RAISED := Color("#232e3b")
-const BORDER := Color("#344253")
-const TEXT := Color("#e6edf3")
-const MUTED := Color("#8b98a8")
-const ACCENT := Color("#4c9ffe")
-const UP := Color("#3fb950")
-const DOWN := Color("#f85149")
-const GOLD := Color("#e3b341")
-const DIM := Color(0.0, 0.0, 0.0, 0.62)
 
 ## Text on the light Kenney panels.
 const INK := Color("#232130")

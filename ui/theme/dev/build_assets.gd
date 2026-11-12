@@ -9,9 +9,8 @@ const OUT := "res://ui/theme/assets/"
 const SLICES: Array[String] = [
 	"Colored/blue", "Colored/blue_pressed", "Colored/green", "Colored/green_pressed",
 	"Colored/red", "Colored/red_pressed", "Colored/grey", "Colored/grey_pressed",
-	"Colored/yellow", "Colored/yellow_pressed",
-	"Ancient/tan", "Ancient/white", "Ancient/grey",
-	"Outline/blue", "Outline/green", "Outline/yellow", "Outline/red",
+	"Ancient/tan",
+	"Outline/blue", "Outline/green", "Outline/yellow",
 ]
 const COIN: Array[String] = ["..yyyy..", ".yooooy.", "yoyyyyoy", "yoyooyoy", "yoyooyoy", "yoyyyyoy", ".yooooy.", "..yyyy.."]
 const PLUS: Array[String] = ["...bb...", "...bb...", ".bbbbbb.", ".bbbbbb.", ".bbbbbb.", ".bbbbbb.", "...bb...", "...bb..."]
@@ -56,7 +55,7 @@ func _pixmap(rows: Array[String], palette: Dictionary) -> Image:
 	return img
 
 
-func _blit(dst: Image, src: Image, at: Vector2i, _dim: float) -> void:
+func _blit(dst: Image, src: Image, at: Vector2i) -> void:
 	for y in src.get_height():
 		for x in src.get_width():
 			var c := src.get_pixel(x, y)
@@ -71,9 +70,9 @@ func _build_tile() -> void:
 	var plus := _pixmap(PLUS, {"b": Color("#5aa9ff")})
 	var tile := Image.create(48, 48, false, Image.FORMAT_RGBA8)
 	tile.fill(BG)
-	_blit(tile, coin, Vector2i(4, 4), 0.55)
-	_blit(tile, _arrow(sheet, 22, 23), Vector2i(28, 4), 0.7)    # green up
-	_blit(tile, _arrow(sheet, 17, 25), Vector2i(4, 28), 0.7)    # orange down
-	_blit(tile, plus, Vector2i(28, 28), 0.6)
+	_blit(tile, coin, Vector2i(4, 4))
+	_blit(tile, _arrow(sheet, 22, 23), Vector2i(28, 4))    # green up
+	_blit(tile, _arrow(sheet, 17, 25), Vector2i(4, 28))    # orange down
+	_blit(tile, plus, Vector2i(28, 28))
 	tile.resize(96, 96, Image.INTERPOLATE_NEAREST)
 	_save(tile, OUT + "bg_tile.png")
