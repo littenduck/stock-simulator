@@ -2,7 +2,7 @@
 ## Does not decide anything about the game; a missing audio file is silently skipped.
 ## Web note: browsers keep the audio context suspended until the first user input. Godot's web
 ## runtime resumes it on the first click/key, and the player always clicks before any sound
-## is triggered (menu -> run setup -> game), so no extra unlock code is needed. See docs/release/web-audio.md.
+## is triggered (menu -> run setup -> game), so no extra unlock code is needed. See tools/release/web-audio.md.
 extends Node
 
 const SFX_DIR := "res://audio/"
