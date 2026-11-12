@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CharacterDef" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://data/defs/character_def.gd" id="1"]
+[ext_resource type="Script" path="res://data/defs/perk_effect_def.gd" id="2"]
+[ext_resource type="Resource" path="res://data/perks/low_fees.tres" id="3"]
+[ext_resource type="Script" path="res://data/defs/perk_def.gd" id="4"]
+
+[sub_resource type="Resource" id="Resource_0"]
+script = ExtResource("2")
+stat = &"max_leverage"
+op = 0
+value = 1.0
+
+[resource]
+script = ExtResource("1")
+id = &"day_trader"
+title_key = "CHAR_DAY_TRADER_TITLE"
+description_key = "CHAR_DAY_TRADER_DESC"
+start_cash = 8000.0
+effects = Array[ExtResource("2")]([SubResource("Resource_0")])
+starting_perks = Array[ExtResource("4")]([ExtResource("3")])
+unlock_id = &"char_day_trader"

@@ -1,3 +1,31 @@
 keys,en
 PERK_LOW_FEES_TITLE,Low Fees
 PERK_LOW_FEES_DESC,Trading fees are halved.
+PERK_SAVINGS_ACCOUNT_TITLE,Savings Account
+PERK_SAVINGS_ACCOUNT_DESC,Positive cash earns 0.05% interest per day.
+PERK_EARLY_BIRD_TITLE,Early Bird
+PERK_EARLY_BIRD_DESC,Rumors appear 1 day earlier.
+PERK_FACT_CHECKER_TITLE,Fact Checker
+PERK_FACT_CHECKER_DESC,Rumors show their true credibility range.
+PERK_STOP_GUARD_TITLE,Stop Guard
+PERK_STOP_GUARD_DESC,Stop orders cost no fee.
+PERK_SECTOR_FAN_TITLE,Sector Fan
+PERK_SECTOR_FAN_DESC,One random sector's rumors are 15% more credible.
+PERK_MARGIN_ACCOUNT_TITLE,Margin Account
+PERK_MARGIN_ACCOUNT_DESC,Maximum leverage +1x.
+PERK_CHEAP_BORROW_TITLE,Cheap Borrow
+PERK_CHEAP_BORROW_DESC,Borrow fees and loan interest are halved.
+PERK_DIVERSIFIER_TITLE,Diversifier
+PERK_DIVERSIFIER_DESC,Holding 4+ different stocks earns +0.1% of equity per day.
+PERK_DIVIDEND_HUNTER_TITLE,Dividend Hunter
+PERK_DIVIDEND_HUNTER_DESC,Long positions earn 0.03% dividends per day.
+PERK_SECOND_OPINION_TITLE,Second Opinion
+PERK_SECOND_OPINION_DESC,Every perk draft offers 1 extra choice.
+PERK_INSIDER_FRIEND_TITLE,Insider Friend
+PERK_INSIDER_FRIEND_DESC,Every 10 days one rumor is guaranteed true and marked.
+PERK_IRON_HANDS_TITLE,Iron Hands
+PERK_IRON_HANDS_DESC,The first forced liquidation is turned into a warning.
+PERK_COMPOUNDER_TITLE,Compounder
+PERK_COMPOUNDER_DESC,Final score x1.1.
+PERK_MARKET_MAKER_TITLE,Market Maker
+PERK_MARKET_MAKER_DESC,No trading fees, and limit orders fill 1% better.
