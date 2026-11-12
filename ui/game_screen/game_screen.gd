@@ -14,6 +14,10 @@ var selected_symbol: String = ""
 @onready var _menu: GamePauseMenu = %PauseMenu
 
 
+func _init() -> void:
+	theme = GameSkins.pixel()
+
+
 func _ready() -> void:
 	var tabs := get_node_or_null("%Tabs") as TabContainer
 	if tabs != null:

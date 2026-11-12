@@ -1,7 +1,6 @@
 ## Dev harness for the game screen. Builds a GameSession by hand (dev market, dev portfolio, tiny
 ## order matching) and emits the EventBus signals the real GameManager will emit later.
 ## Run:   godot --path . res://ui/game_screen/dev/dev_harness.tscn
-## Skins: --skin=dark|light|pixel (variant scenes game_screen_<skin>.tscn)
 ## Shot:  godot --path . res://ui/game_screen/dev/dev_harness.tscn --resolution 1280x720 -- --shot=/tmp/a.png
 ## Keys:  Space next day | F1 post rumor | F2 Fact Checker | F3 Insider Friend | F4 margin call | F5 short ban
 extends Node
