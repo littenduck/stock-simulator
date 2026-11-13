@@ -19,8 +19,8 @@ percentages, so the edge comes from reading the market and from the characters.
 ## Quarters
 
 - **Boss rumor** on days 7, 17, 27: sector or market wide, resolves 3 days later (the review day), stake 30%.
-- **Review** after day 10 and 20: the last place by net worth is **fired** (nobody replaces them). If you are fired the
-  run ends. After day 30 the run ends and the final standings decide.
+- **Review** after day 10 and 20: nobody is fired any more (`FIRE_LAST_PLACE` is off; the code is still there). The run
+  always lasts 30 days and the final standings by net worth decide.
 - Active skills are once per quarter and come back at each review.
 - The calendar date is hidden during the run and shown on the game over screen (blind market).
 
@@ -29,10 +29,10 @@ percentages, so the edge comes from reading the market and from the characters.
 | Character | Rules |
 |---|---|
 | Insider Inu | One random day per quarter she learns tomorrow's rumor is true; she can FLIP it (publish the opposite). The flipped rumor is stamped planted when it resolves. |
-| Copilot Cody | Each day may COPILOT one player: same bet, odds x0.8. |
+| Copilot Cody | Each day may COPILOT one player: same bet at the normal odds. |
 | Double Dan | Once a quarter, after the reveal, doubles his own option. |
 | Saving Son | Cash earns 0.5% a day. |
-| Goldfish Gus | No credibility, odds or chart, only today's price; winning options pay +1 odds. |
+| Goldfish Gus | No credibility, odds or chart, only today's price; winning options pay +0.3 odds. |
 | Hodl Hana | Starts with half her cash in the best stock of the pre-game weeks (bought at its low, head start capped at x1.8 by `HODL_MAX_GAIN`), can never sell it; same-sector rumors pay +0.5 odds. |
 
 ## Where things are
@@ -47,5 +47,5 @@ percentages, so the edge comes from reading the market and from the characters.
 
 ## Not done yet
 
-Perk draft for table runs, the delayed public positions, an Insider tip for the Boss rumor, player-planted rumors
+Perks (switched off in table mode, the characters replace them), the delayed public positions, an Insider tip for the Boss rumor, player-planted rumors
 by other characters, 3D character art, real-money odds mode (odds scaled by the actual price move).

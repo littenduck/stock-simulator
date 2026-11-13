@@ -12,9 +12,9 @@ enum Phase { ACTION, REVEALED, OVER }
 
 const DAILY_RATE := 0.10
 const BOSS_RATE := 0.30
-## Odds multiplier of a copied bet (Copilot).
-const COPY_ODDS_MULT := 0.8
 const MIN_PREMIUM := 5.0
+## Off: the quarter review no longer fires anybody. The code stays so the rule can come back.
+const FIRE_LAST_PLACE := false
 const HODL_CASH_SHARE := 0.5
 ## Hodl Hana never starts with more than this multiple of her stock position: the cost is raised to price / this.
 const HODL_MAX_GAIN := 1.8
@@ -126,13 +126,13 @@ func premium_for(seat_id: int, boss: bool = false) -> float:
 	return premium if premium >= MIN_PREMIUM else 0.0
 
 
-## Effective odds of a bet, with the character bonuses (and the Copilot discount).
-func odds_for(seat: Seat, rumor: TableRumor, side: int, copied: bool = false) -> float:
+## Effective odds of a bet, with the character bonuses. A copied bet has the normal odds.
+func odds_for(seat: Seat, rumor: TableRumor, side: int) -> float:
 	var odds := RumorTier.odds(side, rumor.tier) + seat.mods.bet_odds_bonus
 	if seat.mods.locked_symbol != "" and seat.mods.sector_odds_bonus > 0.0 \
 			and sector_of(rumor.primary_symbol()) == sector_of(seat.mods.locked_symbol):
 		odds += seat.mods.sector_odds_bonus
-	return odds * (COPY_ODDS_MULT if copied else 1.0)
+	return odds
 
 
 ## Seats sorted by rank: the living by net worth, then the fired ones, the latest fired first.
@@ -469,7 +469,7 @@ func _lock_bet(seat: Seat, rumor: TableRumor, side: int, rate: float, copied_fro
 	bet.side = side
 	bet.premium = premium
 	bet.copied_from = copied_from
-	bet.odds = odds_for(seat, rumor, side, copied_from >= 0)
+	bet.odds = odds_for(seat, rumor, side)
 	return bet
 
 
@@ -498,12 +498,12 @@ func _settle(rumor: TableRumor, list: Array[TableBet], report: TableReport) -> v
 		})
 
 
-## Quarter review: skills reset, and after the first two quarters the last place is fired.
+## Quarter review: skills reset, and (when FIRE_LAST_PLACE is on) the last place is fired after the first two quarters.
 func _review(report: TableReport) -> void:
 	report.quarter_ended = day / RunConfig.QUARTER_DAYS
 	for seat in seats:
 		seat.skill_used = false
-	if day >= config.trading_days:
+	if not FIRE_LAST_PLACE or day >= config.trading_days:
 		return
 	var worst: Seat = null
 	for seat in seats:

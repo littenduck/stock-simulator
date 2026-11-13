@@ -61,7 +61,7 @@ func test_full_run_ends_by_day_30() -> void:
 	_play_to_end(s)
 	assert_true(s.is_finished())
 	assert_true(s.day <= 30)
-	assert_true(s.day == 30 or s.human_fired)
+	assert_eq(s.day, 30, "nobody is fired, so every run lasts 30 days")
 
 
 func test_rumors_are_single_stock_and_resolve_next_day() -> void:
@@ -175,7 +175,7 @@ func test_hodl_hana_owns_a_locked_cheap_stock() -> void:
 func test_goldfish_gus_gets_extra_odds() -> void:
 	var s := _session(&"goldfish_gus")
 	var plain := RumorTier.odds(RumorTier.Side.BELIEVE, s.today_rumor.tier)
-	assert_almost(s.odds_for(s.seats[0], s.today_rumor, RumorTier.Side.BELIEVE), plain + 1.0)
+	assert_almost(s.odds_for(s.seats[0], s.today_rumor, RumorTier.Side.BELIEVE), plain + 0.3)
 
 
 func test_double_down_doubles_the_premium_once_per_quarter() -> void:
@@ -203,7 +203,7 @@ func test_copilot_copies_the_target_at_a_discount() -> void:
 		assert_not_null(mine)
 		assert_eq(mine.side, theirs.side)
 		assert_eq(mine.copied_from, 1)
-		assert_almost(mine.odds, RumorTier.odds(mine.side, s.today_rumor.tier) * TableSession.COPY_ODDS_MULT)
+		assert_almost(mine.odds, RumorTier.odds(mine.side, s.today_rumor.tier), 0.0001, "a copied bet has the normal odds")
 
 
 func test_insider_learns_a_true_rumor_and_can_flip_it() -> void:
@@ -264,24 +264,14 @@ func test_boss_rumor_three_days_before_quarter_end() -> void:
 	assert_true(s.boss_rumor == null or s.boss_rumor.resolve_day > 10, "Boss rumor resolved on day 10")
 
 
-func test_last_place_is_fired_after_quarters_one_and_two() -> void:
+func test_nobody_is_fired_at_the_quarter_reviews() -> void:
 	var s := _session()
-	while s.day < 10:
+	while s.day < 20:
 		s.next_day()
-	var fired := 0
-	for seat in s.seats:
-		if not seat.alive:
-			fired += 1
-	assert_eq(fired, 1, "one seat fired after Q1")
-	assert_eq(s.standings().size(), 4)
-	if not s.is_finished():
-		while s.day < 20 and not s.is_finished():
-			s.next_day()
-		var gone := 0
 		for seat in s.seats:
-			if not seat.alive:
-				gone += 1
-		assert_eq(gone, 2, "two seats fired after Q2")
+			assert_true(seat.alive, "everybody stays in (day %d)" % s.day)
+	assert_false(s.human_fired)
+	assert_eq(s.standings().size(), 4)
 
 
 func test_skills_reset_each_quarter() -> void:
