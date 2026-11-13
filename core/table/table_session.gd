@@ -329,6 +329,16 @@ func next_day() -> DayReport:
 
 # ---------------------------------------------------------------- internals
 
+## Table mode has no perks: the characters replace them. The perk code stays in the core for the classic game.
+func _open_draft() -> void:
+	pending_draft = []
+
+
+func choose_perk(_perk: PerkDef) -> void:
+	pass
+
+
+
 func _new_rumor_id() -> int:
 	_next_rumor_id += 1
 	return _next_rumor_id - 1

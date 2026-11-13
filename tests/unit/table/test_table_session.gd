@@ -325,3 +325,16 @@ func test_save_load_roundtrip_midrun() -> void:
 	s.next_day()
 	t.next_day()
 	assert_almost(t.net_worth(), s.net_worth(), 0.01, "same result after loading")
+
+
+func test_table_mode_has_no_perks() -> void:
+	var s := _session()
+	assert_true(s.pending_draft.is_empty(), "no draft at the start")
+	var guard := 0
+	while not s.is_finished() and guard < 40:
+		s.next_day()
+		assert_true(s.pending_draft.is_empty(), "no draft on day %d" % s.day)
+		guard += 1
+	assert_true(s.owned_perks.is_empty())
+	s.choose_perk(ContentDb.perks()[0])
+	assert_true(s.owned_perks.is_empty(), "perks cannot be picked")

@@ -178,7 +178,8 @@ func _enter_game() -> void:
 	EventBus.day_advanced.emit(session.day)
 	EventBus.prices_updated.emit()
 	EventBus.portfolio_changed.emit()
-	EventBus.perks_changed.emit()
+	if not session is TableSession:
+		EventBus.perks_changed.emit()    # table mode has no perks: no pick sound either
 	EventBus.table_changed.emit()
 	for r in session.news.pending():
 		EventBus.rumor_posted.emit(r)
