@@ -169,3 +169,7 @@ TABLE_NIGHT_NET,Net worth %s  (%s)
 TABLE_NIGHT_BOSS,Boss rumor in %d days
 TABLE_NIGHT_BOSS_NOW,The Boss rumor is out
 TABLE_NIGHT_QUARTER,Quarter ends in %d days
+TABLE_BOARD_TITLE,QUARTER %d STANDINGS
+TABLE_PODIUM_WIN,YOU WIN
+TABLE_PODIUM_PLACE,You finish #%d
+TABLE_PODIUM_WINNER,%s wins the table

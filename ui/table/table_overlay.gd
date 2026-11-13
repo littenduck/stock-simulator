@@ -63,6 +63,11 @@ func _input(event: InputEvent) -> void:
 			GameManager.next_day()
 
 
+## Skill animations are hosted by the whole screen: this overlay is hidden between its pop-ups.
+func _fx_host() -> Control:
+	return get_tree().current_scene as Control
+
+
 func _set_modal(on: bool) -> void:
 	TableUi.modal_open = on
 	visible = on
@@ -119,7 +124,7 @@ func _refresh_reveal() -> void:
 		dbl.pressed.connect(func() -> void:
 			t.double_down(0)
 			# Everybody waits while the skill plays.
-			await SkillFx.play_all(self, t.take_skill_events(TableSkills.Slot.AFTER_MARKET), t)
+			await SkillFx.play_all(_fx_host(), t.take_skill_events(TableSkills.Slot.AFTER_MARKET), t)
 			GameManager.table_refresh())
 		_body.add_child(dbl)
 		extras.append(dbl)
@@ -150,7 +155,7 @@ func _play_reveal_skills(delay: float) -> void:
 	var t := TableUi.session()
 	if t == null or _mode != Mode.REVEAL or not is_inside_tree():
 		return
-	await SkillFx.play_all(self, t.take_skill_events(TableSkills.Slot.AFTER_MARKET), t)
+	await SkillFx.play_all(_fx_host(), t.take_skill_events(TableSkills.Slot.AFTER_MARKET), t)
 
 
 ## Resolves the day after `seconds`, unless the player already did, the screen moved on, or Dan still has a choice.
@@ -220,7 +225,7 @@ func _on_resolved(report: TableReport) -> void:
 	_set_modal(false)
 	await get_tree().create_timer(RESULT_DELAY).timeout    # the "Next day" beat before the verdict
 	# A rival's Double Down (decided just before the result) is played in front of everybody first.
-	await SkillFx.play_all(self, t.take_skill_events(TableSkills.Slot.AFTER_MARKET), t)
+	await SkillFx.play_all(_fx_host(), t.take_skill_events(TableSkills.Slot.AFTER_MARKET), t)
 	_mode = Mode.RESULT
 	_clear()
 	_body.add_child(GameFmt.label(tr("TABLE_RESULT_TITLE") % report.day, Color.WHITE, 22))

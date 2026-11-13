@@ -132,8 +132,15 @@ func take_skill_events(for_window: int) -> Array[Dictionary]:
 
 
 func _log_skill(seat_id: int, skill: StringName, amount: float = 0.0, target: int = -1) -> void:
+	# A passive bonus is shown once per window, not once for every bet.
+	if skill == TableSkills.GOLDFISH_ODDS or skill == TableSkills.HODL_SECTOR:
+		for e in skill_events:
+			if int(e["seat"]) == seat_id and e["skill"] == skill and int(e["window"]) == window:
+				return
 	skill_events.append({"seat": seat_id, "skill": skill, "window": window, "public": not TableSkills.is_hidden(skill),
 			"amount": amount, "target": target})
+	while skill_events.size() > 60:    # a run played without a screen never plays them
+		skill_events.remove_at(0)
 	if skill in FEED_SKILLS:
 		# The day turned over before the interest was paid: it belongs to the day that just ended.
 		_log_feed({"kind": "skill", "day": day - 1 if window == TableSkills.Slot.NEXT_DAY else day, "seat": seat_id,
@@ -388,7 +395,7 @@ func reveal() -> Array[Dictionary]:
 				_log_skill(seat.id, TableSkills.COPILOT, 0.0, copied_from)
 			if seat.mods.bet_odds_bonus > 0.0:
 				_log_skill(seat.id, TableSkills.GOLDFISH_ODDS, seat.mods.bet_odds_bonus)
-			if bet.odds - RumorTier.odds(bet.side, today_rumor.tier) - seat.mods.bet_odds_bonus > 0.0:
+			if seat.mods.sector_odds_bonus > 0.0 and bet.odds - RumorTier.odds(bet.side, today_rumor.tier) - seat.mods.bet_odds_bonus > 0.001:
 				_log_skill(seat.id, TableSkills.HODL_SECTOR, seat.mods.sector_odds_bonus)
 		else:
 			seat.streak = 0

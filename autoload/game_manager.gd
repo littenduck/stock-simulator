@@ -24,6 +24,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		next_day()
 
 
+## True while the table screen is open and wants to show the podium before the game-over dialog.
+var defer_finish: bool = false
+var finish_pending: bool = false
+
+
+## Opens the game-over dialog of a table run whose last day has been played (after the podium).
+func finish_pending_run() -> void:
+	if finish_pending:
+		finish_pending = false
+		_finish_run()
+
+
 ## True from the start of a new table run until its screen has played (or skipped) the opening.
 var opening_pending: bool = false
 
@@ -115,6 +127,9 @@ func _table_next() -> void:
 		_emit_report(report)
 		EventBus.table_resolved.emit(report)
 		if report.finished:
+			if defer_finish:
+				finish_pending = true    # the table screen plays the podium, then calls finish_pending_run()
+				return
 			_finish_run()
 			return
 		SaveManager.save_run(table)

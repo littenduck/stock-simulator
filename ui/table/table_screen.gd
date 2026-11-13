@@ -20,6 +20,9 @@ var selected_symbol: String = ""
 @onready var _overlays: Control = $Overlays
 
 var _card_due: bool = false
+## The quarter that ended with the day just resolved (0 = none), and last quarter's standings for the board.
+var _quarter_ended: int = 0
+var _board_prev: Array = []
 ## Your net worth when the day opened (the night scene shows how it changed).
 var _net_before: float = 0.0
 var _boss_shown_id: int = -1
@@ -44,8 +47,12 @@ func _ready() -> void:
 		_chart_card.visible = not blind
 		_blind_note.visible = blind
 	EventBus.prices_updated.connect(_update_blind_note)
-	EventBus.table_resolved.connect(func(report: TableReport) -> void: _card_due = not report.finished)
+	EventBus.table_resolved.connect(func(report: TableReport) -> void:
+		_card_due = not report.finished
+		_quarter_ended = report.quarter_ended if not report.finished else 0)
 	_overlay.result_closed.connect(_on_result_closed)
+	GameManager.defer_finish = true
+	GameManager.finish_pending = false
 	_update_blind_note()
 	var banner := StepBanner.new()    # sweeps across the screen whenever the turn changes step
 	add_child(banner)
@@ -59,6 +66,9 @@ func _start_of_screen() -> void:
 	if t == null or t.is_finished():
 		return
 	TableUi.modal_open = false
+	_board_prev = _standings_snapshot(t)    # where the first quarter board starts from
+	if t.day > 0:
+		t.skill_events.clear()    # a continued run: nothing is left to play from earlier days
 	if t.phase == TableSession.Phase.REVEALED:
 		# Saved between the reveal and the verdict: let the day resolve.
 		EventBus.table_step.emit(TurnBar.Step.AFTER)
@@ -101,6 +111,18 @@ func _update_blind_note() -> void:
 	_blind_note.text = tr("TABLE_BLIND_NOTE") % [selected_symbol, GameFmt.money(t.market.price_of(selected_symbol))]
 
 
+## Everybody's place and net worth, in rank order (the next board starts from it).
+func _standings_snapshot(t: TableSession) -> Array:
+	var out: Array = []
+	for e in t.standings():
+		out.append({"seat": (e["seat"] as Seat).id, "net": float(e["net_worth"])})
+	return out
+
+
+func _exit_tree() -> void:
+	GameManager.defer_finish = false
+
+
 ## What the night scene needs: your net worth, how credible tomorrow's rumor is, the countdowns and the pick.
 func _night_info(t: TableSession) -> Dictionary:
 	var days_to_boss := -1
@@ -118,6 +140,15 @@ func _night_info(t: TableSession) -> Dictionary:
 
 
 func _on_result_closed() -> void:
+	var t0 := TableUi.session()
+	if t0 != null and t0.is_finished():
+		# The last day: the podium first, then the game-over dialog.
+		await Podium.play(self, t0)
+		GameManager.finish_pending_run()
+		return
+	if _card_due and _quarter_ended > 0 and t0 != null:
+		await RankingBoard.play(self, t0, _board_prev, _quarter_ended)
+		_board_prev = _standings_snapshot(t0)
 	if _card_due:
 		_card_due = false
 		var t := TableUi.session()
@@ -139,6 +170,8 @@ func _begin_day(delay: float) -> void:
 	if t == null or not is_inside_tree():
 		return
 	_net_before = t.human().portfolio.net_worth(t.market)
+	if _board_prev.is_empty():
+		_board_prev = _standings_snapshot(t)
 	await _play_news(false)
 	t = TableUi.session()
 	if t != null and t.boss_rumor != null and t.boss_rumor.id != _boss_shown_id and t.boss_bet_of(0) == null:
