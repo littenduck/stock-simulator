@@ -9,3 +9,4 @@ build/
 
 # OS
 .DS_Store
+build_info.txt

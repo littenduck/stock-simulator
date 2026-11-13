@@ -53,7 +53,13 @@ func _add_version_label() -> void:
 func _commit_id() -> String:
 	var out: Array = []
 	if not OS.has_feature("template") and OS.execute("git", ["-C", ProjectSettings.globalize_path("res://"), "rev-parse", "--short", "HEAD"], out) == 0 and not out.is_empty():
-		return String(out[0]).strip_edges()
+		var id := String(out[0]).strip_edges()
+		# Tracked files changed since that commit: mark the build as not matching it.
+		var changes: Array = []
+		if OS.execute("git", ["-C", ProjectSettings.globalize_path("res://"), "status", "--porcelain", "--untracked-files=no"], changes) == 0 \
+				and not changes.is_empty() and String(changes[0]).strip_edges() != "":
+			id += "-dirty"
+		return id
 	if FileAccess.file_exists("res://build_info.txt"):
 		return FileAccess.get_file_as_string("res://build_info.txt").strip_edges()
 	return ""
