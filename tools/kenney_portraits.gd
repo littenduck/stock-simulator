@@ -2,17 +2,17 @@
 ## (CC0, https://kenney.nl/assets/mini-characters) into ui/theme/portraits/<character id>.png.
 ##   godot --path . --script res://tools/kenney_portraits.gd -- <glb folder> <output folder> [sheet.png]
 ## Each character is the pack model that looks most like the role, used as it is. The only changes: Saving Son gets the
-## light skin tone of the other default characters, and Goldfish Gus gets a goldfish head.
+## light skin tone of the other default characters, and Goldfish Gus is painted goldfish orange with red block fins.
 extends SceneTree
 
 const CELL := 192
-const ORDER := ["saving_son", "goldfish_gus", "hodl_hana", "copilot_cody", "double_dan", "insider_inu"]
+const ORDER := ["saving_son", "double_dan", "goldfish_gus", "hodl_hana", "copilot_cody", "insider_inu"]
 const MODELS := {
 	"saving_son": "character-male-a",
+	"double_dan": "character-male-e",
 	"goldfish_gus": "character-male-b",
 	"hodl_hana": "character-female-e",
 	"copilot_cody": "character-robot",
-	"double_dan": "character-male-e",
 	"insider_inu": "character-male-d",
 }
 
@@ -51,52 +51,62 @@ func _load(name: String) -> Node3D:
 	return doc.generate_scene(state)
 
 
-func _solid(color: Color) -> StandardMaterial3D:
+## Matte colour with a little self-light, so the added blocks sit next to the pack's palette-lit models.
+func _flat(color: Color) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = color
-	m.roughness = 0.5
+	m.roughness = 1.0
+	m.metallic_specular = 0.0
+	m.emission_enabled = true
+	m.emission = color
+	m.emission_energy_multiplier = 0.2
 	return m
 
 
-func _blob(parent: Node3D, mesh: Mesh, mat: Material, pos: Vector3, scale: Vector3 = Vector3.ONE) -> void:
+func _box(parent: Node3D, mat: Material, pos: Vector3, size: Vector3) -> void:
 	var mi := MeshInstance3D.new()
-	mi.mesh = mesh
+	mi.mesh = BoxMesh.new()
 	mi.material_override = mat
 	mi.position = pos
-	mi.scale = scale
+	mi.scale = size
 	parent.add_child(mi)
 
 
-## Every model paints from the same 8x8 colour grid (64 px cells). Cells (1,4) and (1,5) are the dark skin tone and its
-## shadow; copy the light tone of cells (2,4) and (2,5) over them, for this model only.
-func _light_skin(model: Node3D) -> void:
-	for part in ["head-mesh", "body-mesh"]:
+## Repaints cells of the shared 8x8 colour grid (64 px cells) of one mesh, for this model only.
+func _repaint(model: Node3D, parts: Array, paint: Dictionary, copy: Dictionary = {}) -> void:
+	for part: String in parts:
 		var mi: MeshInstance3D = model.find_child(part, true, false)
 		var mat := (mi.mesh.surface_get_material(0) as StandardMaterial3D).duplicate() as StandardMaterial3D
 		var img: Image = mat.albedo_texture.get_image()
 		if img.is_compressed():
 			img.decompress()
-		for row in [4, 5]:
-			img.fill_rect(Rect2i(64, row * 64, 64, 64), img.get_pixel(2 * 64 + 32, row * 64 + 32))
+		for cell: Vector2i in copy:
+			var src: Vector2i = copy[cell]
+			img.fill_rect(Rect2i(cell.x * 64, cell.y * 64, 64, 64), img.get_pixel(src.x * 64 + 32, src.y * 64 + 32))
+		for cell: Vector2i in paint:
+			img.fill_rect(Rect2i(cell.x * 64, cell.y * 64, 64, 64), paint[cell])
 		mat.albedo_texture = ImageTexture.create_from_image(img)
 		mi.set_surface_override_material(0, mat)
 
 
-func _fish_head(model: Node3D) -> void:
-	(model.find_child("head-mesh", true, false) as MeshInstance3D).visible = false
-	var ball := SphereMesh.new()
-	ball.radius = 0.1
-	ball.height = 0.2
-	var orange := _solid(Color("#f5963a"))
-	var red := _solid(Color("#e5484d"))
-	_blob(model, ball, orange, Vector3(0, 0.57, 0.02), Vector3(1.7, 1.75, 1.6))          # the head
-	_blob(model, ball, _solid(Color("#ffb868")), Vector3(0, 0.5, 0.1), Vector3(1.2, 0.9, 0.8))   # lighter cheeks
-	_blob(model, ball, red, Vector3(0, 0.77, -0.02), Vector3(0.5, 1.1, 0.5))             # crest fin on top
+## Saving Son: cells (1,4) and (1,5) are the dark skin tone and its shadow; copy the light tone of (2,4) and (2,5).
+func _light_skin(model: Node3D) -> void:
+	_repaint(model, ["head-mesh", "body-mesh"], {}, {Vector2i(1, 4): Vector2i(2, 4), Vector2i(1, 5): Vector2i(2, 5)})
+
+
+## Goldfish Gus: his own head painted goldfish orange (the beard becomes a fat chin), with red block fins that touch the
+## head. Only the head is painted, so his arms and body stay as they are.
+func _goldfish(model: Node3D) -> void:
+	_repaint(model, ["head-mesh"], {Vector2i(2, 4): Color("#ff9244"), Vector2i(2, 5): Color("#ff7c44"),
+		Vector2i(0, 5): Color("#ffa75a"), Vector2i(1, 5): Color("#ff7c44")})
+	var red := _flat(Color("#f36744"))
+	var deep := _flat(Color("#cf534f"))
+	_box(model, red, Vector3(0, 0.685, 0.0), Vector3(0.07, 0.07, 0.22))      # crest, three steps
+	_box(model, red, Vector3(0, 0.745, -0.04), Vector3(0.07, 0.07, 0.15))
+	_box(model, deep, Vector3(0, 0.8, -0.07), Vector3(0.07, 0.06, 0.09))
 	for s in [-1.0, 1.0]:
-		_blob(model, ball, red, Vector3(0.19 * s, 0.55, 0.0), Vector3(0.35, 1.0, 0.7))   # side fins
-		_blob(model, ball, _solid(Color.WHITE), Vector3(0.085 * s, 0.63, 0.14), Vector3(0.62, 0.62, 0.5))   # eyes
-		_blob(model, ball, _solid(Color("#2b2540")), Vector3(0.09 * s, 0.63, 0.165), Vector3(0.3, 0.3, 0.3))
-	_blob(model, ball, _solid(Color("#c9402a")), Vector3(0, 0.49, 0.175), Vector3(0.55, 0.3, 0.3))    # little mouth
+		_box(model, red, Vector3(0.2 * s, 0.56, 0.0), Vector3(0.07, 0.17, 0.15))     # side fins at the ears
+		_box(model, deep, Vector3(0.235 * s, 0.53, -0.02), Vector3(0.05, 0.1, 0.1))
 
 
 func _bust(id: String) -> Image:
@@ -114,7 +124,7 @@ func _bust(id: String) -> Image:
 	if id == "saving_son":
 		_light_skin(model)
 	elif id == "goldfish_gus":
-		_fish_head(model)
+		_goldfish(model)
 	var anim: AnimationPlayer = model.find_child("AnimationPlayer", true, false)
 	if anim != null and anim.has_animation("idle"):
 		anim.play("idle")
@@ -122,10 +132,10 @@ func _bust(id: String) -> Image:
 		anim.pause()
 	var cam := Camera3D.new()
 	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
-	cam.size = 0.7
+	cam.size = 0.8
 	vp.add_child(cam)
-	cam.position = Vector3(0, 0.5, 3)
-	cam.look_at(Vector3(0, 0.5, 0))
+	cam.position = Vector3(0, 0.52, 3)
+	cam.look_at(Vector3(0, 0.52, 0))
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-30, 20, 0)
 	vp.add_child(light)

@@ -46,7 +46,7 @@ The Suno masters are not in the repository (about 25 MB as WAV); only the compre
 ## Character portraits (`ui/theme/portraits/`)
 Mini Characters 2.0 by Kenney (https://kenney.nl/assets/mini-characters), licence CC0 1.0, copy in
 `ui/theme/portraits/License.txt`. The six PNGs are renders of pack models: character-male-a (recoloured to the light skin tone of the other
-characters), character-male-b (its head replaced by a goldfish head made of simple shapes), character-robot,
+characters), character-male-b (head painted goldfish orange, with a few red block fins added), character-robot,
 character-male-e, character-male-d and character-female-e (the last three unchanged).
 `tools/kenney_portraits.gd` makes the images and shows how to regenerate them from the downloaded pack. The 3D models themselves are not part of the game files. Credit is not required but appreciated:
 "Characters by Kenney (kenney.nl)".
