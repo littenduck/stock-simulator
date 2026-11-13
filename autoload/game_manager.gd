@@ -19,7 +19,8 @@ var session: GameSession
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if state == State.PLAYING and event.is_action_pressed("next_day"):
+	# Table mode has no Space shortcut: the turn is moved by the Next button at the bottom.
+	if state == State.PLAYING and not session is TableSession and event.is_action_pressed("next_day"):
 		next_day()
 
 

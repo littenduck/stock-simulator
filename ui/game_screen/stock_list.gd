@@ -112,6 +112,11 @@ func _add_row(symbol: String) -> void:
 		name_label.custom_minimum_size = Vector2(40, 0)
 		left.add_child(name_label)
 		button.tooltip_text = "%s (%s)" % [full_name, symbol]
+	var held := GameFmt.label("", GameColors.GOLD, 12)
+	held.clip_text = true
+	held.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	held.custom_minimum_size = Vector2(40, 0)
+	left.add_child(held)
 
 	var right := VBoxContainer.new()
 	right.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -127,11 +132,8 @@ func _add_row(symbol: String) -> void:
 	chip.size_flags_horizontal = Control.SIZE_SHRINK_END
 	var change := GameDelta.new(12, true)
 	chip.add_child(change)
-	var held := GameFmt.label("", GameColors.GOLD, 12)
-	held.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	right.add_child(price)
 	right.add_child(chip)
-	right.add_child(held)
 	_rows[symbol] = {"button": button, "price": price, "change": change, "chip": chip, "held": held, "badge": badge, "spark": spark}
 
 
@@ -159,14 +161,16 @@ func _refresh() -> void:
 		spark.queue_redraw()
 		var shares: int = s.portfolio.shares_of(symbol)
 		var hl := r["held"] as Label
-		if shares > 0:
-			hl.text = tr("UI_GAME_HELD_LONG") % shares
-		elif shares < 0:
-			hl.text = tr("UI_GAME_HELD_SHORT") % -shares
+		# "16 @ 153.69": shares held and the average price paid. The tooltip spells it out.
+		if shares != 0:
+			var avg: float = float(s.portfolio.positions.get(symbol, {}).get("avg_cost", 0.0))
+			hl.text = "%d @ %s" % [shares, GameFmt.price(avg)]
+			(r["button"] as Control).tooltip_text = "%s\n%s" % [(r["button"] as Control).tooltip_text.get_slice("\n", 0), tr("UI_GAME_HELD_AVG") % [absi(shares), GameFmt.price(avg)]]
 		else:
 			hl.text = ""
+			(r["button"] as Control).tooltip_text = (r["button"] as Control).tooltip_text.get_slice("\n", 0)
 		hl.visible = shares != 0
-		hl.add_theme_color_override("font_color", GameColors.GOLD)
+		hl.add_theme_color_override("font_color", GameColors.GOLD if shares > 0 else GameColors.DOWN)
 
 
 func _on_row_pressed(symbol: String) -> void:

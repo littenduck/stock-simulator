@@ -22,6 +22,8 @@ const SFX: Dictionary = {
 	&"order_cancelled": IFACE + "close_001.ogg",
 	&"rumor_posted": IFACE + "question_001.ogg",
 	&"rumor_resolved": IFACE + "bong_001.ogg",
+	&"reveal_tick": IFACE + "click_003.ogg",
+	&"stamp": IFACE + "drop_003.ogg",
 }
 const POLYPHONY := 4
 
@@ -61,6 +63,7 @@ func bind_bus(bus: Node) -> void:
 	bus.connect("rumor_posted", _on_rumor_posted)
 	bus.connect("rumor_resolved", _on_rumor_resolved)
 	bus.connect("perks_changed", _on_perks_changed)
+	bus.connect("sfx_requested", play)
 
 
 ## Plays an effect by name. Unknown names and missing files are ignored.

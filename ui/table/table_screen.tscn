@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://ui/table/table_screen.gd" id="1"]
 [ext_resource type="PackedScene" path="res://ui/audio/music_player.tscn" id="music"]
@@ -6,17 +6,15 @@
 [ext_resource type="Script" path="res://ui/game_screen/top_bar.gd" id="3"]
 [ext_resource type="Script" path="res://ui/game_screen/stock_list.gd" id="4"]
 [ext_resource type="Script" path="res://ui/game_screen/price_chart.gd" id="5"]
-[ext_resource type="Script" path="res://ui/game_screen/portfolio_view.gd" id="6"]
 [ext_resource type="Script" path="res://ui/table/trade_panel.gd" id="8"]
-[ext_resource type="Script" path="res://ui/table/table_hud.gd" id="9"]
+[ext_resource type="Script" path="res://ui/table/rumor_card.gd" id="9"]
 [ext_resource type="Script" path="res://ui/table/standings_bar.gd" id="10"]
 [ext_resource type="Script" path="res://ui/game_screen/pause_menu.gd" id="11"]
 [ext_resource type="PackedScene" path="res://ui/game_over/game_over_dialog.tscn" id="13"]
 [ext_resource type="PackedScene" path="res://ui/audio/audio_feedback.tscn" id="14"]
 [ext_resource type="Script" path="res://ui/table/table_overlay.gd" id="15"]
-[ext_resource type="Script" path="res://ui/table/boss_card.gd" id="16"]
-[ext_resource type="Script" path="res://ui/table/skill_bar.gd" id="17"]
-[ext_resource type="Script" path="res://ui/table/rumor_log.gd" id="18"]
+[ext_resource type="Script" path="res://ui/table/turn_bar.gd" id="17"]
+[ext_resource type="Script" path="res://ui/table/rumor_feed.gd" id="18"]
 
 [node name="TableScreen" type="Control"]
 script = ExtResource("1")
@@ -95,41 +93,25 @@ size_flags_stretch_ratio = 3.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PortfolioView" type="PanelContainer" parent="Layout/Rows/Body/Center"]
+[node name="TradePanel" type="PanelContainer" parent="Layout/Rows/Body/Center"]
 unique_name_in_owner = true
-script = ExtResource("6")
+script = ExtResource("8")
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.3
-
-[node name="BossCard" type="PanelContainer" parent="Layout/Rows/Body/Center"]
-unique_name_in_owner = true
-script = ExtResource("16")
-layout_mode = 2
 
 [node name="Right" type="VBoxContainer" parent="Layout/Rows/Body"]
 layout_mode = 2
 custom_minimum_size = Vector2(342, 0)
 theme_override_constants/separation = 6
 
-[node name="TableHud" type="PanelContainer" parent="Layout/Rows/Body/Right"]
-unique_name_in_owner = true
-script = ExtResource("9")
-layout_mode = 2
-
-[node name="TradePanel" type="PanelContainer" parent="Layout/Rows/Body/Right"]
-unique_name_in_owner = true
-script = ExtResource("8")
-layout_mode = 2
-
-[node name="RumorLog" type="PanelContainer" parent="Layout/Rows/Body/Right"]
+[node name="Feed" type="PanelContainer" parent="Layout/Rows/Body/Right"]
 unique_name_in_owner = true
 script = ExtResource("18")
 layout_mode = 2
 size_flags_vertical = 3
-custom_minimum_size = Vector2(0, 70)
 
-[node name="SkillBar" type="PanelContainer" parent="Layout/Rows"]
+[node name="TurnBar" type="PanelContainer" parent="Layout/Rows"]
 unique_name_in_owner = true
 script = ExtResource("17")
 layout_mode = 2
@@ -155,7 +137,19 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="TableOverlay" type="Control" parent="Overlays"]
+unique_name_in_owner = true
 script = ExtResource("15")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="RumorCard" type="Control" parent="Overlays"]
+unique_name_in_owner = true
+script = ExtResource("9")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

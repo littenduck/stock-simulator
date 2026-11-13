@@ -4,13 +4,19 @@ You and three computer seats trade the same market for **30 days = 3 quarters of
 shown, everybody secretly bets on it, and the bets are revealed together. The classic 60-day game is still in the
 code (`RunConfig.Mode.CLASSIC`) but the menu now starts table runs only.
 
-## One day
+## One turn (four steps, shown as dots in the bar at the bottom)
 
-1. **Rumor.** One single-stock rumor with a credibility tier: Low (33%), Medium (50%) or High (80%).
-2. **Action phase** (secret): bet **BELIEVE** (Buy Call), **BULLSHIT** (Buy Put) or **PASS**; trade; use a skill.
-3. **Reveal** (Space): all bets side by side. Double Dan may double here.
-4. **Resolve** (Space): the market moves. A rumor is **true** when the real price moved the way it claimed since it was
-   shown (unchanged counts as up). Rumors never move prices themselves.
+1. **Pre-market.** The new day opens at its new price. The verdict on yesterday's rumor lands (stamp, payouts, ranking),
+   then today's news window pops up and flies into the rumor feed.
+2. **Market open.** The only step that waits for you: buy and sell, open the rumor card (click the feed entry or the blue
+   Choose button) and pick **BELIEVE** (Buy Call), **BULLSHIT** (Buy Put) or **PASS**, use your skill. Then press **Next**
+   (Space is the shortcut). Pressing it with no call counts as PASS.
+3. **After-market.** Everybody's bets are revealed together (automatic; Space skips the wait). Only skills work now,
+   such as Double Down. Trading is closed, so nobody can trade on what they just saw.
+4. **Next day.** The price moves and the day turns over, back to step 1.
+
+A rumor is **true** when the real price moved the way it claimed between the day it was shown and the next day (the Boss
+rumor: three days later). Rumors never move prices themselves.
 
 A bet costs 10% of net worth (never more than your cash) and pays `stake x odds` if right, nothing if wrong.
 Odds: BELIEVE low x3 / medium x2 / high x1.25, BULLSHIT low x1.5 / medium x2 / high x5. They are fair for the tier

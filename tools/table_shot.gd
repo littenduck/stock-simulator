@@ -54,17 +54,36 @@ func _run(char_id: StringName, seed_value: int) -> void:
 	await _shot("1_setup")
 	gm.start_run(RunConfig.make_table(ContentDb.character_by_id(char_id), seed_value))
 	await _wait(40)
-	await _shot("2_action")
+	await create_timer(1.3).timeout
+	await _shot("2a_news")             # pre-market: the news window pops up
+	await create_timer(2.6).timeout
+	await _shot("2b_market_open")      # the news has flown into the feed, the turn waits for Next
 	var t := gm.session as TableSession
-	t.set_call(RumorTier.Side.BELIEVE)
+	root.get_node("EventBus").rumor_card_requested.emit(false)
+	await create_timer(1.0).timeout
+	await _shot("2c_card")
+	# Not typed: UI scripts that use autoloads cannot be compiled while this tool script loads.
+	var card: Node = current_scene.get_node("%RumorCard")
+	t.set_call(RumorTier.Side.BELIEVE)     # what a click on BELIEVE does
+	card.call("close")
+	await create_timer(0.5).timeout
 	t.buy_fraction(0, t.market.symbols()[1], 0.25)
 	gm.table_refresh()
-	gm.next_day()
-	await _wait(10)
-	await _shot("3_reveal")
-	gm.next_day()
-	await _wait(10)
-	await _shot("4_result")
+	await _shot("2_action")
+	gm.next_day()    # end the turn: the bets are revealed, then the day resolves by itself (auto reveal)
+	await create_timer(0.55).timeout
+	await _shot("3a_reveal_mid")
+	await create_timer(1.0).timeout
+	await _shot("3b_reveal")
+	await create_timer(1.55).timeout    # the day resolves at about 2.6 s
+	await create_timer(0.5).timeout
+	await _shot("4a_stamp_in_the_air")
+	await create_timer(0.25).timeout
+	await _shot("4b_impact")
+	await create_timer(0.5).timeout
+	await _shot("4c_confetti")
+	await create_timer(1.5).timeout
+	await _shot("4d_result")
 	for i in 7:
 		t.set_call(RumorTier.Side.BELIEVE)
 		gm.next_day()

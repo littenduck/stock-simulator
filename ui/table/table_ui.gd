@@ -59,3 +59,30 @@ static func wrapped(text: String, color: Color = Color.WHITE, size: int = 0) -> 
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return l
+
+
+## True while a pop-up (the rumor card or the reveal / verdict window) is in front: Space must not move the turn then.
+static var modal_open: bool = false
+
+static var _arrow: ImageTexture = null
+
+const ARROW_ROWS := [
+	"k........", "kk.......", "kwk......", "kwwk.....", "kwwwk....", "kwwwwk...",
+	"kwwwk....", "kwwk.....", "kwk......", "kk.......", "k........",
+]
+
+
+## A small white right arrow with a dark edge, drawn here because the font has no arrow glyph.
+static func arrow_right() -> ImageTexture:
+	if _arrow == null:
+		var img := Image.create(9, 11, false, Image.FORMAT_RGBA8)
+		for y in ARROW_ROWS.size():
+			var row: String = ARROW_ROWS[y]
+			for x in row.length():
+				if row[x] == "k":
+					img.set_pixel(x, y, Color("#232130"))
+				elif row[x] == "w":
+					img.set_pixel(x, y, Color.WHITE)
+		img.resize(18, 22, Image.INTERPOLATE_NEAREST)
+		_arrow = ImageTexture.create_from_image(img)
+	return _arrow

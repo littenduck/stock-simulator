@@ -30,3 +30,9 @@ signal table_revealed(entries: Array)
 signal table_resolved(report: TableReport)
 ## Table mode. Calls, skills or trades changed: widgets refresh.
 signal table_changed
+## Any widget may ask for a sound effect by name (AudioFeedback.SFX).
+signal sfx_requested(sfx: StringName)
+## Table mode. Open the rumor card (false = today's rumor, true = the Boss rumor).
+signal rumor_card_requested(boss: bool)
+## Table mode. The turn moved to a step (TurnBar.Step: 0 pre-market, 1 market open, 2 after-market, 3 next day).
+signal table_step(step: int)

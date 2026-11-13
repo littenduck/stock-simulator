@@ -13,6 +13,9 @@ enum Phase { ACTION, REVEALED, OVER }
 const DAILY_RATE := 0.10
 const BOSS_RATE := 0.30
 const MIN_PREMIUM := 5.0
+## Trading is only open in the ACTION phase (market open). After the reveal (after-market) only skills work, because
+## by then everybody's bets are known and an Insider's bet would give her insider tip away.
+const ERR_MARKET_CLOSED := "TABLE_ERR_CLOSED"
 ## Off: the quarter review no longer fires anybody. The code stays so the rule can come back.
 const FIRE_LAST_PLACE := false
 const HODL_CASH_SHARE := 0.5
@@ -217,6 +220,8 @@ func buy_fraction(seat_id: int, symbol: String, fraction: float) -> TradeResult:
 
 
 func buy_amount(seat_id: int, symbol: String, amount: float) -> TradeResult:
+	if phase != Phase.ACTION:
+		return TradeResult.fail(ERR_MARKET_CLOSED)
 	var seat := seats[seat_id]
 	if not market.has_symbol(symbol):
 		return TradeResult.fail(TradeService.ERR_UNKNOWN_SYMBOL)
@@ -227,8 +232,30 @@ func buy_amount(seat_id: int, symbol: String, amount: float) -> TradeResult:
 	return _trade(seat, Order.market(Order.Dir.BUY, symbol, shares))
 
 
+## What a buy button would do right now: {"shares": int, "cost": float} for a share of the seat's cash (fee included).
+func buy_preview(seat_id: int, symbol: String, fraction: float) -> Dictionary:
+	var seat := seats[seat_id]
+	var price := market.price_of(symbol)
+	var per_share := price * (1.0 + seat.mods.effective_fee_rate())
+	var amount := seat.portfolio.cash * clampf(fraction, 0.0, 1.0)
+	var shares := maxi(0, floori(amount / per_share)) if per_share > 0.0 else 0
+	return {"shares": shares, "cost": shares * per_share}
+
+
+## What a sell button would do right now: {"shares": int, "proceeds": float}.
+func sell_preview(seat_id: int, symbol: String, fraction: float) -> Dictionary:
+	var seat := seats[seat_id]
+	var held := seat.portfolio.shares_of(symbol)
+	if held <= 0:
+		return {"shares": 0, "proceeds": 0.0}
+	var shares := held if fraction >= 0.999 else maxi(1, floori(held * fraction))
+	return {"shares": shares, "proceeds": shares * market.price_of(symbol) * (1.0 - seat.mods.effective_fee_rate())}
+
+
 ## Sells a share of the position (0.5 = half, 1.0 = everything).
 func sell_fraction(seat_id: int, symbol: String, fraction: float) -> TradeResult:
+	if phase != Phase.ACTION:
+		return TradeResult.fail(ERR_MARKET_CLOSED)
 	var seat := seats[seat_id]
 	var held := seat.portfolio.shares_of(symbol)
 	if held <= 0:
@@ -239,6 +266,8 @@ func sell_fraction(seat_id: int, symbol: String, fraction: float) -> TradeResult
 
 ## Sells everything in `from_symbol` and puts the proceeds into `to_symbol`.
 func swap(seat_id: int, from_symbol: String, to_symbol: String) -> TradeResult:
+	if phase != Phase.ACTION:
+		return TradeResult.fail(ERR_MARKET_CLOSED)
 	if from_symbol == to_symbol:
 		return TradeResult.fail(TradeService.ERR_INVALID_SHARES)
 	var sold := sell_fraction(seat_id, from_symbol, 1.0)
