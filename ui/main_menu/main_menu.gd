@@ -68,9 +68,18 @@ func _add_version_label() -> void:
 	label.add_theme_font_size_override("font_size", 12)
 	label.add_theme_color_override("font_color", Color(1, 1, 1, 0.55))
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_MINSIZE, 12)
+	# Right in the bottom-right corner: anchored there and growing leftwards and upwards from a 16 / 12 px margin.
+	label.anchor_left = 1.0
+	label.anchor_right = 1.0
+	label.anchor_top = 1.0
+	label.anchor_bottom = 1.0
+	label.offset_left = 0.0
+	label.offset_top = 0.0
+	label.offset_right = -16.0
+	label.offset_bottom = -12.0
 	label.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	label.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(label)
 
 
