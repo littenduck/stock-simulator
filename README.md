@@ -1,7 +1,9 @@
 # Stock Simulator
 
-A turn-based stock Roguelike (60 trading days, 6 of 30 real-world-flavored companies in 4 sectors (tech, space, consumer, finance), a perk every 10 days,
-rumors that come true or not). Web build first; Steam later.
+A turn-based stock Roguelike. **Table mode** (new): 30 days in 3 quarters, you and three rivals bet every day on one
+funny rumor (BELIEVE / BULLSHIT / PASS), the last place is fired after each of the first two quarters, and six characters
+(Insider Inu, Copilot Cody, Double Dan, Saving Son, Goldfish Gus, Hodl Hana) each bend the rules. See [docs/table-mode.md](docs/table-mode.md).
+The classic 60-day game (6 of 30 real-world-flavored companies in 4 sectors, a perk every 10 days) is still in the code. Web build first; Steam later.
 
 - Licence: source-available, noncommercial use only (PolyForm Noncommercial 1.0.0), see [LICENSE.txt](LICENSE.txt) and [CREDITS.txt](CREDITS.txt)
 - Version: single source is `config/version` under `[application]` in [project.godot](project.godot) (shown in the main menu corner); releases are tagged `v<version>`

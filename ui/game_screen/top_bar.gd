@@ -77,9 +77,9 @@ func _refresh() -> void:
 		return
 	var date: String = ChartMath.long_date(s.date_of_day(s.day))
 	if date != "":
-		_day.text = tr("UI_GAME_DAY_DATE") % [s.day, RunConfig.TRADING_DAYS, date]
+		_day.text = tr("UI_GAME_DAY_DATE") % [s.day, s.config.trading_days, date]
 	else:
-		_day.text = tr("UI_GAME_DAY_ONLY") % [s.day, RunConfig.TRADING_DAYS]
+		_day.text = tr("UI_GAME_DAY_ONLY") % [s.day, s.config.trading_days]
 	UiFx.count_label(_cash, s.portfolio.cash, _money, GameColors.DOWN if s.portfolio.cash < 0.0 else Color.WHITE)
 	var nw: float = s.net_worth()
 	UiFx.count_label(_net_worth, nw, _money)
@@ -90,7 +90,10 @@ func _refresh() -> void:
 		_alert.text = ""
 	var blocked: bool = GameManager.state == GameManager.State.DRAFTING or GameManager.state == GameManager.State.GAME_OVER
 	_next_day.disabled = blocked or s.is_finished()
-	_next_day.text = (tr("UI_GAME_FINAL_DAY") if s.day == RunConfig.TRADING_DAYS - 1 else tr("UI_GAME_NEXT_DAY")) + "  [Space]"
+	if s is TableSession:
+		_next_day.text = tr("TABLE_BTN_CONTINUE" if (s as TableSession).phase == TableSession.Phase.REVEALED else "TABLE_BTN_REVEAL") + "  [Space]"
+	else:
+		_next_day.text = (tr("UI_GAME_FINAL_DAY") if s.day == s.config.trading_days - 1 else tr("UI_GAME_NEXT_DAY")) + "  [Space]"
 
 
 func _money(value: float) -> String:

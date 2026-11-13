@@ -55,6 +55,17 @@ theme_type_variation = &"SubtleLabel"
 text = "UI_FLOW_SETTINGS_MARGIN_HINT"
 autowrap_mode = 3
 
+[node name="FeesRow" type="HBoxContainer" parent="Center/Panel/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+metadata/title_key = "UI_FLOW_SETTINGS_FEES"
+
+[node name="FeesHint" type="Label" parent="Center/Panel/Column"]
+layout_mode = 2
+theme_type_variation = &"SubtleLabel"
+text = "UI_FLOW_SETTINGS_FEES_HINT"
+autowrap_mode = 3
+
 [node name="SoundHeader" type="Label" parent="Center/Panel/Column"]
 layout_mode = 2
 theme_type_variation = &"SubtleLabel"

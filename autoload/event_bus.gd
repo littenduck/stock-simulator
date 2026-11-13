@@ -23,3 +23,10 @@ signal margin_called
 signal draft_offered(options: Array)
 signal perks_changed
 signal run_finished(score: float)
+
+## Table mode. The bets of the day were revealed (entries: see TableSession.reveal()).
+signal table_revealed(entries: Array)
+## Table mode. A day was resolved; the report holds the verdicts, payouts, firings and the Boss rumor.
+signal table_resolved(report: TableReport)
+## Table mode. Calls, skills or trades changed: widgets refresh.
+signal table_changed

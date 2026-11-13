@@ -10,8 +10,9 @@ var _difficulty: int = 1
 var _character_group := ButtonGroup.new()
 var _difficulty_group := ButtonGroup.new()
 
-@onready var _character_row: HBoxContainer = %CharacterRow
+@onready var _character_row: Container = %CharacterRow
 @onready var _difficulty_row: HBoxContainer = %DifficultyRow
+## Shows the passive and active skill of the selected character.
 @onready var _difficulty_label: Label = %DifficultyLabel
 @onready var _margin_label: Label = %MarginLabel
 @onready var _back_button: Button = %BackButton
@@ -24,11 +25,11 @@ func _ready() -> void:
 	_animate_in()
 	_back_button.pressed.connect(_on_back_button_pressed)
 	_start_button.pressed.connect(_on_start_button_pressed)
+	# Table mode has no difficulty levels yet: the row is hidden, the label below the cards describes the skills.
+	_difficulty_row.get_parent().get_node("DifficultyHeader").visible = false
+	_difficulty_row.visible = false
 	_build_characters()
-	_build_difficulties()
-	_update_difficulty_text()
-	# Read-only: the margin switch lives in Settings and is fixed for the whole run.
-	_margin_label.text = tr("UI_FLOW_SETUP_MARGIN_ON" if GameSettings.margin_enabled() else "UI_FLOW_SETUP_MARGIN_OFF")
+	_margin_label.text = tr("TABLE_SETUP_FEES_ON" if GameSettings.fees_enabled() else "TABLE_SETUP_FEES_OFF")
 	_start_button.disabled = _character == null
 	var selected := _character_group.get_pressed_button()
 	if selected != null:
@@ -51,8 +52,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		GameManager.go_to_menu()
 
 
+const ROSTER_ORDER := ["insider_inu", "copilot_cody", "double_dan", "saving_son", "goldfish_gus", "hodl_hana"]
+
+
 func _characters() -> Array[CharacterDef]:
-	return characters_override if not characters_override.is_empty() else ContentDb.characters()
+	if not characters_override.is_empty():
+		return characters_override
+	var out: Array[CharacterDef] = []
+	for id in ROSTER_ORDER:
+		var def := ContentDb.character_by_id(StringName(id))
+		if def != null:
+			out.append(def)
+	return out
 
 
 func _build_characters() -> void:
@@ -64,7 +75,7 @@ func _build_characters() -> void:
 		card.toggle_mode = true
 		card.button_group = _character_group
 		card.disabled = not unlocked
-		card.custom_minimum_size = Vector2(300, 250)
+		card.custom_minimum_size = Vector2(300, 150)
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		card.focus_mode = Control.FOCUS_ALL
 		_style_card(card, unlocked)
@@ -75,7 +86,7 @@ func _build_characters() -> void:
 			card.button_pressed = true  # also fires toggled -> _character
 
 
-const AVATARS := {"rookie": "star", "day_trader": "bolt", "value_investor": "bank"}
+const AVATARS := {"rookie": "star", "day_trader": "bolt", "value_investor": "bank", "insider_inu": "eye", "copilot_cody": "people", "double_dan": "coin", "saving_son": "bank", "goldfish_gus": "clover", "hodl_hana": "gem"}
 
 
 ## Same cream card for every state: unselected is dimmer with a grey frame, selected has a green frame and glow.
@@ -130,7 +141,8 @@ func _character_card_body(def: CharacterDef, unlocked: bool) -> Control:
 	names.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	names.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	names.add_child(_label(tr(def.title_key), &"HeaderLabel"))
-	names.add_child(_label(tr("UI_FLOW_START_CASH") % UiFormat.money(def.start_cash), &"PositiveLabel"))
+	var tag_key := "TABLE_ADVANCED" if def.difficulty_tag == "advanced" else "TABLE_EASY"
+	names.add_child(_label(tr(tag_key), &"RarityLegendaryLabel" if def.difficulty_tag == "advanced" else &"PositiveLabel"))
 	head.add_child(names)
 	box.add_child(head)
 	var rule := ColorRect.new()
@@ -194,6 +206,8 @@ func _on_character_card_toggled(pressed: bool, def: CharacterDef) -> void:
 	if pressed:
 		_character = def
 		_start_button.disabled = false
+		var key := String(def.id).to_upper()
+		_difficulty_label.text = "%s: %s\n%s: %s" % [tr("TABLE_PASSIVE"), tr("CHAR_%s_PASSIVE" % key), tr("TABLE_ACTIVE"), tr("CHAR_%s_ACTIVE" % key)]
 
 
 func _on_difficulty_button_toggled(pressed: bool, level: int) -> void:
@@ -205,7 +219,7 @@ func _on_difficulty_button_toggled(pressed: bool, level: int) -> void:
 func _on_start_button_pressed() -> void:
 	if _character == null:
 		return
-	GameManager.start_run(RunConfig.make(_character, _difficulty, 0, GameSettings.margin_enabled()))
+	GameManager.start_run(RunConfig.make_table(_character, 0, GameSettings.fees_enabled()))
 
 
 func _on_back_button_pressed() -> void:

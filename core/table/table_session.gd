@@ -16,6 +16,8 @@ const BOSS_RATE := 0.30
 const COPY_ODDS_MULT := 0.8
 const MIN_PREMIUM := 5.0
 const HODL_CASH_SHARE := 0.5
+## Hodl Hana never starts with more than this multiple of her stock position: the cost is raised to price / this.
+const HODL_MAX_GAIN := 1.8
 
 var seats: Array[Seat] = []
 var phase: Phase = Phase.ACTION
@@ -404,6 +406,7 @@ func _grant_hodl_stock(seat: Seat) -> void:
 	if best == "":
 		best = market.symbols()[0]
 		best_low = market.price_of(best) * 0.7
+	best_low = maxf(best_low, market.price_of(best) / HODL_MAX_GAIN)
 	var shares := floori(seat.character.start_cash * HODL_CASH_SHARE / best_low)
 	seat.portfolio.apply_fill(best, shares, best_low, 0.0)
 	seat.mods.locked_symbol = best
