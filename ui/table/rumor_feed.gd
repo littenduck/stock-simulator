@@ -1,5 +1,7 @@
-## The right column: the rumor feed, like the classic screen's rumor window. Newest first: the Boss rumor (pinned while
-## it is open), today's rumor with the call you made, then every rumor that has resolved with its stamp and your result.
+## The right column, newest first, with three kinds of entries:
+##   rumors   today's rumor with the call you made, the open Boss rumor under it, then every rumor that has resolved
+##   summary  one card per day: what everybody played and what it paid
+##   skills   a line whenever a public skill was played (an Insider's hidden skills never show)
 class_name TableFeed
 extends PanelContainer
 
@@ -36,13 +38,28 @@ func _refresh() -> void:
 	for child in _list.get_children():
 		_list.remove_child(child)
 		child.queue_free()
-	if t.boss_rumor != null:
-		_list.add_child(_boss_entry(t))
 	if t.today_rumor != null and not t.is_finished():
 		_list.add_child(_today_entry(t))
+	if t.boss_rumor != null:
+		_list.add_child(_boss_entry(t))
+	# Every finished day, newest first: its summary, its skills, then the rumor that resolved.
+	var resolved_by_day: Dictionary = {}
+	for h in t.history:
+		var r := TableRumor.from_dict(h["rumor"])
+		var key := r.resolve_day - 1
+		if not resolved_by_day.has(key):
+			resolved_by_day[key] = []
+		(resolved_by_day[key] as Array).append(h)
 	var count := 0
-	for i in range(t.history.size() - 1, -1, -1):
-		_list.add_child(_history_entry(t, t.history[i]))
+	for d in range(t.day - 1, -1, -1):
+		for e in t.feed_log:
+			if String(e["kind"]) == "summary" and int(e["day"]) == d:
+				_list.add_child(_summary_entry(t, e))
+		for e in t.feed_log:
+			if String(e["kind"]) == "skill" and int(e["day"]) == d:
+				_list.add_child(_skill_entry(t, e))
+		for h in (resolved_by_day.get(d, []) as Array):
+			_list.add_child(_history_entry(t, h))
 		count += 1
 		if count >= SHOWN:
 			break
@@ -175,6 +192,58 @@ func _tier_line(t: TableSession, rumor: TableRumor) -> Control:
 	if t.human().has_flag(&"goldfish"):
 		return GameFmt.label(tr("TABLE_CRED_HIDDEN"), GameColors.MUTED, 12)
 	return GameFmt.label(tr("TABLE_CRED") % TableUi.tier_text(rumor.tier, self), TableUi.tier_color(rumor.tier), 12)
+
+
+## The day's summary: one line per player, with what they played and what it paid.
+func _summary_entry(t: TableSession, e: Dictionary) -> Control:
+	var col := _card(Color("#4aa3ff"))
+	col.add_child(GameFmt.label(tr("TABLE_FEED_SUMMARY") % (int(e["day"]) + 1), Color("#4aa3ff"), 13))
+	for r in e["rows"]:
+		var seat := t.seats[int(r["seat"])]
+		var side := int(r["side"])
+		var line := HBoxContainer.new()
+		line.add_theme_constant_override("separation", 6)
+		var name := GameFmt.label(TableUi.seat_name(seat, self) + (" (" + tr("TABLE_BOSS_TAG") + ")" if bool(r["boss"]) else ""), GameColors.GOLD if seat.is_human else Color.WHITE, 12)
+		name.custom_minimum_size = Vector2(112, 0)
+		name.clip_text = true
+		name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		line.add_child(name)
+		if side == RumorTier.Side.PASS:
+			line.add_child(GameFmt.label(tr(TableUi.side_key(side)), GameColors.MUTED, 12))
+		else:
+			var what := "%s %s x%.1f" % [tr(TableUi.side_key(side)), GameFmt.money(float(r["premium"]), 0), float(r["odds"])]
+			if int(r["copied_from"]) >= 0:
+				what += " " + tr("TABLE_FEED_COPY_MARK")
+			if bool(r["doubled"]):
+				what += " " + tr("TABLE_FEED_DOUBLE_MARK")
+			var net := float(r["net"])
+			var detail := GameFmt.label(what, TableUi.side_color(side), 12)
+			detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			detail.clip_text = true
+			detail.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			line.add_child(detail)
+			line.add_child(GameFmt.label(("+" if net > 0.0 else "-") + GameFmt.money(absf(net), 0), GameColors.UP if net > 0.0 else GameColors.DOWN, 12))
+		col.add_child(line)
+	return _panel_of(col)
+
+
+## A public skill that was played: one line.
+func _skill_entry(t: TableSession, e: Dictionary) -> Control:
+	var seat := t.seats[int(e["seat"])]
+	var who := TableUi.seat_name(seat, self)
+	var text := ""
+	match String(e["skill"]):
+		"copilot":
+			text = tr("TABLE_FEED_SKILL_COPY") % [who, TableUi.seat_name(t.seats[int(e["target"])], self)]
+		"double_down":
+			text = tr("TABLE_FEED_SKILL_DOUBLE") % [who, GameFmt.money(float(e["amount"]), 0)]
+		"hodl_buy":
+			text = tr("TABLE_FEED_SKILL_HODL") % [who, int(e["amount"]), seat.mods.locked_symbol]
+		"interest":
+			text = tr("TABLE_FEED_SKILL_INTEREST") % [who, GameFmt.money(float(e["amount"]), 2)]
+	var col := _card(Color("#b57bee"))
+	col.add_child(TableUi.wrapped(text, Color("#b57bee").darkened(0.2), 12))
+	return _panel_of(col)
 
 
 func _history_entry(t: TableSession, h: Dictionary) -> Control:

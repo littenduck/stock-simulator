@@ -482,3 +482,38 @@ func test_interest_is_logged_when_the_day_turns() -> void:
 	s.advance()
 	var events := s.take_skill_events(TableSkills.Slot.NEXT_DAY)
 	assert_true(events.any(func(e: Dictionary) -> bool: return e["skill"] == TableSkills.INTEREST and float(e["amount"]) > 0.0))
+
+
+# ---------------------------------------------------------------- the feed log
+
+func test_a_summary_is_logged_every_day_with_the_payouts() -> void:
+	var s := _session(&"saving_son")
+	s.open_market()
+	s.set_call(RumorTier.Side.BELIEVE)
+	s.next_day()
+	var summaries := s.feed_log.filter(func(e: Dictionary) -> bool: return e["kind"] == "summary")
+	assert_eq(summaries.size(), 1)
+	assert_eq(int(summaries[0]["day"]), 0, "the day the bets were placed")
+	assert_eq((summaries[0]["rows"] as Array).size(), 4, "one row for each player")
+	var mine: Dictionary = (summaries[0]["rows"] as Array)[0]
+	assert_eq(int(mine["seat"]), 0)
+	assert_true(float(mine["premium"]) > 0.0)
+
+
+func test_public_skills_reach_the_feed_but_hidden_ones_do_not() -> void:
+	var s := _session(&"hodl_hana")
+	assert_true(s.feed_log.any(func(e: Dictionary) -> bool: return e["kind"] == "skill" and e["skill"] == "hodl_buy"))
+	var i := _session(&"insider_inu")
+	while not i.is_finished() and i.day < 12:
+		i.next_day()
+	assert_false(i.feed_log.any(func(e: Dictionary) -> bool: return e["kind"] == "skill" and String(e["skill"]).begins_with("insider")))
+
+
+func test_the_feed_log_survives_a_save() -> void:
+	var s := _session(&"saving_son")
+	s.next_day()
+	s.next_day()
+	var cfg := RunConfig.make_table(ContentDb.character_by_id(&"saving_son"), SEED)
+	var loaded := TableSession.from_dict(JSON.parse_string(JSON.stringify(s.to_dict())), cfg, ContentDb.companies(), ContentDb.perks(), ContentDb.news()) as TableSession
+	assert_true(loaded != null)
+	assert_eq(loaded.feed_log.size(), s.feed_log.size())

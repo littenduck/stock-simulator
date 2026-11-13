@@ -158,3 +158,10 @@ TABLE_SKILL_SECTOR,SECTOR CONVICTION
 TABLE_SKILL_ODDS_BODY,%s's option pays +%.1f odds.
 TABLE_SKILL_CONTINUE,Space: continue
 TABLE_SKILL_SPENT,Your skill is used up until the next quarter.
+TABLE_FEED_SUMMARY,Day %d · Summary
+TABLE_FEED_COPY_MARK,(copy)
+TABLE_FEED_DOUBLE_MARK,(x2)
+TABLE_FEED_SKILL_COPY,%s copied %s
+TABLE_FEED_SKILL_DOUBLE,%s doubled down: +%s
+TABLE_FEED_SKILL_HODL,%s bought %d %s at its low
+TABLE_FEED_SKILL_INTEREST,%s earned %s interest

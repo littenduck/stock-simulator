@@ -52,7 +52,14 @@ var last_reveal: Array[Dictionary] = []
 ## Resolved rumors, newest last, for the rumor log: {"rumor": TableRumor.to_dict(), "side": your side (0 = passed),
 ## "net": your profit or loss on it}.
 var history: Array[Dictionary] = []
+## The feed beside the rumors: {"kind":"summary","day","rows":[...]} once a day, and {"kind":"skill","day","seat","skill",
+## "amount","target"} for a public skill. `day` is the day the bets were placed.
+var feed_log: Array[Dictionary] = []
 const HISTORY_LIMIT := 40
+## The feed's log of days and public skills (see feed_log).
+const FEED_LIMIT := 90
+## Public skills that get a line in the feed (the odds bonuses show in the daily summary instead).
+const FEED_SKILLS := [&"copilot", &"double_down", &"hodl_buy", &"interest"]
 
 var _events: Array[NewsEventDef] = []
 var _roster: Array[CharacterDef] = []
@@ -127,6 +134,33 @@ func take_skill_events(for_window: int) -> Array[Dictionary]:
 func _log_skill(seat_id: int, skill: StringName, amount: float = 0.0, target: int = -1) -> void:
 	skill_events.append({"seat": seat_id, "skill": skill, "window": window, "public": not TableSkills.is_hidden(skill),
 			"amount": amount, "target": target})
+	if skill in FEED_SKILLS:
+		# The day turned over before the interest was paid: it belongs to the day that just ended.
+		_log_feed({"kind": "skill", "day": day - 1 if window == TableSkills.Slot.NEXT_DAY else day, "seat": seat_id,
+				"skill": String(skill), "amount": amount, "target": target})
+
+
+func _log_feed(entry: Dictionary) -> void:
+	feed_log.append(entry)
+	while feed_log.size() > FEED_LIMIT:
+		feed_log.remove_at(0)
+
+
+## One summary per day: what everybody played and what it paid (the day has just turned over, so it is day - 1).
+func _log_summary(report: TableReport) -> void:
+	var rows: Array[Dictionary] = []
+	for entry in last_reveal:
+		var seat_id := int(entry["seat"])
+		var boss := bool(entry["boss"])
+		var net := 0.0
+		for p in report.payouts:
+			if int(p["seat"]) == seat_id and bool(p["boss"]) == boss:
+				net = float(p["payout"]) - float(p["premium"])
+		var bet := boss_bet_of(seat_id) if boss else daily_bet_of(seat_id)
+		rows.append({"seat": seat_id, "boss": boss, "side": int(entry["side"]), "premium": float(entry["premium"]),
+				"odds": float(entry["odds"]), "copied_from": int(entry["copied_from"]),
+				"doubled": bet != null and bet.doubled, "net": net})
+	_log_feed({"kind": "summary", "day": day - 1, "rows": rows})
 
 
 func quarter() -> int:
@@ -385,8 +419,11 @@ func advance() -> TableReport:
 	report.day = day
 	market.step()
 	_settle(today_rumor, bets, report)
-	if boss_rumor != null and boss_rumor.resolve_day == day:
+	var boss_resolved := boss_rumor != null and boss_rumor.resolve_day == day
+	if boss_resolved:
 		_settle(boss_rumor, boss_bets, report)
+	_log_summary(report)
+	if boss_resolved:
 		boss_rumor = null
 		boss_bets.clear()
 	for seat in seats:
@@ -650,7 +687,7 @@ func to_dict() -> Dictionary:
 		"bets": bets.map(func(b: TableBet) -> Dictionary: return b.to_dict()),
 		"boss_bets": boss_bets.map(func(b: TableBet) -> Dictionary: return b.to_dict()),
 		"insider_days": insider_days.duplicate(), "recent": _recent.duplicate(), "next_id": _next_rumor_id,
-		"fired_order": _fired_order.duplicate(), "human_fired": human_fired, "history": history.duplicate(true),
+		"fired_order": _fired_order.duplicate(), "human_fired": human_fired, "history": history.duplicate(true), "feed_log": feed_log.duplicate(true),
 	}
 	return d
 
@@ -702,6 +739,9 @@ func _restore_table(t: Dictionary) -> void:
 	_next_rumor_id = int(t.get("next_id", 1))
 	_fired_order.assign((t.get("fired_order", []) as Array).map(func(x: Variant) -> int: return int(x)))
 	human_fired = bool(t.get("human_fired", false))
+	feed_log = []
+	for e in t.get("feed_log", []):
+		feed_log.append(e)
 	history = []
 	for h in t.get("history", []):
 		history.append({"rumor": h["rumor"], "side": int(h.get("side", 0)), "net": float(h.get("net", 0.0))})
