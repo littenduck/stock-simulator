@@ -45,6 +45,9 @@ func _ready() -> void:
 	EventBus.table_resolved.connect(func(report: TableReport) -> void: _card_due = not report.finished)
 	_overlay.result_closed.connect(_on_result_closed)
 	_update_blind_note()
+	var banner := StepBanner.new()    # sweeps across the screen whenever the turn changes step
+	add_child(banner)
+	banner.watch(%TurnBar)
 	_start_of_screen()
 
 

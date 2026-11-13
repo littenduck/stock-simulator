@@ -7,6 +7,9 @@ extends PanelContainer
 
 enum Step { PRE, OPEN, AFTER, NEXT }
 
+## The turn moved to a new step (the step banner listens).
+signal stepped(step: int)
+
 const STEP_KEYS := ["TABLE_STEP_PRE", "TABLE_STEP_OPEN", "TABLE_STEP_AFTER", "TABLE_STEP_NEXT"]
 const WAIT_KEYS := ["TABLE_WAIT_PRE", "", "", "TABLE_WAIT_NEXT"]
 const SIDE_WIDTH := 250.0
@@ -71,6 +74,7 @@ func _ready() -> void:
 func _on_step(new_step: int) -> void:
 	step = new_step
 	TableUi.current_step = new_step
+	stepped.emit(new_step)
 	# Market open and after-market wait for the player at once; pre-market waits for its news to land.
 	_ready_next = new_step == Step.OPEN or new_step == Step.AFTER
 	_refresh()

@@ -75,3 +75,4 @@ whole thing, and the "Opening animation" switch in Settings turns it off (on by 
 
 Code: `ui/table/table_opening.gd` (the director), `slot_pick.gd` (the arcade pick), `character_model.gd` (3D models).
 
+Every time the turn moves to a new step a banner sweeps across the screen ("PRE-MARKET", "MARKET OPEN", "AFTER-MARKET", "NEXT DAY") with a line about what happens now (`ui/table/step_banner.gd`).

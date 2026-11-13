@@ -135,3 +135,8 @@ TABLE_INTRO_YOU,YOU
 TABLE_INTRO_RIVAL,RIVAL %d
 TABLE_INTRO_PLAYER,PLAYER %d / %d
 TABLE_INTRO_STOCKS,Today's six stocks
+TABLE_BANNER_STEP,STEP
+TABLE_BANNER_PRE,Today's news is coming in
+TABLE_BANNER_OPEN,Trade and make your call
+TABLE_BANNER_AFTER,Everybody's bets are revealed
+TABLE_BANNER_NEXT,The day turns over
