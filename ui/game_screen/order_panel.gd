@@ -10,6 +10,7 @@ var symbol: String = "":
 		symbol = value
 		if changed:
 			_reset_trigger()
+			_clear_status()
 		_refresh()
 
 var _side: Order.Dir = Order.Dir.BUY
@@ -244,24 +245,34 @@ func _refresh() -> void:
 	_submit.theme_type_variation = &"BuyButton" if is_buy else &"SellButton"
 
 
+## A status line (error or fill) describes the last action only; any edit of the ticket retires it.
+func _clear_status() -> void:
+	if _status != null:
+		_status.text = ""
+
+
 func _on_buy_toggled(pressed: bool) -> void:
 	if pressed:
+		_clear_status()
 		_side = Order.Dir.BUY
 		_refresh()
 
 
 func _on_sell_toggled(pressed: bool) -> void:
 	if pressed:
+		_clear_status()
 		_side = Order.Dir.SELL
 		_refresh()
 
 
 func _on_kind_selected(_index: int) -> void:
+	_clear_status()
 	_reset_trigger()
 	_refresh()
 
 
 func _on_shares_changed() -> void:
+	_clear_status()
 	_refresh()
 
 

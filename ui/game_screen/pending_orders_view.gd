@@ -5,6 +5,7 @@ extends PanelContainer
 signal stock_selected(symbol: String)
 
 var _list: VBoxContainer
+var _refresh_queued: bool = false
 var _empty: Label
 
 
@@ -37,7 +38,16 @@ func _ready() -> void:
 	_refresh()
 
 
+## Several signals fire per action/day; rebuild once per frame.
+func _queue_refresh() -> void:
+	if _refresh_queued:
+		return
+	_refresh_queued = true
+	_refresh.call_deferred()
+
+
 func _refresh() -> void:
+	_refresh_queued = false
 	var s: GameSession = GameManager.session
 	if s == null or not is_node_ready():
 		return
@@ -78,24 +88,24 @@ func _make_row(order: Order) -> Control:
 
 func _on_cancel_pressed(order_id: int) -> void:
 	GameCommands.cancel_order(order_id)
-	_refresh()
+	_queue_refresh()
 
 
 func _on_order_placed(_order: Order) -> void:
-	_refresh()
+	_queue_refresh()
 
 
 func _on_order_cancelled(_order_id: int) -> void:
-	_refresh()
+	_queue_refresh()
 
 
 func _on_order_filled(_order: Order, _result: TradeResult) -> void:
-	_refresh()
+	_queue_refresh()
 
 
 func _on_day_advanced(_day: int) -> void:
-	_refresh()
+	_queue_refresh()
 
 
 func _on_portfolio_changed() -> void:
-	_refresh()
+	_queue_refresh()

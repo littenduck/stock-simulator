@@ -8,6 +8,7 @@ const MAX_ENTRIES := 40
 var _list: VBoxContainer
 var _empty: Label
 var _entries: Array[Rumor] = []
+var _refresh_queued: bool = false
 
 
 @export var show_title: bool = true
@@ -41,16 +42,25 @@ func _ready() -> void:
 	_refresh()
 
 
+## One day fires several signals (posted, resolved, day, perks); rebuild the list once per frame.
+func _queue_refresh() -> void:
+	if _refresh_queued:
+		return
+	_refresh_queued = true
+	_refresh.call_deferred()
+
+
 func _refresh() -> void:
+	_refresh_queued = false
 	if _list == null:
 		return
 	for child in _list.get_children():
-		_list.remove_child(child)
-		if child != _empty:
+		if child != _empty:  # the placeholder stays in the tree (an unparented node would leak)
+			_list.remove_child(child)
 			child.queue_free()
-	if _entries.is_empty():
+	_empty.visible = _entries.is_empty()
+	if not _empty.is_inside_tree():
 		_list.add_child(_empty)
-		return
 	for i in range(_entries.size() - 1, -1, -1):
 		_list.add_child(_make_entry(_entries[i]))
 
@@ -147,21 +157,21 @@ func _on_rumor_posted(rumor: Rumor) -> void:
 		_entries.append(rumor)
 		if _entries.size() > MAX_ENTRIES:
 			_entries.remove_at(0)
-	_refresh()
+	_queue_refresh()
 
 
 func _on_rumor_resolved(rumor: Rumor) -> void:
 	if rumor not in _entries:
 		_entries.append(rumor)
-	_refresh()
+	_queue_refresh()
 
 
 func _on_day_advanced(_day: int) -> void:
-	_refresh()
+	_queue_refresh()
 
 
 func _on_perks_changed() -> void:
-	_refresh()
+	_queue_refresh()
 
 
 ## Thin bar: the shown credibility as a fill, or the Fact Checker range as a band, with a % label.

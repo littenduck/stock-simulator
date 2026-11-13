@@ -14,7 +14,7 @@ UI_FLOW_START_CASH,Starting cash: %s
 UI_FLOW_LOCKED,Locked
 UI_FLOW_LOCKED_GENERIC,Keep playing to unlock this.
 UI_FLOW_UNLOCK_HINT_DAY_TRADER,Finish any run.
-UI_FLOW_UNLOCK_HINT_VALUE_INVESTOR,Reach $20000 net worth in a single run.
+UI_FLOW_UNLOCK_HINT_VALUE_INVESTOR,"Reach $20,000 net worth in a single run."
 UI_FLOW_DIFFICULTY_LEVEL,Level %d
 UI_FLOW_DIFFICULTY_1,Standard rules.
 UI_FLOW_DIFFICULTY_2,Fees +50%.

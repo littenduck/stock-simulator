@@ -134,6 +134,10 @@ func _on_edit_gui_input(event: InputEvent) -> void:
 	elif key.keycode == KEY_ESCAPE:
 		line_edit.accept_event()
 		line_edit.release_focus()
+	elif key.keycode == KEY_SPACE:
+		# A space is never part of a quantity. Swallow it (it must not type, and must not advance the day
+		# while the player is entering a number).
+		line_edit.accept_event()
 
 
 func _update_message() -> void:

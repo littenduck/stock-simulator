@@ -1,11 +1,11 @@
 ## Dependency-free test runner.
 ##   godot --headless --path . --script res://tests/run_tests.gd -- [dir] [--filter=text]
 ## Runs every tests/**/test_*.gd (or only under [dir]); exit code 1 if anything fails.
-## CONTRACT: frozen (lead).
+## Runs in _initialize (not _init) so the autoloads (EventBus, GameManager, SaveManager) exist when scripts compile.
 extends SceneTree
 
 
-func _init() -> void:
+func _initialize() -> void:
 	var args := OS.get_cmdline_user_args()
 	var root := "res://tests"
 	var filter := ""

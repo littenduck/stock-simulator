@@ -124,7 +124,7 @@ func _play_intro() -> void:
 		return
 	_panel.pivot_offset = _panel.size * 0.5
 	_tween = create_tween().set_parallel(true)
-	_tween.tween_property(_dim, "color:a", 0.66, 0.28)
+	_tween.tween_property(_dim, "color:a", 0.80, 0.28)
 	_tween.tween_property(_panel, "modulate:a", 1.0, 0.18)
 	_tween.tween_property(_panel, "scale", Vector2.ONE, 0.42).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_tween.tween_property(_title_label, "modulate:a", 1.0, 0.25).set_delay(0.18)

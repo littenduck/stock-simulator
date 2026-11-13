@@ -7,7 +7,7 @@
 class_name PerkCard
 extends Button
 
-const CARD_SIZE := Vector2(236, 318)
+const CARD_SIZE := Vector2(236, 268)
 
 var perk: PerkDef
 var index: int = 0
@@ -74,11 +74,11 @@ func setup(p_perk: PerkDef, p_index: int, title_text: String, desc_text: String,
 	margin.add_theme_constant_override("margin_left", 16)
 	margin.add_theme_constant_override("margin_right", 16)
 	margin.add_theme_constant_override("margin_top", 18)
-	margin.add_theme_constant_override("margin_bottom", 16)
+	margin.add_theme_constant_override("margin_bottom", 14)
 	add_child(margin)
 	var box := VBoxContainer.new()
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_theme_constant_override("separation", 8)
+	box.add_theme_constant_override("separation", 7)
 	margin.add_child(box)
 
 	# Rarity ribbon.
@@ -136,6 +136,9 @@ func setup(p_perk: PerkDef, p_index: int, title_text: String, desc_text: String,
 	desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	desc.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	desc.max_lines_visible = 4
+	desc.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	desc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	desc.add_theme_font_size_override("font_size", 16)
 	desc.add_theme_color_override("font_color", UiPalette.INK_MUTED)

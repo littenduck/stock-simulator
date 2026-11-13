@@ -27,7 +27,10 @@ with its original `License.txt`. Credit is not required but appreciated: "Sound 
 | `audio/kenney_impact-sounds/` | Impact Sounds 1.0 | not yet |
 
 ## Art / fonts
-`icon.svg` belongs to the project. No third-party art or fonts yet.
+`icon.svg` belongs to the project. The company and perk icons are 16x16 pixel bitmaps written as text in
+`ui/theme/pixel_icons.gd` (original work). The UI uses Godot's built-in default font; no font files are shipped.
+UI panel/button textures: Kenney pixel UI pack in `ui/theme/assets/kenney_pixel-ui-pack/` (see the licence file in that folder).
+
 
 ## Music (`audio/music/`)
 | File | What it is |

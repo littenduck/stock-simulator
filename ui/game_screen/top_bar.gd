@@ -30,7 +30,10 @@ func _ready() -> void:
 	_net_worth = _stat(row, "UI_GAME_NET_WORTH", hero_size) as Label
 	_return = _stat(row, "UI_GAME_RETURN", value_size, true) as GameDelta
 
-	_alert = GameFmt.label("", GameColors.DOWN, 18)
+	_alert = GameFmt.label("", GameColors.DOWN, 16)
+	# Wraps instead of widening the bar: a long alert used to push the whole screen out of the window.
+	_alert.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_alert.custom_minimum_size = Vector2(60, 0)
 	_alert.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_alert.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_alert.vertical_alignment = VERTICAL_ALIGNMENT_CENTER

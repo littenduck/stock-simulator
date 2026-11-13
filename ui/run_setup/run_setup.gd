@@ -64,13 +64,52 @@ func _build_characters() -> void:
 		card.toggle_mode = true
 		card.button_group = _character_group
 		card.disabled = not unlocked
-		card.custom_minimum_size = Vector2(300, 190)
+		card.custom_minimum_size = Vector2(300, 250)
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		card.focus_mode = Control.FOCUS_ALL
+		_style_card(card, unlocked)
 		card.add_child(_character_card_body(def, unlocked))
 		card.toggled.connect(_on_character_card_toggled.bind(def))
 		_character_row.add_child(card)
 		if unlocked and _character == null:
 			card.button_pressed = true  # also fires toggled -> _character
+
+
+const AVATARS := {"rookie": "star", "day_trader": "bolt", "value_investor": "bank"}
+
+
+## Same cream card for every state: unselected is dimmer with a grey frame, selected has a green frame and glow.
+func _style_card(card: Button, unlocked: bool) -> void:
+	for state in ["normal", "hover", "pressed", "hover_pressed", "focus", "disabled"]:
+		var sb := StyleBoxFlat.new()
+		sb.set_corner_radius_all(10)
+		sb.bg_color = Color("#f6edd9")
+		var selected: bool = state in ["pressed", "hover_pressed"]
+		sb.set_border_width_all(4 if selected else 3)
+		sb.border_color = Color("#4fb83a") if selected else Color("#8d8a94")
+		if selected:
+			sb.shadow_color = Color(0.3, 0.85, 0.25, 0.55)
+			sb.shadow_size = 14
+		elif state == "hover":
+			sb.border_color = Color("#b9b5c2")
+			sb.bg_color = Color("#fbf4e3")
+		card.add_theme_stylebox_override(state, StyleBoxEmpty.new() if state == "focus" else sb)
+	card.set_meta("fx_off", true)
+	card.pivot_offset_ratio = Vector2(0.5, 0.5)
+	card.toggled.connect(func(on: bool) -> void: _restyle_card(card, on, unlocked))
+	_restyle_card(card, false, unlocked, false)
+
+
+func _restyle_card(card: Button, on: bool, unlocked: bool, animate: bool = true) -> void:
+	var dim: float = 1.0 if on else (0.62 if not unlocked else 0.8)
+	card.self_modulate = Color(1, 1, 1, 1)
+	for child in card.get_children():
+		if child is Control:
+			(child as Control).modulate = Color(dim, dim, dim, 1.0)
+	if on and animate and card.is_inside_tree():
+		var t := card.create_tween()
+		t.tween_property(card, "scale", Vector2(1.04, 1.04), 0.10)
+		t.tween_property(card, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
 func _character_card_body(def: CharacterDef, unlocked: bool) -> Control:
@@ -83,8 +122,22 @@ func _character_card_body(def: CharacterDef, unlocked: bool) -> Control:
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_theme_constant_override("separation", 6)
 	margin.add_child(box)
-	box.add_child(_label(tr(def.title_key), &"HeaderLabel"))
-	box.add_child(_label(tr("UI_FLOW_START_CASH") % UiFormat.money(def.start_cash), &"PositiveLabel"))
+	var head := HBoxContainer.new()
+	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	head.add_theme_constant_override("separation", 12)
+	head.add_child(CompanyBadge.make(String(AVATARS.get(String(def.id), "star")), 64))
+	var names := VBoxContainer.new()
+	names.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	names.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	names.add_child(_label(tr(def.title_key), &"HeaderLabel"))
+	names.add_child(_label(tr("UI_FLOW_START_CASH") % UiFormat.money(def.start_cash), &"PositiveLabel"))
+	head.add_child(names)
+	box.add_child(head)
+	var rule := ColorRect.new()
+	rule.color = Color(0.55, 0.54, 0.58, 0.5)
+	rule.custom_minimum_size = Vector2(0, 2)
+	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(rule)
 	var desc := _label(tr(def.description_key), &"")
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -93,7 +146,6 @@ func _character_card_body(def: CharacterDef, unlocked: bool) -> Control:
 		var locked := _label(tr("UI_FLOW_LOCKED") + ": " + _unlock_hint(def), &"RarityLegendaryLabel")
 		locked.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		box.add_child(locked)
-		box.modulate = Color(1, 1, 1, 0.7)
 	return margin
 
 

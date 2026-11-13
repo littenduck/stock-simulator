@@ -35,10 +35,12 @@ func _build_rows() -> void:
 		_grid.add_child(_cell(tr(key), &"SubtleLabel"))
 	for i in scores.size():
 		var entry: Dictionary = scores[i]
-		_grid.add_child(_cell("%d" % (i + 1), &"RarityLegendaryLabel" if i == 0 else &""))
+		var rank := _cell("%d" % (i + 1), &"RarityLegendaryLabel" if i == 0 else &"")
+		rank.add_theme_font_size_override("font_size", 16)
+		_grid.add_child(rank)
 		_grid.add_child(_cell(UiFormat.money(float(entry.get("score", 0.0))), &"PositiveLabel"))
 		_grid.add_child(_cell(_character_name(entry.get("character", "")), &""))
-		_grid.add_child(_cell(str(entry.get("difficulty", 1)), &""))
+		_grid.add_child(_cell(str(int(entry.get("difficulty", 1))), &""))
 		_grid.add_child(_cell(_date_text(entry.get("date", "")), &"SubtleLabel"))
 
 
