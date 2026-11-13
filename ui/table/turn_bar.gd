@@ -91,6 +91,7 @@ func _on_ready(ready_step: int) -> void:
 func _on_next_pressed() -> void:
 	match step:
 		Step.PRE:
+			TableUi.session().open_market()    # pre-market is over: trading, calls and the skills of this window open
 			_on_step(Step.OPEN)
 		Step.OPEN, Step.AFTER:
 			GameManager.next_day()
@@ -102,7 +103,7 @@ func _refresh() -> void:
 		return
 	_build_dots()
 	var alive := t.human().alive and not t.is_finished()
-	var can_press := _ready_next and alive and step != Step.NEXT
+	var can_press := _ready_next and alive and step != Step.NEXT and not TableUi.skill_busy
 	if step == Step.OPEN:
 		can_press = can_press and t.phase == TableSession.Phase.ACTION
 	elif step == Step.AFTER:

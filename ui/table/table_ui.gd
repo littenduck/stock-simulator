@@ -67,6 +67,15 @@ static var modal_open: bool = false
 ## The step of the turn the screen is in (TurnBar.Step). Only step 1 (market open) lets you trade or open the rumor card.
 static var current_step: int = 0
 
+## True while a skill animation plays: nothing moves on until it is over (the Next button waits).
+static var skill_busy: bool = false
+
+
+static func set_busy(on: bool) -> void:
+	skill_busy = on
+	EventBus.table_changed.emit()
+
+
 static var _arrow: ImageTexture = null
 
 const ARROW_ROWS := [

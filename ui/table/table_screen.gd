@@ -105,6 +105,7 @@ func _on_result_closed() -> void:
 		if t != null:
 			# The day turns over: night to dawn, the day counter flips, and only then the pre-market begins.
 			await DayTransition.play(self, t.day - 1, t.day, t.config.trading_days)
+			await SkillFx.play_all(self, t.take_skill_events(TableSkills.Slot.NEXT_DAY), t)
 		_begin_day(0.3)
 
 
@@ -112,7 +113,8 @@ func _on_result_closed() -> void:
 ## opens), then the market is open and the turn waits for you.
 func _begin_day(delay: float) -> void:
 	EventBus.table_step.emit(TurnBar.Step.PRE)
-	await get_tree().create_timer(delay).timeout
+	# The PRE-MARKET banner has the screen first; the news comes in once it has swept past.
+	await get_tree().create_timer(maxf(delay, 1.5)).timeout
 	var t := TableUi.session()
 	if t == null or not is_inside_tree():
 		return
@@ -121,6 +123,10 @@ func _begin_day(delay: float) -> void:
 	if t != null and t.boss_rumor != null and t.boss_rumor.id != _boss_shown_id and t.boss_bet_of(0) == null:
 		_boss_shown_id = t.boss_rumor.id
 		await _play_news(true)
+	# Pre-market skills (an Insider's tip, Hana's first purchase) play before the market can open.
+	t = TableUi.session()
+	if t != null:
+		await SkillFx.play_all(self, t.take_skill_events(TableSkills.Slot.PRE_MARKET), t)
 	EventBus.table_step_ready.emit(TurnBar.Step.PRE)    # the news is in the feed: Next opens the market
 
 

@@ -36,6 +36,8 @@ func start_run(config: RunConfig) -> void:
 	else:
 		session = GameSession.new(config, ContentDb.companies(), ContentDb.perks(), ContentDb.news(), _unlocked_ids())
 	session.start()
+	if session is TableSession:
+		(session as TableSession).strict_windows = true
 	opening_pending = config.mode == RunConfig.Mode.TABLE
 	SaveManager.save_run(session)
 	_enter_game()
@@ -59,6 +61,8 @@ func continue_run() -> bool:
 		SaveManager.delete_run()
 		return false
 	session = loaded
+	if session is TableSession:
+		(session as TableSession).strict_windows = true
 	_enter_game()
 	return true
 

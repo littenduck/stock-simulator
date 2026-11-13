@@ -24,6 +24,12 @@ const HODL_MAX_GAIN := 1.8
 
 var seats: Array[Seat] = []
 var phase: Phase = Phase.ACTION
+## Where in the day we are (TableSkills.Window): pre-market, market open, after-market, next day. Runs played through
+## the game screen turn `strict_windows` on, and then trading, calls and skills only work in their own window.
+var window: int = TableSkills.Slot.MARKET_OPEN
+var strict_windows: bool = false
+## What skills did, for the animations: {"seat","skill","window","public","amount","target"}. Not saved.
+var skill_events: Array[Dictionary] = []
 ## Shown to everybody today; resolves tomorrow.
 var today_rumor: TableRumor
 ## Already dealt for tomorrow; only an Insider may know it (and flip it).
@@ -71,6 +77,7 @@ static func _default_roster() -> Array[CharacterDef]:
 
 ## Seats the table, deals the first rumors. There is no perk draft in table mode.
 func start() -> Array[PerkDef]:
+	window = TableSkills.Slot.PRE_MARKET
 	_seat_players()
 	_pick_insider_days()
 	for seat in seats:
@@ -86,6 +93,40 @@ func start() -> Array[PerkDef]:
 
 func human() -> Seat:
 	return seats[0]
+
+
+## Pre-market is over: the market opens (trading, calls and most skills now work).
+func open_market() -> void:
+	if phase == Phase.ACTION and window == TableSkills.Slot.PRE_MARKET:
+		window = TableSkills.Slot.MARKET_OPEN
+
+
+## True while calls and trades are allowed.
+func market_is_open() -> bool:
+	return phase == Phase.ACTION and (not strict_windows or window == TableSkills.Slot.MARKET_OPEN)
+
+
+## True when `skill` may be used right now.
+func skill_allowed(skill: StringName) -> bool:
+	return not strict_windows or TableSkills.allows(skill, window)
+
+
+## The skill events of a window, removed from the list (the screen plays them as that window comes up).
+func take_skill_events(for_window: int) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var rest: Array[Dictionary] = []
+	for e in skill_events:
+		if int(e["window"]) == for_window:
+			out.append(e)
+		else:
+			rest.append(e)
+	skill_events = rest
+	return out
+
+
+func _log_skill(seat_id: int, skill: StringName, amount: float = 0.0, target: int = -1) -> void:
+	skill_events.append({"seat": seat_id, "skill": skill, "window": window, "public": not TableSkills.is_hidden(skill),
+			"amount": amount, "target": target})
 
 
 func quarter() -> int:
@@ -171,7 +212,7 @@ func human_rank() -> int:
 ## True while the seat is an Insider with a hint about tomorrow's rumor and its skill is unused.
 func can_flip(seat_id: int) -> bool:
 	var seat := seats[seat_id]
-	return seat.alive and seat.has_flag(&"insider") and not seat.skill_used \
+	return seat.alive and seat.has_flag(&"insider") and not seat.skill_used and skill_allowed(TableSkills.INSIDER_FLIP) \
 			and tomorrow_rumor != null and seat.knowledge.has(tomorrow_rumor.id) and not tomorrow_rumor.planted
 
 
@@ -182,26 +223,26 @@ func insider_hint() -> TableRumor:
 
 func can_double(seat_id: int) -> bool:
 	var seat := seats[seat_id]
-	return phase == Phase.REVEALED and seat.alive and seat.has_flag(&"double_down") and not seat.skill_used \
+	return phase == Phase.REVEALED and skill_allowed(TableSkills.DOUBLE_DOWN) and seat.alive and seat.has_flag(&"double_down") and not seat.skill_used \
 			and daily_bet_of(seat_id) != null and seat.portfolio.cash >= MIN_PREMIUM
 
 
 # ---------------------------------------------------------------- actions of the human (seat 0) and shared helpers
 
 func set_call(side: int, seat_id: int = 0) -> void:
-	if phase == Phase.ACTION and seats[seat_id].alive:
+	if market_is_open() and seats[seat_id].alive:
 		calls[seat_id] = side
 		copy_targets.erase(seat_id)
 
 
 func set_boss_call(side: int, seat_id: int = 0) -> void:
-	if phase == Phase.ACTION and boss_rumor != null and boss_bet_of(seat_id) == null:
+	if market_is_open() and boss_rumor != null and boss_bet_of(seat_id) == null:
 		boss_calls[seat_id] = side
 
 
 ## Copilot: copy another seat's call today (-1 = stop copying).
 func set_copy_target(target_id: int, seat_id: int = 0) -> void:
-	if phase != Phase.ACTION or not seats[seat_id].has_flag(&"copilot"):
+	if not market_is_open() or not skill_allowed(TableSkills.COPILOT) or not seats[seat_id].has_flag(&"copilot"):
 		return
 	if target_id < 0 or target_id == seat_id:
 		copy_targets.erase(seat_id)
@@ -210,7 +251,7 @@ func set_copy_target(target_id: int, seat_id: int = 0) -> void:
 
 
 func arm_flip(on: bool, seat_id: int = 0) -> void:
-	if phase == Phase.ACTION and (not on or can_flip(seat_id)):
+	if market_is_open() and (not on or can_flip(seat_id)):
 		flip_armed[seat_id] = on
 
 
@@ -220,7 +261,7 @@ func buy_fraction(seat_id: int, symbol: String, fraction: float) -> TradeResult:
 
 
 func buy_amount(seat_id: int, symbol: String, amount: float) -> TradeResult:
-	if phase != Phase.ACTION:
+	if not market_is_open():
 		return TradeResult.fail(ERR_MARKET_CLOSED)
 	var seat := seats[seat_id]
 	if not market.has_symbol(symbol):
@@ -254,7 +295,7 @@ func sell_preview(seat_id: int, symbol: String, fraction: float) -> Dictionary:
 
 ## Sells a share of the position (0.5 = half, 1.0 = everything).
 func sell_fraction(seat_id: int, symbol: String, fraction: float) -> TradeResult:
-	if phase != Phase.ACTION:
+	if not market_is_open():
 		return TradeResult.fail(ERR_MARKET_CLOSED)
 	var seat := seats[seat_id]
 	var held := seat.portfolio.shares_of(symbol)
@@ -266,7 +307,7 @@ func sell_fraction(seat_id: int, symbol: String, fraction: float) -> TradeResult
 
 ## Sells everything in `from_symbol` and puts the proceeds into `to_symbol`.
 func swap(seat_id: int, from_symbol: String, to_symbol: String) -> TradeResult:
-	if phase != Phase.ACTION:
+	if not market_is_open():
 		return TradeResult.fail(ERR_MARKET_CLOSED)
 	if from_symbol == to_symbol:
 		return TradeResult.fail(TradeService.ERR_INVALID_SHARES)
@@ -287,6 +328,7 @@ func double_down(seat_id: int = 0) -> bool:
 	bet.premium += extra
 	bet.doubled = true
 	seat.skill_used = true
+	_log_skill(seat_id, TableSkills.DOUBLE_DOWN, extra)
 	return true
 
 
@@ -297,6 +339,7 @@ func reveal() -> Array[Dictionary]:
 	if phase != Phase.ACTION or _finished:
 		return last_reveal
 	NpcBrain.decide(self, _rng)
+	window = TableSkills.Slot.AFTER_MARKET
 	bets.clear()
 	last_reveal = []
 	for seat in seats:
@@ -307,6 +350,12 @@ func reveal() -> Array[Dictionary]:
 		var bet := _lock_bet(seat, today_rumor, side, DAILY_RATE, copied_from)
 		if bet != null:
 			bets.append(bet)
+			if copied_from >= 0:
+				_log_skill(seat.id, TableSkills.COPILOT, 0.0, copied_from)
+			if seat.mods.bet_odds_bonus > 0.0:
+				_log_skill(seat.id, TableSkills.GOLDFISH_ODDS, seat.mods.bet_odds_bonus)
+			if bet.odds - RumorTier.odds(bet.side, today_rumor.tier) - seat.mods.bet_odds_bonus > 0.0:
+				_log_skill(seat.id, TableSkills.HODL_SECTOR, seat.mods.sector_odds_bonus)
 		else:
 			seat.streak = 0
 		last_reveal.append(_reveal_entry(seat, bet, false))
@@ -330,6 +379,7 @@ func advance() -> TableReport:
 		report.finished = true
 		return report
 	NpcBrain.after_reveal(self, _rng)
+	window = TableSkills.Slot.NEXT_DAY
 	_apply_flips()
 	day += 1
 	report.day = day
@@ -340,7 +390,9 @@ func advance() -> TableReport:
 		boss_rumor = null
 		boss_bets.clear()
 	for seat in seats:
-		DailyEffects.apply(seat.portfolio, market, seat.mods)
+		var effects := DailyEffects.apply(seat.portfolio, market, seat.mods)
+		if float(effects.get("interest", 0.0)) > 0.0 and seat.has_flag(&"saver"):
+			_log_skill(seat.id, TableSkills.INTEREST, float(effects["interest"]))
 	report.margin_called = Margin.check(portfolio, market, book, mods)
 	if day % RunConfig.QUARTER_DAYS == 0:
 		_review(report)
@@ -453,6 +505,7 @@ func _grant_hodl_stock(seat: Seat) -> void:
 	var shares := floori(seat.character.start_cash * HODL_CASH_SHARE / best_low)
 	seat.portfolio.apply_fill(best, shares, best_low, 0.0)
 	seat.mods.locked_symbol = best
+	_log_skill(seat.id, TableSkills.HODL_BUY, float(shares), -1)
 
 
 ## Deals the rumor for the day after today. On an Insider day it is true, and the Insider is told.
@@ -466,6 +519,7 @@ func _deal_tomorrow() -> void:
 		for seat in seats:
 			if seat.alive and seat.has_flag(&"insider"):
 				seat.knowledge[tomorrow_rumor.id] = true
+				_log_skill(seat.id, TableSkills.INSIDER_TIP)
 
 
 func _apply_flips() -> void:
@@ -476,6 +530,7 @@ func _apply_flips() -> void:
 			seat.knowledge.erase(original.id)
 			seat.knowledge[tomorrow_rumor.id] = false
 			seat.skill_used = true
+			_log_skill(seat.id, TableSkills.INSIDER_FLIP)
 	flip_armed = {}
 
 
@@ -563,6 +618,7 @@ func _review(report: TableReport) -> void:
 
 ## The tomorrow rumor becomes today's; a new one is dealt; a Boss rumor may start.
 func _open_next_day(report: TableReport) -> void:
+	window = TableSkills.Slot.PRE_MARKET
 	today_rumor = tomorrow_rumor
 	today_rumor.activate(day, market)
 	_deal_tomorrow()
@@ -612,6 +668,7 @@ static func from_dict(data: Dictionary, config: RunConfig, company_pool: Array[C
 
 func _restore_table(t: Dictionary) -> void:
 	phase = int(t.get("phase", 0)) as Phase
+	window = TableSkills.Slot.AFTER_MARKET if phase == Phase.REVEALED else TableSkills.Slot.MARKET_OPEN
 	seats = []
 	for sd in t.get("seats", []):
 		var seat := _make_seat(int(sd["id"]), ContentDb.character_by_id(StringName(String(sd["character"]))))

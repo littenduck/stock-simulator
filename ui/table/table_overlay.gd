@@ -58,7 +58,7 @@ func _input(event: InputEvent) -> void:
 		_close()
 	elif _mode == Mode.REVEAL:
 		var t := TableUi.session()
-		if t != null and t.phase == TableSession.Phase.REVEALED:
+		if t != null and t.phase == TableSession.Phase.REVEALED and not TableUi.skill_busy:
 			get_viewport().set_input_as_handled()
 			GameManager.next_day()
 
@@ -83,6 +83,12 @@ func _close() -> void:
 # ---------------------------------------------------------------- reveal
 
 func _on_revealed(_entries: Array) -> void:
+	# The AFTER-MARKET banner sweeps past first, then the bets flip over.
+	_mode = Mode.NONE
+	await get_tree().create_timer(1.1).timeout
+	var t0 := TableUi.session()
+	if t0 == null or t0.phase != TableSession.Phase.REVEALED or not is_inside_tree():
+		return
 	_mode = Mode.REVEAL
 	_play_intro = true
 	_refresh_reveal()
@@ -109,9 +115,11 @@ func _refresh_reveal() -> void:
 	if t.can_double(0):
 		var dbl := GameFmt.button(tr("TABLE_DOUBLE"))
 		dbl.custom_minimum_size = Vector2(0, 44)
+		dbl.disabled = TableUi.skill_busy
 		dbl.pressed.connect(func() -> void:
 			t.double_down(0)
-			TableFx.sfx(&"stamp")
+			# Everybody waits while the skill plays.
+			await SkillFx.play_all(self, t.take_skill_events(TableSkills.Slot.AFTER_MARKET), t)
 			GameManager.table_refresh())
 		_body.add_child(dbl)
 		extras.append(dbl)
@@ -129,10 +137,20 @@ func _refresh_reveal() -> void:
 	if _play_intro:
 		_play_intro = false
 		_animate_reveal(rows, extras)
+		_play_reveal_skills(intro_time + 0.2)
 		if auto_on:
-			_schedule_auto(intro_time + AUTO_HOLD)
+			_schedule_auto(intro_time + AUTO_HOLD + 2.0)
 	elif auto_on:
 		_schedule_auto(1.2)
+
+
+## Once the bets have flipped over, the skills that show in the reveal (a copied bet, odds bonuses) play one by one.
+func _play_reveal_skills(delay: float) -> void:
+	await get_tree().create_timer(delay).timeout
+	var t := TableUi.session()
+	if t == null or _mode != Mode.REVEAL or not is_inside_tree():
+		return
+	await SkillFx.play_all(self, t.take_skill_events(TableSkills.Slot.AFTER_MARKET), t)
 
 
 ## Resolves the day after `seconds`, unless the player already did, the screen moved on, or Dan still has a choice.
@@ -142,6 +160,9 @@ func _schedule_auto(seconds: float) -> void:
 	get_tree().create_timer(seconds).timeout.connect(func() -> void:
 		var t := TableUi.session()
 		if token != _auto_token or t == null or _mode != Mode.REVEAL or not visible:
+			return
+		if TableUi.skill_busy:
+			_schedule_auto(0.8)    # a skill is playing: wait for it
 			return
 		if t.phase == TableSession.Phase.REVEALED and not t.can_double(0):
 			GameManager.next_day())
@@ -198,6 +219,8 @@ func _on_resolved(report: TableReport) -> void:
 	_mode = Mode.NONE
 	_set_modal(false)
 	await get_tree().create_timer(RESULT_DELAY).timeout    # the "Next day" beat before the verdict
+	# A rival's Double Down (decided just before the result) is played in front of everybody first.
+	await SkillFx.play_all(self, t.take_skill_events(TableSkills.Slot.AFTER_MARKET), t)
 	_mode = Mode.RESULT
 	_clear()
 	_body.add_child(GameFmt.label(tr("TABLE_RESULT_TITLE") % report.day, Color.WHITE, 22))
@@ -225,7 +248,6 @@ func _on_resolved(report: TableReport) -> void:
 		e.modulate.a = 0.0
 		e.create_tween().tween_property(e, "modulate:a", 1.0, 0.3).set_delay(at)
 	_set_modal(true)
-	EventBus.table_step.emit(TurnBar.Step.PRE)
 	TableFx.sfx(&"order_placed")
 	UiFx.bounce_in(_panel, 0.0)
 

@@ -35,14 +35,23 @@ percentages, so the edge comes from reading the market and from the characters.
 The picker numbers them: 01 Saving Son, 02 Double Dan, 03 Hodl Hana, 04 Goldfish Gus, 05 Copilot Cody, 06 Insider Inu. There is no easy / hard label.
 Portraits are renders of the free Kenney Mini Characters pack (CC0): the stock models, except Saving Son (lighter skin) and Goldfish Gus (painted goldfish orange with red fins). See `CREDITS.txt` and `tools/kenney_portraits.gd`.
 
-| Character | Rules |
-|---|---|
-| Insider Inu | One random day per quarter she learns tomorrow's rumor is true; she can FLIP it (publish the opposite). The flipped rumor is stamped planted when it resolves. |
-| Copilot Cody | Each day may COPILOT one player: same bet at the normal odds. |
-| Double Dan | Once a quarter, after the reveal, doubles his own option. |
-| Saving Son | Cash earns 0.5% a day. |
-| Goldfish Gus | No credibility, odds or chart, only today's price; winning options pay +0.3 odds. |
-| Hodl Hana | Starts with half her cash in the best stock of the pre-game weeks (bought at its low, head start capped at x1.8 by `HODL_MAX_GAIN`), can never sell it; same-sector rumors pay +0.5 odds. |
+Every skill belongs to a window of the day (`core/table/table_skills.gd`). Outside its window it cannot be used, and
+when it takes effect in front of the table it plays its own animation (`ui/table/skill_fx.gd`) while everybody waits;
+Space skips it. Hidden skills (the Insider's) are only seen by their owner until their effect comes out.
+
+| Character | Window | Rules | Animation |
+|---|---|---|---|
+| Insider Inu | Pre-market | Once a quarter, on one random day, she learns tomorrow's rumor is TRUE (hidden). | An eye opens (only she sees it). |
+| | Market open | Once a quarter she can FLIP that rumor (hidden). Next day it is published as the opposite and stamped planted when it resolves; nobody learns by whom. | The planted stamp at the verdict. |
+| Copilot Cody | Market open | Every day he may COPILOT one rival; after-market he holds the same option at the normal odds. | A beam runs from the copied seat to Cody. |
+| Double Dan | After-market | Once a quarter, when the bets are revealed, he doubles his own option. | A huge x2 slams down. |
+| Saving Son | Next day | His cash earns 0.5% interest. | Coins drift up. |
+| Goldfish Gus | Market open / After-market | No credibility tiers and no chart, only today's price; his options pay +0.3 odds. | Bubbles rise. |
+| Hodl Hana | Pre-market (day 1) / After-market | Half her cash is already in the best stock of the pre-game weeks (bought at its low, head start capped at x1.8 by `HODL_MAX_GAIN`), never sold; options in its sector pay +0.5 odds. | Diamonds rain down; sparkles for the sector bonus. |
+
+The four windows are pre-market (news), market open (trade and call), after-market (the reveal) and next day (the
+market moves). `TableSession.window` tracks them; in a real game (`strict_windows`) trading, calls and skills only work
+in their own window.
 
 ## Where things are
 

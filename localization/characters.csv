@@ -7,25 +7,25 @@ CHAR_VALUE_INVESTOR_TITLE,Value Investor
 CHAR_VALUE_INVESTOR_DESC,"$12,000, cannot short, long dividends are doubled."
 CHAR_INSIDER_INU_TITLE,Insider Inu
 CHAR_INSIDER_INU_DESC,"Knows one rumor a quarter is true, and can publish its opposite."
-CHAR_INSIDER_INU_PASSIVE,"Once a quarter, on a random day, you learn that tomorrow's rumor is TRUE."
-CHAR_INSIDER_INU_ACTIVE,"FLIP (once a quarter): publish the opposite instead. When it resolves it is stamped as planted, and nobody learns by whom."
+CHAR_INSIDER_INU_PASSIVE,"Pre-market (once a quarter, on one random day): you learn that tomorrow's rumor is TRUE."
+CHAR_INSIDER_INU_ACTIVE,"Market open (once a quarter): FLIP that rumor. Next day: it is published as the opposite, and stamped as planted when it resolves. Nobody learns by whom."
 CHAR_COPILOT_CODY_TITLE,Copilot Cody
 CHAR_COPILOT_CODY_DESC,"Copies another player's bet whenever he likes."
-CHAR_COPILOT_CODY_PASSIVE,"Each day you may COPILOT another player: you place the same bet as them, at the normal odds."
-CHAR_COPILOT_CODY_ACTIVE,None. Your best skill is picking who to follow.
+CHAR_COPILOT_CODY_PASSIVE,None.
+CHAR_COPILOT_CODY_ACTIVE,"Market open (every day): COPILOT one rival. After-market: you hold the same option as them, at the normal odds."
 CHAR_DOUBLE_DAN_TITLE,Double Dan
 CHAR_DOUBLE_DAN_DESC,"Sees every bet first, then decides whether to double his own."
-CHAR_DOUBLE_DAN_PASSIVE,None. You read the table instead.
-CHAR_DOUBLE_DAN_ACTIVE,"DOUBLE DOWN (once a quarter): after all bets are revealed and before the result, double your own option."
+CHAR_DOUBLE_DAN_PASSIVE,None.
+CHAR_DOUBLE_DAN_ACTIVE,"After-market (once a quarter): DOUBLE DOWN. When the bets are revealed, double your own option before the result."
 CHAR_SAVING_SON_TITLE,Saving Son
 CHAR_SAVING_SON_DESC,Lets the cash work. Simple and steady.
-CHAR_SAVING_SON_PASSIVE,Your cash earns 0.5% interest every day.
+CHAR_SAVING_SON_PASSIVE,Next day: your cash earns 0.5% interest.
 CHAR_SAVING_SON_ACTIVE,None.
 CHAR_GOLDFISH_GUS_TITLE,Goldfish Gus
 CHAR_GOLDFISH_GUS_DESC,Forgets everything but today. Gets paid for it.
-CHAR_GOLDFISH_GUS_PASSIVE,"You can't see credibility or the chart, only today's price. Winning options pay +0.3 odds."
+CHAR_GOLDFISH_GUS_PASSIVE,"Market open: no credibility tiers and no chart, only today's price. After-market: your options pay +0.3 odds."
 CHAR_GOLDFISH_GUS_ACTIVE,None.
 CHAR_HODL_HANA_TITLE,Hodl Hana
 CHAR_HODL_HANA_DESC,"Never sells. Believes in one stock, loudly."
-CHAR_HODL_HANA_PASSIVE,"You start with half your cash in the best stock of the pre-game weeks, bought at its low, and can never sell it. Rumors about its sector pay +0.5 odds."
+CHAR_HODL_HANA_PASSIVE,"Pre-market, day 1: half your cash is already in the best stock of the pre-game weeks, bought at its low, and it can never be sold. After-market: options on rumors in its sector pay +0.5 odds."
 CHAR_HODL_HANA_ACTIVE,None.

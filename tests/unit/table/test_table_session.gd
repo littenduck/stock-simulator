@@ -422,3 +422,63 @@ func test_ending_the_turn_without_a_call_counts_as_pass() -> void:
 	s.reveal()
 	assert_true(s.daily_bet_of(0) == null, "no call, no bet")
 	assert_almost(s.portfolio.cash, cash, 0.001, "and no money spent")
+
+
+# ---------------------------------------------------------------- the four windows of the day
+
+func test_strict_windows_close_trading_and_calls_before_market_open() -> void:
+	var s := _session(&"saving_son")
+	s.strict_windows = true
+	assert_eq(s.window, TableSkills.Slot.PRE_MARKET)
+	var symbol: String = s.market.symbols()[0]
+	assert_false(s.buy_fraction(0, symbol, 0.25).ok, "no trading in pre-market")
+	s.set_call(RumorTier.Side.BELIEVE)
+	assert_false(s.calls.has(0), "no call in pre-market")
+	s.open_market()
+	assert_eq(s.window, TableSkills.Slot.MARKET_OPEN)
+	assert_true(s.buy_fraction(0, symbol, 0.25).ok, "trading at market open")
+	s.set_call(RumorTier.Side.BELIEVE)
+	assert_true(s.calls.has(0))
+	s.reveal()
+	assert_eq(s.window, TableSkills.Slot.AFTER_MARKET)
+	assert_false(s.buy_fraction(0, symbol, 0.25).ok, "no trading after the reveal")
+	s.advance()
+	assert_eq(s.window, TableSkills.Slot.PRE_MARKET, "the next day starts in pre-market")
+
+
+func test_skills_only_work_in_their_window() -> void:
+	var s := _session(&"copilot_cody")
+	s.strict_windows = true
+	s.set_copy_target(1)
+	assert_false(s.copy_targets.has(0), "copilot is a market-open skill")
+	s.open_market()
+	s.set_copy_target(1)
+	assert_true(s.copy_targets.has(0))
+	assert_false(TableSkills.allows(TableSkills.DOUBLE_DOWN, TableSkills.Slot.MARKET_OPEN))
+	assert_true(TableSkills.allows(TableSkills.DOUBLE_DOWN, TableSkills.Slot.AFTER_MARKET))
+
+
+func test_skill_events_are_logged_in_their_window() -> void:
+	var s := _session(&"copilot_cody")
+	s.open_market()
+	s.set_call(RumorTier.Side.BELIEVE, 1)
+	s.set_copy_target(1)
+	s.reveal()
+	var events := s.take_skill_events(TableSkills.Slot.AFTER_MARKET)
+	var copies := events.filter(func(e: Dictionary) -> bool: return e["skill"] == TableSkills.COPILOT)
+	assert_true(copies.size() <= 1)
+	assert_eq(s.take_skill_events(TableSkills.Slot.AFTER_MARKET).size(), 0, "events are handed out once")
+
+
+func test_hodl_hana_logs_her_first_purchase_in_pre_market() -> void:
+	var s := _session(&"hodl_hana")
+	var events := s.take_skill_events(TableSkills.Slot.PRE_MARKET)
+	assert_true(events.any(func(e: Dictionary) -> bool: return e["skill"] == TableSkills.HODL_BUY))
+
+
+func test_interest_is_logged_when_the_day_turns() -> void:
+	var s := _session(&"saving_son")
+	s.reveal()
+	s.advance()
+	var events := s.take_skill_events(TableSkills.Slot.NEXT_DAY)
+	assert_true(events.any(func(e: Dictionary) -> bool: return e["skill"] == TableSkills.INTEREST and float(e["amount"]) > 0.0))

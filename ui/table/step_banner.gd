@@ -6,8 +6,8 @@ extends Control
 
 const HINT_KEYS := ["TABLE_BANNER_PRE", "TABLE_BANNER_OPEN", "TABLE_BANNER_AFTER"]
 const TIME_KEYS := ["TABLE_BANNER_DAWN", "TABLE_BANNER_DAY", "TABLE_BANNER_NIGHT"]
-const SLIDE := 0.4
-const HOLD := 1.3
+const SLIDE := 0.35
+const HOLD := 0.95
 const SIZE := Vector2(620, 132)
 
 var _banner: Control
