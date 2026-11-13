@@ -31,6 +31,7 @@ static func play(host: Control, session: TableSession) -> void:
 
 
 func _ready() -> void:
+	TableUi.locks += 1
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	set_meta("no_fx", true)
@@ -139,6 +140,7 @@ func _run() -> void:
 	var out := create_tween()
 	out.tween_property(self, "modulate:a", 0.0, 0.3)
 	await out.finished
+	TableUi.locks = maxi(TableUi.locks - 1, 0)
 	finished.emit()
 
 

@@ -22,10 +22,24 @@ func _ready() -> void:
 	_build_switch(_auto_row, GameSettings.auto_reveal(), func(value: bool) -> void: GameSettings.set_auto_reveal(value))
 	_build_switch(_opening_row, GameSettings.opening_enabled(), func(value: bool) -> void: GameSettings.set_opening_enabled(value))
 	_build_switch(_fees_row, GameSettings.fees_enabled(), func(value: bool) -> void: GameSettings.set_fees_enabled(value))
+	_build_language()
 	_build_volume()
 	_display_section.visible = not OS.has_feature("web")
 	_build_switch(_fullscreen_row, GameSettings.fullscreen(), _on_fullscreen_chosen)
 	(_margin_row.get_child(1) as Button).grab_focus()
+
+
+## The language row: a title on the left, the two language buttons on the right (switching rebuilds this screen).
+func _build_language() -> void:
+	var row := HBoxContainer.new()
+	var title := Label.new()
+	title.text = tr("UI_FLOW_SETTINGS_LANGUAGE")
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(title)
+	row.add_child(LanguageToggle.new())
+	var column := _margin_row.get_parent()
+	column.add_child(row)
+	column.move_child(row, column.get_node("GameModeHeader").get_index())    # above the game mode rules
 
 
 func _unhandled_input(event: InputEvent) -> void:

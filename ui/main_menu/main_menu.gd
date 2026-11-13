@@ -27,7 +27,17 @@ func _ready() -> void:
 	else:
 		_new_run_button.grab_focus()
 	_add_version_label()
+	_add_language_toggle()
 	_animate_in()
+
+
+## The language buttons in the bottom-left corner.
+func _add_language_toggle() -> void:
+	var toggle := LanguageToggle.new()
+	toggle.name = "LanguageToggle"
+	toggle.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_MINSIZE, 12)
+	toggle.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	add_child(toggle)
 
 
 ## Small muted version text in the bottom-right corner, read from project.godot (application/config/version).

@@ -46,6 +46,9 @@ func _ready() -> void:
 	_next_day.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_next_day.pressed.connect(_on_next_day_pressed)
 	row.add_child(_next_day)
+	var language := LanguageToggle.new()
+	language.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(language)
 	var menu := GameFmt.button(tr("UI_GAME_MENU") + "  [Esc]")
 	menu.custom_minimum_size = Vector2(110, 44)
 	menu.size_flags_vertical = Control.SIZE_SHRINK_CENTER

@@ -36,6 +36,23 @@ static func set_opening_enabled(value: bool) -> void:
 	_set_value("opening_enabled", value)
 
 
+## "en" or "zh". With nothing saved yet the language of the computer is used (Chinese computers start in Chinese).
+static func language() -> String:
+	var saved: Variant = _get_value("language", "")
+	if String(saved) in ["en", "zh"]:
+		return String(saved)
+	return "zh" if OS.get_locale_language() == "zh" else "en"
+
+
+static func set_language(code: String) -> void:
+	_set_value("language", code)
+	apply_language()
+
+
+static func apply_language() -> void:
+	TranslationServer.set_locale(language())
+
+
 ## Trading fees in table mode (off by default).
 static func fees_enabled() -> bool:
 	return bool(_get_value("fees_enabled", false))
@@ -72,6 +89,7 @@ static func apply_once() -> void:
 	if _applied:
 		return
 	_applied = true
+	apply_language()
 	apply_audio()
 	apply_display()
 

@@ -44,6 +44,7 @@ static func play(host: Control, p_from: int, p_to: int, p_total: int, p_info: Di
 
 
 func _ready() -> void:
+	TableUi.locks += 1
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	set_meta("no_fx", true)
@@ -215,6 +216,7 @@ func _run(chip_col: Control, pick_row: Control) -> void:
 	await _wait(0.35)
 	if _skipped:
 		modulate.a = 0.0
+	TableUi.locks = maxi(TableUi.locks - 1, 0)
 	finished.emit()
 
 
