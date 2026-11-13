@@ -13,3 +13,7 @@ extends Resource
 @export var starting_perks: Array[PerkDef] = []
 ## Profile unlock id required to select this character. Empty = always available.
 @export var unlock_id: StringName = &""
+## True for the six table-mode seats (rivals draw from these); the classic characters stay out of the table.
+@export var table_role: bool = false
+## One-line "easy / advanced" hint for the character picker: "easy" or "advanced".
+@export var difficulty_tag: String = "easy"

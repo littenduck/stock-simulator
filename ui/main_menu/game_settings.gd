@@ -18,6 +18,15 @@ static func margin_enabled() -> bool:
 	return bool(_get_value("margin_enabled", false))
 
 
+## Trading fees in table mode (off by default).
+static func fees_enabled() -> bool:
+	return bool(_get_value("fees_enabled", false))
+
+
+static func set_fees_enabled(value: bool) -> void:
+	_set_value("fees_enabled", value)
+
+
 static func volume() -> float:
 	return clampf(float(_get_value("volume", 0.8)), 0.0, 1.0)
 

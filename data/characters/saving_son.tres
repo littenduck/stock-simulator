@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CharacterDef" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://data/defs/character_def.gd" id="1"]
+[ext_resource type="Script" path="res://data/defs/perk_effect_def.gd" id="2"]
+
+[sub_resource type="Resource" id="Resource_0"]
+script = ExtResource("2")
+stat = &"cash_interest_daily"
+op = 0
+value = 0.005
+
+[resource]
+script = ExtResource("1")
+id = &"saving_son"
+title_key = "CHAR_SAVING_SON_TITLE"
+description_key = "CHAR_SAVING_SON_DESC"
+start_cash = 10000.0
+effects = Array[ExtResource("2")]([SubResource("Resource_0")])
+flags = Array[StringName]([&"saver"])
+unlock_id = &""
+table_role = true
+difficulty_tag = "easy"

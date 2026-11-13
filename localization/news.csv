@@ -63,3 +63,23 @@ NEWS_TECH_CHIP_DEMAND,Rumor: AI chip orders are said to be sold out through next
 NEWS_TECH_DATA_BREACH,Rumor: a cloud outage and data leak is said to be brewing
 NEWS_TZLA_CHEAP_MODEL,Rumor: Tezla is said to be readying a budget car for everyone
 NEWS_TZLA_ROBOTAXI_DELAY,Rumor: Tezla's robotaxi launch is said to slip yet again
+GENERIC_UP_1,Rumor: %s is said to have been quietly bought up by a very patient golden retriever
+GENERIC_UP_2,"Rumor: %s is said to have replaced its whole strategy with an intern's napkin sketch, and it works"
+GENERIC_UP_3,"Rumor: %s is said to be adding a rocket emoji to every product, and customers love it"
+GENERIC_UP_4,Rumor: %s is said to have found a loophole that counts Fridays twice
+GENERIC_UP_5,Rumor: a famous investor is said to have been spotted wearing a %s hoodie
+GENERIC_UP_6,"Rumor: %s is said to be launching a product nobody asked for, and everybody wants"
+GENERIC_UP_7,"Rumor: the CEO of %s is said to have finally answered an email, and the news was great"
+GENERIC_UP_8,Rumor: %s is said to have been recommended by a pigeon with a perfect track record
+GENERIC_UP_9,Rumor: analysts are said to have run out of price targets high enough for %s
+GENERIC_UP_10,Rumor: %s is said to have accidentally invented a profitable meeting
+GENERIC_DOWN_1,Rumor: %s is said to have lost its quarterly report somewhere in the office plants
+GENERIC_DOWN_2,Rumor: the CEO of %s is said to have replied all with a very honest opinion
+GENERIC_DOWN_3,Rumor: a pigeon is said to have moved into the %s server room and refuses to leave
+GENERIC_DOWN_4,"Rumor: %s is said to have rebranded again, and nobody can find the new logo"
+GENERIC_DOWN_5,Rumor: %s is said to be pivoting to a business its own lawyers called brave
+GENERIC_DOWN_6,Rumor: a spreadsheet at %s is said to have a cell that equals minus the company
+GENERIC_DOWN_7,Rumor: %s is said to have scheduled a meeting to discuss the meetings
+GENERIC_DOWN_8,Rumor: customers are said to have found the off button of the main %s product
+GENERIC_DOWN_9,Rumor: %s is said to have bought a very expensive office slide
+GENERIC_DOWN_10,Rumor: %s is said to be blaming the weather. Indoors

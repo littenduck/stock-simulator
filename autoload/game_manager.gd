@@ -9,6 +9,7 @@ enum State { MENU, PLAYING, DRAFTING, GAME_OVER }
 const MAIN_MENU_SCENE := "res://ui/main_menu/main_menu.tscn"
 const RUN_SETUP_SCENE := "res://ui/run_setup/run_setup.tscn"
 const GAME_SCENE := "res://ui/game_screen/game_screen.tscn"
+const TABLE_SCENE := "res://ui/table/table_screen.tscn"
 const HIGH_SCORES_SCENE := "res://ui/high_scores/high_scores.tscn"
 const SETTINGS_SCENE := "res://ui/main_menu/settings.tscn"
 
@@ -25,7 +26,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func start_run(config: RunConfig) -> void:
 	if config == null or config.character == null:
 		return
-	session = GameSession.new(config, ContentDb.companies(), ContentDb.perks(), ContentDb.news(), _unlocked_ids())
+	if config.mode == RunConfig.Mode.TABLE:
+		session = TableSession.new(config, ContentDb.companies(), ContentDb.perks(), ContentDb.news(), _unlocked_ids())
+	else:
+		session = GameSession.new(config, ContentDb.companies(), ContentDb.perks(), ContentDb.news(), _unlocked_ids())
 	session.start()
 	SaveManager.save_run(session)
 	_enter_game()
@@ -39,7 +43,11 @@ func continue_run() -> bool:
 	var config := GameSession.config_from_dict(data)
 	if config == null:
 		return false
-	var loaded := GameSession.from_dict(data, config, ContentDb.companies(), ContentDb.perks(), ContentDb.news())
+	var loaded: GameSession
+	if config.mode == RunConfig.Mode.TABLE:
+		loaded = TableSession.from_dict(data, config, ContentDb.companies(), ContentDb.perks(), ContentDb.news())
+	else:
+		loaded = GameSession.from_dict(data, config, ContentDb.companies(), ContentDb.perks(), ContentDb.news())
 	if loaded == null or loaded.is_finished():
 		SaveManager.delete_run()
 		return false
@@ -56,6 +64,9 @@ func has_saved_run() -> bool:
 func next_day() -> void:
 	if state != State.PLAYING or session == null:
 		return
+	if session is TableSession:
+		_table_next()
+		return
 	var report := session.next_day()
 	_emit_report(report)
 	if report.finished:
@@ -65,6 +76,33 @@ func next_day() -> void:
 	if not report.draft_offer.is_empty():
 		_change_state(State.DRAFTING)
 		EventBus.draft_offered.emit(report.draft_offer)
+
+
+## Table mode: the first press reveals everybody's bets, the second one resolves the day.
+func _table_next() -> void:
+	var table := session as TableSession
+	if table.phase == TableSession.Phase.ACTION:
+		var entries := table.reveal()
+		SaveManager.save_run(table)
+		EventBus.portfolio_changed.emit()
+		EventBus.table_revealed.emit(entries)
+	elif table.phase == TableSession.Phase.REVEALED:
+		var report := table.advance()
+		_emit_report(report)
+		EventBus.table_resolved.emit(report)
+		if report.finished:
+			_finish_run()
+			return
+		SaveManager.save_run(table)
+
+
+## Table mode: something the player did (a call, a skill, a trade) changed the state.
+func table_refresh() -> void:
+	if session == null:
+		return
+	SaveManager.save_run(session)
+	EventBus.portfolio_changed.emit()
+	EventBus.table_changed.emit()
 
 
 ## Market orders fill now; limit/stop orders are queued. Failures also emit EventBus.trade_failed.
@@ -131,7 +169,7 @@ func _unlocked_ids() -> Array[StringName]:
 ## current state: prices, and the open draft if there is one.
 func _enter_game() -> void:
 	_change_state(State.DRAFTING if not session.pending_draft.is_empty() else State.PLAYING)
-	await UiFx.change_scene(get_tree(), GAME_SCENE)
+	await UiFx.change_scene(get_tree(), TABLE_SCENE if session is TableSession else GAME_SCENE)
 	# change_scene_to_file is deferred; wait until the new scene's _ready has run.
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -140,7 +178,9 @@ func _enter_game() -> void:
 	EventBus.day_advanced.emit(session.day)
 	EventBus.prices_updated.emit()
 	EventBus.portfolio_changed.emit()
-	EventBus.perks_changed.emit()
+	if not session is TableSession:
+		EventBus.perks_changed.emit()    # table mode has no perks: no pick sound either
+	EventBus.table_changed.emit()
 	for r in session.news.pending():
 		EventBus.rumor_posted.emit(r)
 	for o in session.book.pending():

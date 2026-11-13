@@ -62,6 +62,15 @@ func _run_info() -> String:
 	if session == null or session.config == null or session.config.character == null:
 		return ""
 	var config := session.config
+	if session is TableSession:
+		var table := session as TableSession
+		var text := tr("TABLE_RANK") % [table.human_rank(), table.seats.size()]
+		if table.human_fired:
+			text += "  ·  " + tr("TABLE_YOU_FIRED_SHORT")
+		var start := table.date_of_day(0)
+		if start != "":
+			text += "\n" + tr("TABLE_STARTED") % start
+		return tr(config.character.title_key) + "  ·  " + text
 	return tr("UI_FLOW_RUN_INFO") % [tr(config.character.title_key), config.difficulty]
 
 
@@ -82,6 +91,8 @@ func _fill_unlocks() -> void:
 		if _unlocked_at_start.has(id):
 			continue
 		var character := _character_for_unlock(id)
+		if character != null and not character.table_role and GameManager.session is TableSession:
+			continue    # the classic characters are not on the table, so do not announce them
 		if character != null:
 			lines.append(tr("UI_FLOW_UNLOCK_CHARACTER") % tr(character.title_key))
 		else:

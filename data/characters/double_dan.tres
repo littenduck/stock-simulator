@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CharacterDef" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://data/defs/character_def.gd" id="1"]
+[ext_resource type="Script" path="res://data/defs/perk_effect_def.gd" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"double_dan"
+title_key = "CHAR_DOUBLE_DAN_TITLE"
+description_key = "CHAR_DOUBLE_DAN_DESC"
+start_cash = 10000.0
+flags = Array[StringName]([&"double_down"])
+unlock_id = &""
+table_role = true
+difficulty_tag = "advanced"

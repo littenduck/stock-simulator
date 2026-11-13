@@ -10,6 +10,7 @@ const ERR_NOT_ENOUGH_CASH := "TRADE_ERR_NOT_ENOUGH_CASH"
 const ERR_SHORT_DISABLED := "TRADE_ERR_SHORT_DISABLED"
 const ERR_OVER_LEVERAGE := "TRADE_ERR_OVER_LEVERAGE"
 const ERR_NOT_IMPLEMENTED := "TRADE_ERR_NOT_IMPLEMENTED"
+const ERR_LOCKED := "TRADE_ERR_LOCKED"
 
 const _EPS := 1e-9
 
@@ -32,6 +33,8 @@ static func execute_at(order: Order, price: float, fee: float, market: MarketSim
 	if order.shares <= 0:
 		return TradeResult.fail(ERR_INVALID_SHARES, order)
 	var signed: int = order.shares if order.side == Order.Dir.BUY else -order.shares
+	if signed < 0 and mods.locked_symbol != "" and order.symbol == mods.locked_symbol:
+		return TradeResult.fail(ERR_LOCKED, order)
 	var old_shares: int = portfolio.shares_of(order.symbol)
 	var new_shares: int = old_shares + signed
 	if new_shares < 0 and new_shares < old_shares and not mods.can_short:

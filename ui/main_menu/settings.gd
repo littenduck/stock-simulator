@@ -3,6 +3,7 @@
 extends Control
 
 @onready var _margin_row: HBoxContainer = %MarginRow
+@onready var _fees_row: HBoxContainer = %FeesRow
 @onready var _volume_row: HBoxContainer = %VolumeRow
 @onready var _display_section: VBoxContainer = %DisplaySection
 @onready var _fullscreen_row: HBoxContainer = %FullscreenRow
@@ -16,6 +17,7 @@ var _volume_up: Button
 func _ready() -> void:
 	_back_button.pressed.connect(_on_back_button_pressed)
 	_build_switch(_margin_row, GameSettings.margin_enabled(), _on_margin_chosen)
+	_build_switch(_fees_row, GameSettings.fees_enabled(), func(value: bool) -> void: GameSettings.set_fees_enabled(value))
 	_build_volume()
 	_display_section.visible = not OS.has_feature("web")
 	_build_switch(_fullscreen_row, GameSettings.fullscreen(), _on_fullscreen_chosen)

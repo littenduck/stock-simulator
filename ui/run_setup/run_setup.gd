@@ -10,8 +10,9 @@ var _difficulty: int = 1
 var _character_group := ButtonGroup.new()
 var _difficulty_group := ButtonGroup.new()
 
-@onready var _character_row: HBoxContainer = %CharacterRow
+@onready var _character_row: Container = %CharacterRow
 @onready var _difficulty_row: HBoxContainer = %DifficultyRow
+## Shows the passive and active skill of the selected character.
 @onready var _difficulty_label: Label = %DifficultyLabel
 @onready var _margin_label: Label = %MarginLabel
 @onready var _back_button: Button = %BackButton
@@ -24,11 +25,11 @@ func _ready() -> void:
 	_animate_in()
 	_back_button.pressed.connect(_on_back_button_pressed)
 	_start_button.pressed.connect(_on_start_button_pressed)
+	# Table mode has no difficulty levels yet: the row is hidden, the label below the cards describes the skills.
+	_difficulty_row.get_parent().get_node("DifficultyHeader").visible = false
+	_difficulty_row.visible = false
 	_build_characters()
-	_build_difficulties()
-	_update_difficulty_text()
-	# Read-only: the margin switch lives in Settings and is fixed for the whole run.
-	_margin_label.text = tr("UI_FLOW_SETUP_MARGIN_ON" if GameSettings.margin_enabled() else "UI_FLOW_SETUP_MARGIN_OFF")
+	_margin_label.text = tr("TABLE_SETUP_RIVALS") + "   ·   " + tr("TABLE_SETUP_FEES_ON" if GameSettings.fees_enabled() else "TABLE_SETUP_FEES_OFF")
 	_start_button.disabled = _character == null
 	var selected := _character_group.get_pressed_button()
 	if selected != null:
@@ -51,8 +52,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		GameManager.go_to_menu()
 
 
+## Saving Son first (the one to start with); Double Dan right after him because the two look alike (round glasses);
+## then the other easy character, Goldfish Gus and Hodl Hana, and the harder ones, Copilot Cody and Insider Inu, last.
+const ROSTER_ORDER := ["saving_son", "double_dan", "goldfish_gus", "hodl_hana", "copilot_cody", "insider_inu"]
+
+
 func _characters() -> Array[CharacterDef]:
-	return characters_override if not characters_override.is_empty() else ContentDb.characters()
+	if not characters_override.is_empty():
+		return characters_override
+	var out: Array[CharacterDef] = []
+	for id in ROSTER_ORDER:
+		var def := ContentDb.character_by_id(StringName(id))
+		if def != null:
+			out.append(def)
+	return out
 
 
 func _build_characters() -> void:
@@ -64,7 +77,7 @@ func _build_characters() -> void:
 		card.toggle_mode = true
 		card.button_group = _character_group
 		card.disabled = not unlocked
-		card.custom_minimum_size = Vector2(300, 250)
+		card.custom_minimum_size = Vector2(150, 176)
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		card.focus_mode = Control.FOCUS_ALL
 		_style_card(card, unlocked)
@@ -75,7 +88,7 @@ func _build_characters() -> void:
 			card.button_pressed = true  # also fires toggled -> _character
 
 
-const AVATARS := {"rookie": "star", "day_trader": "bolt", "value_investor": "bank"}
+const AVATARS := {"rookie": "star", "day_trader": "bolt", "value_investor": "bank", "insider_inu": "eye", "copilot_cody": "people", "double_dan": "coin", "saving_son": "bank", "goldfish_gus": "clover", "hodl_hana": "gem"}
 
 
 ## Same cream card for every state: unselected is dimmer with a grey frame, selected has a green frame and glow.
@@ -112,40 +125,28 @@ func _restyle_card(card: Button, on: bool, unlocked: bool, animate: bool = true)
 		t.tween_property(card, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
-func _character_card_body(def: CharacterDef, unlocked: bool) -> Control:
+func _character_card_body(def: CharacterDef, _unlocked: bool) -> Control:
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 14)
+		margin.add_theme_constant_override("margin_" + side, 8)
 	var box := VBoxContainer.new()
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_theme_constant_override("separation", 6)
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_theme_constant_override("separation", 5)
 	margin.add_child(box)
-	var head := HBoxContainer.new()
-	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	head.add_theme_constant_override("separation", 12)
-	head.add_child(CompanyBadge.make(String(AVATARS.get(String(def.id), "star")), 64))
-	var names := VBoxContainer.new()
-	names.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	names.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	names.add_child(_label(tr(def.title_key), &"HeaderLabel"))
-	names.add_child(_label(tr("UI_FLOW_START_CASH") % UiFormat.money(def.start_cash), &"PositiveLabel"))
-	head.add_child(names)
-	box.add_child(head)
-	var rule := ColorRect.new()
-	rule.color = Color(0.55, 0.54, 0.58, 0.5)
-	rule.custom_minimum_size = Vector2(0, 2)
-	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(rule)
-	var desc := _label(tr(def.description_key), &"")
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	box.add_child(desc)
-	if not unlocked:
-		var locked := _label(tr("UI_FLOW_LOCKED") + ": " + _unlock_hint(def), &"RarityLegendaryLabel")
-		locked.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		box.add_child(locked)
+	var portrait := PortraitView.make(String(def.id), 6)
+	portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	box.add_child(portrait)
+	var name_label := _label(tr(def.title_key), &"HeaderLabel")
+	name_label.add_theme_font_size_override("font_size", 16)
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(name_label)
+	var advanced := def.difficulty_tag == "advanced"
+	var tag := _label(tr("TABLE_ADVANCED" if advanced else "TABLE_EASY"), &"RarityLegendaryLabel" if advanced else &"PositiveLabel")
+	tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(tag)
 	return margin
 
 
@@ -194,6 +195,8 @@ func _on_character_card_toggled(pressed: bool, def: CharacterDef) -> void:
 	if pressed:
 		_character = def
 		_start_button.disabled = false
+		var key := String(def.id).to_upper()
+		_difficulty_label.text = "%s: %s\n%s: %s" % [tr("TABLE_PASSIVE"), tr("CHAR_%s_PASSIVE" % key), tr("TABLE_ACTIVE"), tr("CHAR_%s_ACTIVE" % key)]
 
 
 func _on_difficulty_button_toggled(pressed: bool, level: int) -> void:
@@ -205,7 +208,7 @@ func _on_difficulty_button_toggled(pressed: bool, level: int) -> void:
 func _on_start_button_pressed() -> void:
 	if _character == null:
 		return
-	GameManager.start_run(RunConfig.make(_character, _difficulty, 0, GameSettings.margin_enabled()))
+	GameManager.start_run(RunConfig.make_table(_character, 0, GameSettings.fees_enabled()))
 
 
 func _on_back_button_pressed() -> void:

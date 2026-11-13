@@ -42,10 +42,10 @@ func _init(p_config: RunConfig, company_pool: Array[CompanyDef], perk_pool: Arra
 	_history = HistoryData.default()
 	# Companies first, then a window in which every drawn company has enough real data (late listings such as
 	# SpaceX only fit recent windows), so each company is equally likely to appear.
-	var pool := _with_enough_history(company_pool, _history)
+	var pool := _with_enough_history(company_pool, _history, p_config.trading_days)
 	var drawn := MarketSim.draw_companies(pool, RunConfig.COMPANIES_PER_RUN, _rng, unlocked)
 	_ensure_small_sectors(drawn, pool, unlocked, _rng)
-	window_start = _pick_window(_history, _rng, drawn)
+	window_start = _pick_window(_history, _rng, drawn, p_config.trading_days)
 	_build_market(drawn)
 	market.volatility_mult = mods.volatility_mult
 	portfolio = Portfolio.new(p_config.character.start_cash)
@@ -58,13 +58,13 @@ const GUARANTEED_SECTORS: Array[String] = ["space", "finance"]
 
 
 ## Companies whose real data covers lookback + a full run. A company without real data stays (GBM fallback).
-static func _with_enough_history(pool: Array[CompanyDef], history: HistoryData) -> Array[CompanyDef]:
+static func _with_enough_history(pool: Array[CompanyDef], history: HistoryData, days: int = RunConfig.TRADING_DAYS) -> Array[CompanyDef]:
 	if history == null:
 		return pool
 	var out: Array[CompanyDef] = []
 	for c in pool:
 		if c.history_key == "" or not history.has_key(c.history_key) \
-				or history.first_row(c.history_key) + PRE_GAME_DAYS <= history.row_count() - 1 - RunConfig.TRADING_DAYS:
+				or history.first_row(c.history_key) + PRE_GAME_DAYS <= history.row_count() - 1 - days:
 			out.append(c)
 	return out
 
@@ -87,14 +87,14 @@ static func _ensure_small_sectors(drawn: Array[CompanyDef], pool: Array[CompanyD
 
 ## Deterministic start row from the run rng: leaves PRE_GAME_DAYS of real data before it for every drawn company
 ## and TRADING_DAYS rows after it. Returns -1 when there is no (or too little) history.
-static func _pick_window(history: HistoryData, rng: RandomNumberGenerator, companies: Array[CompanyDef]) -> int:
+static func _pick_window(history: HistoryData, rng: RandomNumberGenerator, companies: Array[CompanyDef], days: int = RunConfig.TRADING_DAYS) -> int:
 	if history == null:
 		return -1
 	var lo := PRE_GAME_DAYS
 	for c in companies:
 		if c.history_key != "" and history.has_key(c.history_key):
 			lo = maxi(lo, history.first_row(c.history_key) + PRE_GAME_DAYS)
-	var hi := history.row_count() - 1 - RunConfig.TRADING_DAYS
+	var hi := history.row_count() - 1 - days
 	if hi < lo:
 		return -1
 	return rng.randi_range(lo, hi)
@@ -123,7 +123,7 @@ func _build_market(companies: Array[CompanyDef]) -> void:
 func date_of_day(day_index: int) -> String:
 	if window_start < 0 or _history == null:
 		return ""
-	return _history.date_at(window_start + clampi(day_index, -PRE_GAME_DAYS, RunConfig.TRADING_DAYS))
+	return _history.date_at(window_start + clampi(day_index, -PRE_GAME_DAYS, config.trading_days))
 
 
 ## Opens the day-0 perk draft and returns its options.
@@ -158,7 +158,7 @@ func next_day() -> DayReport:
 	DailyEffects.apply(portfolio, market, mods)
 	# 6. margin check (forced liquidation)
 	report.margin_called = Margin.check(portfolio, market, book, mods)
-	report.finished = day >= RunConfig.TRADING_DAYS
+	report.finished = day >= config.trading_days
 	# 7. new rumors
 	if not report.finished:
 		report.new_rumors = news.roll(day, mods, market)
@@ -232,6 +232,8 @@ func to_dict() -> Dictionary:
 		"character": String(config.character.id),
 		"difficulty": config.difficulty,
 		"margin_enabled": config.margin_enabled,
+		"mode": int(config.mode),
+		"fees_enabled": config.fees_enabled,
 		"rng_seed": str(_rng.seed),
 		"rng_state": str(_rng.state),
 		"companies": market.symbols(),
@@ -266,6 +268,10 @@ static func config_from_dict(data: Dictionary) -> RunConfig:
 	if character == null:
 		return null
 	var c := RunConfig.make(character, int(data.get("difficulty", 1)), int(data.get("seed", 1)), bool(data.get("margin_enabled", false)))
+	c.mode = int(data.get("mode", 0)) as RunConfig.Mode
+	if c.mode == RunConfig.Mode.TABLE:
+		c.trading_days = RunConfig.TABLE_DAYS
+	c.fees_enabled = bool(data.get("fees_enabled", true))
 	return c
 
 
@@ -282,6 +288,11 @@ static func from_dict(data: Dictionary, config: RunConfig, company_pool: Array[C
 	if d.is_empty() or config == null:
 		return null
 	var s := GameSession.new(config, company_pool, perk_pool, news_pool)
+	return s if s._restore(d, config, company_pool, perk_pool) else null
+
+
+## Loads a saved dictionary into this freshly constructed session. False when the save cannot be used.
+func _restore(d: Dictionary, p_config: RunConfig, company_pool: Array[CompanyDef], perk_pool: Array[PerkDef]) -> bool:
 	# Same companies as the saved run (the drawn set depended on the profile's unlocks).
 	var drawn: Array[CompanyDef] = []
 	for sym in d.get("companies", []):
@@ -290,38 +301,38 @@ static func from_dict(data: Dictionary, config: RunConfig, company_pool: Array[C
 				drawn.append(c)
 				break
 	if drawn.is_empty():
-		return null
+		return false
 	# Saves from before real history have no window: they continue as GBM runs (market.load_dict synthesizes candles).
 	var ws := int(d.get("window_start", -1))
-	if s._history == null or ws < PRE_GAME_DAYS or ws + RunConfig.TRADING_DAYS >= s._history.row_count() \
-			or not _window_has_data(s._history, drawn, ws) \
-			or (d.has("start_date") and s._history.date_at(ws) != String(d["start_date"])):
+	if _history == null or ws < PRE_GAME_DAYS or ws + p_config.trading_days >= _history.row_count() \
+			or not _window_has_data(_history, drawn, ws) \
+			or (d.has("start_date") and _history.date_at(ws) != String(d["start_date"])):
 		ws = -1
-	s.window_start = ws
-	s._build_market(drawn)
-	s._sector_fan_sector = String(d.get("sector_fan_sector", ""))
+	window_start = ws
+	_build_market(drawn)
+	_sector_fan_sector = String(d.get("sector_fan_sector", ""))
 	for id in d.get("perks", []):
 		var p := _find_perk(perk_pool, StringName(String(id)))
 		if p != null:
-			s.owned_perks.append(p)
+			owned_perks.append(p)
 	for id in d.get("pending_draft", []):
 		var p := _find_perk(perk_pool, StringName(String(id)))
 		if p != null:
-			s.pending_draft.append(p)
-	s.mods = ModifiersBuilder.build(config, s.owned_perks)
-	s.mods.iron_hands_used = bool(d.get("iron_hands_used", false))
-	s._apply_sector_fan()
-	s.market.volatility_mult = s.mods.volatility_mult
-	s.market.load_dict(d.get("market", {}))
-	s.portfolio.load_dict(d.get("portfolio", {}))
-	s.book.load_dict(d.get("book", {}))
-	s.news.load_dict(d.get("news", {}))
-	s.trade_log.assign(d.get("trade_log", []))
-	s.day = int(d.get("day", 0))
-	s._finished = bool(d.get("finished", false))
-	s._rng.seed = int(String(d.get("rng_seed", str(config.seed_value))))
-	s._rng.state = int(String(d.get("rng_state", "0")))
-	return s
+			pending_draft.append(p)
+	mods = ModifiersBuilder.build(p_config, owned_perks)
+	mods.iron_hands_used = bool(d.get("iron_hands_used", false))
+	_apply_sector_fan()
+	market.volatility_mult = mods.volatility_mult
+	market.load_dict(d.get("market", {}))
+	portfolio.load_dict(d.get("portfolio", {}))
+	book.load_dict(d.get("book", {}))
+	news.load_dict(d.get("news", {}))
+	trade_log.assign(d.get("trade_log", []))
+	day = int(d.get("day", 0))
+	_finished = bool(d.get("finished", false))
+	_rng.seed = int(String(d.get("rng_seed", str(p_config.seed_value))))
+	_rng.state = int(String(d.get("rng_state", "0")))
+	return true
 
 
 static func _find_perk(pool: Array[PerkDef], id: StringName) -> PerkDef:

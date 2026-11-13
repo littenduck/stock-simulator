@@ -135,6 +135,23 @@ func init_series(symbol: String, bars: Array) -> void:
 	_prices[symbol] = cl[cl.size() - 1]
 
 
+## Real return of `symbol` from run day `from_day` to `to_day` (NAN when the future is not known, see PriceModel).
+func peek_return(symbol: String, from_day: int, to_day: int) -> float:
+	var c := company_of(symbol)
+	if c == null or _model == null:
+		return NAN
+	return _model.peek_return(c, from_day, to_day)
+
+
+## Symbols hit by a sector / market wide event (target_symbol wins over sector; "all" = everything).
+func symbols_hit_by(event: NewsEventDef) -> Array[String]:
+	var out: Array[String] = []
+	for c in _companies:
+		if _is_affected(c, event):
+			out.append(c.symbol)
+	return out
+
+
 ## Today's change vs yesterday as a fraction (0.02 = +2%).
 func day_change(symbol: String) -> float:
 	var h: PackedFloat32Array = history_of(symbol)

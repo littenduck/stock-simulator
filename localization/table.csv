@@ -1,0 +1,90 @@
+keys,en
+TABLE_BTN_REVEAL,Reveal bets
+TABLE_BTN_CONTINUE,Continue
+TABLE_YOU,you
+TABLE_FIRED,FIRED
+TABLE_STREAK,%d wins in a row
+TABLE_BUY,Buy
+TABLE_SELL,Sell
+TABLE_Q1,1/4
+TABLE_Q2,1/2
+TABLE_Q3,3/4
+TABLE_ALL_IN,All in
+TABLE_SELL_HALF,Sell half
+TABLE_SELL_ALL,Out
+TABLE_SWAP,Swap
+TABLE_SWAP_BTN,Swap
+TABLE_TRADE_TITLE,Trade %s  %s
+TABLE_BOUGHT,Bought %d %s at %s
+TABLE_SOLD,Sold %d %s at %s
+TABLE_SWAPPED,Swapped %s into %s
+TABLE_RUMOR_TODAY,Today's rumor
+TABLE_CRED,Credibility: %s
+TABLE_CRED_HIDDEN,Credibility: ???
+TABLE_KNOW_TRUE,You know: this rumor is TRUE
+TABLE_KNOW_FALSE,You know: this rumor is FALSE (you planted it)
+TABLE_BELIEVE,BELIEVE
+TABLE_BULLSHIT,BULLSHIT
+TABLE_PASS,PASS
+TABLE_PASS_SUB,do nothing
+TABLE_BUY_CALL,Buy Call
+TABLE_CALL,Call
+TABLE_PUT,Put
+TABLE_KEYS_HINT,"Keys: Q = BELIEVE (Buy Call), W = BULLSHIT (Buy Put), E = PASS"
+TABLE_BUY_PUT,Buy Put
+TABLE_COPYING,Copying %s: you place the same bet
+TABLE_STAKE_NONE,No cash left for a bet. Sell something first.
+TABLE_STAKE,"Stake: %s (%d%% of your net worth, paid now)"
+TABLE_BOSS_TITLE,BOSS RUMOR  ·  resolves in %d days
+TABLE_BOSS_BET,Your Boss bet: %s for %s
+TABLE_BOSS_STAKE,Boss stake: %s (%d%% of your net worth)
+TABLE_COPILOT,COPILOT: copy a player's bet
+TABLE_COPY_NONE,Nobody: bet on my own
+TABLE_INSIDER_HINT,Insider tip: tomorrow's rumor is TRUE
+TABLE_FLIP,FLIP: publish the opposite
+TABLE_FLIP_HINT,When it resolves it is stamped as planted. Nobody learns by whom.
+TABLE_FLIP_USED,Your flip is used up until the next quarter.
+TABLE_NO_HINT,No tip today. It comes on one random day each quarter.
+TABLE_DAN_HINT,DOUBLE DOWN comes after the reveal.
+TABLE_DAN_USED,Double down used: it comes back next quarter.
+TABLE_REVEAL_TITLE,Bets revealed
+TABLE_BOSS_TAG,Boss
+TABLE_COPIED,copying %s
+TABLE_DOUBLED,doubled
+TABLE_DOUBLE,DOUBLE DOWN
+TABLE_RESULT_TITLE,Day %d result
+TABLE_CONFIRMED,CONFIRMED
+TABLE_DEBUNKED,DEBUNKED
+TABLE_PLANTED,PLANTED
+TABLE_MOVE,Price move: %s
+TABLE_YOU_WON,You won %s
+TABLE_YOU_LOST,You lost %s
+TABLE_NO_BET,You passed
+TABLE_YOU_FIRED,You were FIRED. Your run ends here.
+TABLE_YOU_FIRED_SHORT,fired
+TABLE_FIRED_NOTE,%s was FIRED at the quarter review
+TABLE_QUARTER_END,Quarter %d is over: your skills are back
+TABLE_BOSS_NEW,New BOSS rumor: you can bet on it for the next 3 days
+TABLE_OK,OK
+TABLE_BLIND_NOTE,"Gus only sees today.
+%s  %s"
+TABLE_RANK,You finished #%d of %d
+TABLE_STARTED,The run started on %s
+TABLE_SETUP_TITLE,Pick your seat
+TABLE_SETUP_CHARACTER,Character
+TABLE_SETUP_FEES_ON,Trading fees: On (change it in Settings)
+TABLE_SETUP_FEES_OFF,Trading fees: Off (turn them on in Settings)
+TABLE_EASY,EASY
+TABLE_ADVANCED,ADVANCED
+TABLE_PASSIVE,Passive
+TABLE_ACTIVE,Active
+TIER_LOW,Low
+TIER_MEDIUM,Medium
+TIER_HIGH,High
+UI_FLOW_SETTINGS_FEES,Trading fees
+UI_FLOW_SETTINGS_FEES_HINT,A small fee on every trade in the table game. Off by default. Applies from the start of your next run.
+TABLE_LOG_TITLE,RUMOR LOG
+TABLE_LOG_EMPTY,Nothing has resolved yet. Every verdict lands here.
+TABLE_LOG_DAY,Day %d
+TABLE_KEYS_SHORT,[Q] [W] [E]
+TABLE_SETUP_RIVALS,Your three rivals are drawn at random
