@@ -52,8 +52,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		GameManager.go_to_menu()
 
 
-## Easy to hard: the passive characters first (Saving Son is the one to start with), the skill characters after them.
-const ROSTER_ORDER := ["saving_son", "goldfish_gus", "hodl_hana", "copilot_cody", "double_dan", "insider_inu"]
+## Saving Son first (the one to start with); Double Dan right after him because the two look alike (round glasses);
+## then the other easy character, Goldfish Gus and Hodl Hana, and the harder ones, Copilot Cody and Insider Inu, last.
+const ROSTER_ORDER := ["saving_son", "double_dan", "goldfish_gus", "hodl_hana", "copilot_cody", "insider_inu"]
 
 
 func _characters() -> Array[CharacterDef]:
