@@ -175,3 +175,7 @@ TABLE_PODIUM_WIN,YOU WIN,你赢了
 TABLE_PODIUM_PLACE,You finish #%d,你排第 %d 名
 TABLE_PODIUM_WINNER,%s wins the table,%s 赢得牌桌
 UI_FLOW_SETTINGS_LANGUAGE,Language,语言
+TABLE_SETUP_LENGTH,Game length,游戏长度
+TABLE_LEN_1,Quick · 1 quarter · 7 days,快速 · 1 个季度 · 7 天
+TABLE_LEN_2,2 quarters · 14 days,2 个季度 · 14 天
+TABLE_LEN_4,4 quarters · 28 days,4 个季度 · 28 天

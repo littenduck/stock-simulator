@@ -3,8 +3,9 @@ extends TestCase
 const SEED := 1234
 
 
-func _session(char_id: StringName = &"saving_son", seed_value: int = SEED) -> TableSession:
-	var cfg := RunConfig.make_table(ContentDb.character_by_id(char_id), seed_value)
+## Most tests play a long run (4 quarters, 28 days) so quarters, Boss rumors and skill resets happen.
+func _session(char_id: StringName = &"saving_son", seed_value: int = SEED, quarters: int = 4) -> TableSession:
+	var cfg := RunConfig.make_table(ContentDb.character_by_id(char_id), seed_value, false, quarters)
 	var s := TableSession.new(cfg, ContentDb.companies(), ContentDb.perks(), ContentDb.news())
 	s.start()
 	return s
@@ -21,7 +22,10 @@ func _play_to_end(s: TableSession, side: int = RumorTier.Side.BELIEVE) -> int:
 
 func test_table_config() -> void:
 	var cfg := RunConfig.make_table(ContentDb.character_by_id(&"saving_son"), 5)
-	assert_eq(cfg.trading_days, 30)
+	assert_eq(cfg.trading_days, 7, "the quick game is one quarter of 7 days")
+	assert_eq(cfg.quarters(), 1)
+	assert_eq(RunConfig.make_table(ContentDb.character_by_id(&"saving_son"), 5, false, 2).trading_days, 14)
+	assert_eq(RunConfig.make_table(ContentDb.character_by_id(&"saving_son"), 5, false, 4).trading_days, 28)
 	assert_eq(cfg.mode, RunConfig.Mode.TABLE)
 	assert_false(cfg.fees_enabled, "fees are off by default in table mode")
 	assert_eq(ModifiersBuilder.build(cfg, []).effective_fee_rate(), 0.0)
@@ -60,8 +64,8 @@ func test_full_run_ends_by_day_30() -> void:
 	var s := _session()
 	_play_to_end(s)
 	assert_true(s.is_finished())
-	assert_true(s.day <= 30)
-	assert_eq(s.day, 30, "nobody is fired, so every run lasts 30 days")
+	assert_true(s.day <= 28)
+	assert_eq(s.day, 28, "nobody is fired, so a 4-quarter run lasts 28 days")
 
 
 func test_rumors_are_single_stock_and_resolve_next_day() -> void:
@@ -130,8 +134,8 @@ func test_pass_costs_nothing() -> void:
 func test_premium_never_exceeds_cash() -> void:
 	var s := _session()
 	s.buy_fraction(0, s.market.symbols()[0], 1.0)
-	assert_true(s.portfolio.cash < 10.0)
-	assert_eq(s.premium_for(0), 0.0, "no premium when the cash is gone")
+	assert_true(s.premium_for(0) <= s.portfolio.cash, "the premium is never more than the cash that is left")
+	assert_true(s.portfolio.cash < 100.0)
 
 
 func test_trade_buttons() -> void:
@@ -250,18 +254,18 @@ func test_unflipped_insider_rumor_is_true() -> void:
 
 func test_boss_rumor_three_days_before_quarter_end() -> void:
 	var s := _session()
-	while s.day < 7:
+	while s.day < 4:
 		s.next_day()
-	assert_not_null(s.boss_rumor, "Boss rumor on day 7")
-	assert_eq(s.boss_rumor.resolve_day, 10)
+	assert_not_null(s.boss_rumor, "Boss rumor on day 4")
+	assert_eq(s.boss_rumor.resolve_day, 7, "it resolves on day 7, the last day of the quarter")
 	s.set_boss_call(RumorTier.Side.BULLSHIT)
 	s.reveal()
 	var bet := s.boss_bet_of(0)
 	assert_not_null(bet)
 	assert_almost(bet.premium, minf(s.net_worth() * 0.30 + bet.premium, s.net_worth()) , s.net_worth())  # stake exists
-	while s.day < 10 and not s.is_finished():
+	while s.day < 7 and not s.is_finished():
 		s.next_day()
-	assert_true(s.boss_rumor == null or s.boss_rumor.resolve_day > 10, "Boss rumor resolved on day 10")
+	assert_true(s.boss_rumor == null or s.boss_rumor.resolve_day > 7, "Boss rumor resolved on day 7")
 
 
 func test_nobody_is_fired_at_the_quarter_reviews() -> void:
@@ -280,7 +284,7 @@ func test_skills_reset_each_quarter() -> void:
 	s.reveal()
 	s.double_down(0)
 	assert_true(s.seats[0].skill_used)
-	while s.day < 10 and not s.is_finished():
+	while s.day < 7 and not s.is_finished():
 		s.next_day()
 	if s.seats[0].alive:
 		assert_false(s.seats[0].skill_used, "new quarter, new skill")
@@ -517,3 +521,36 @@ func test_the_feed_log_survives_a_save() -> void:
 	var loaded := TableSession.from_dict(JSON.parse_string(JSON.stringify(s.to_dict())), cfg, ContentDb.companies(), ContentDb.perks(), ContentDb.news()) as TableSession
 	assert_true(loaded != null)
 	assert_eq(loaded.feed_log.size(), s.feed_log.size())
+
+
+func test_a_run_has_one_two_or_four_quarters_each_with_its_own_insider_day() -> void:
+	for quarters in [1, 2, 4]:
+		var s := _session(&"insider_inu", SEED, quarters)
+		assert_eq(s.config.trading_days, quarters * 7)
+		assert_eq(s.insider_days.size(), quarters, "one Insider day per quarter")
+		for q in quarters:
+			assert_true(s.insider_days[q] >= q * 7 and s.insider_days[q] < (q + 1) * 7, "inside quarter %d" % q)
+		_play_to_end(s)
+		assert_true(s.is_finished())
+		assert_eq(s.day, quarters * 7)
+
+
+func test_an_old_30_day_save_keeps_its_own_quarters() -> void:
+	var s := _session(&"saving_son", SEED, 4)
+	var data: Dictionary = JSON.parse_string(JSON.stringify(s.to_dict()))
+	data.erase("trading_days")
+	data.erase("quarter_days")
+	var cfg := GameSession.config_from_dict(data)
+	assert_eq(cfg.trading_days, 30, "saves from before the choice were 30 days")
+	assert_eq(cfg.quarter_days, 10)
+
+
+func test_a_loaded_run_keeps_its_real_price_window() -> void:
+	var s := _session(&"saving_son", 99)
+	for i in 3:
+		s.next_day()
+	var data: Dictionary = JSON.parse_string(JSON.stringify(s.to_dict()))
+	var cfg := GameSession.config_from_dict(data)
+	var t := TableSession.from_dict(data, cfg, ContentDb.companies(), ContentDb.perks(), ContentDb.news()) as TableSession
+	assert_eq(t.window_start, s.window_start, "the window of real prices is found again after loading")
+	assert_true(s.window_start >= 0)

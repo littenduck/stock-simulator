@@ -171,12 +171,12 @@ func _log_summary(report: TableReport, boss_resolved: bool = false) -> void:
 
 
 func quarter() -> int:
-	return mini(day / RunConfig.QUARTER_DAYS + 1, 3)
+	return mini(day / config.quarter_days + 1, config.quarters())
 
 
 ## Days left in the current quarter, counting today (10 on the first day of a quarter).
 func days_left_in_quarter() -> int:
-	return RunConfig.QUARTER_DAYS - day % RunConfig.QUARTER_DAYS
+	return config.quarter_days - day % config.quarter_days
 
 
 func sector_of(symbol: String) -> String:
@@ -438,7 +438,7 @@ func advance() -> TableReport:
 		if float(effects.get("interest", 0.0)) > 0.0 and seat.has_flag(&"saver"):
 			_log_skill(seat.id, TableSkills.INTEREST, float(effects["interest"]))
 	report.margin_called = Margin.check(portfolio, market, book, mods)
-	if day % RunConfig.QUARTER_DAYS == 0:
+	if day % config.quarter_days == 0:
 		_review(report)
 	report.finished = day >= config.trading_days or human_fired
 	if report.finished:
@@ -519,9 +519,9 @@ func _pick_insider_days() -> void:
 	if symbols.is_empty() or is_nan(market.peek_return(symbols[0], 0, 1)):
 		return
 	var last_day := config.trading_days - 2
-	for q in 3:
-		var first := q * RunConfig.QUARTER_DAYS
-		insider_days.append(_rng.randi_range(first, mini(first + RunConfig.QUARTER_DAYS - 2, last_day)))
+	for q in config.quarters():
+		var first := q * config.quarter_days
+		insider_days.append(_rng.randi_range(first, mini(first + config.quarter_days - 2, last_day)))
 
 
 ## Hodl Hana: half the cash is already in the stock that rose most in the pre-game weeks, bought at its low.
@@ -640,7 +640,7 @@ func _settle(rumor: TableRumor, list: Array[TableBet], report: TableReport) -> v
 
 ## Quarter review: skills reset, and (when FIRE_LAST_PLACE is on) the last place is fired after the first two quarters.
 func _review(report: TableReport) -> void:
-	report.quarter_ended = day / RunConfig.QUARTER_DAYS
+	report.quarter_ended = day / config.quarter_days
 	for seat in seats:
 		seat.skill_used = false
 	if not FIRE_LAST_PLACE or day >= config.trading_days:
@@ -666,7 +666,7 @@ func _open_next_day(report: TableReport) -> void:
 	today_rumor = tomorrow_rumor
 	today_rumor.activate(day, market)
 	_deal_tomorrow()
-	if day % RunConfig.QUARTER_DAYS == RunConfig.QUARTER_DAYS - TableRumor.BOSS_DAYS:
+	if day % config.quarter_days == config.quarter_days - TableRumor.BOSS_DAYS:
 		boss_rumor = RumorFactory.make_boss(day, market, _events, _recent, _rng, _new_rumor_id())
 		if boss_rumor != null:
 			boss_rumor.activate(day, market)

@@ -131,7 +131,8 @@ func _night_info(t: TableSession) -> Dictionary:
 	if t.boss_rumor != null:
 		days_to_boss = maxi(t.boss_rumor.resolve_day - t.day, 0)
 	else:
-		days_to_boss = posmod(RunConfig.QUARTER_DAYS - TableRumor.BOSS_DAYS - t.day % RunConfig.QUARTER_DAYS, RunConfig.QUARTER_DAYS)
+		var q := t.config.quarter_days
+		days_to_boss = posmod(q - TableRumor.BOSS_DAYS - t.day % q, q)
 	var info := {
 		"net_from": _net_before, "net_to": t.human().portfolio.net_worth(t.market),
 		"tier": -1 if t.human().has_flag(&"goldfish") or t.today_rumor == null else t.today_rumor.tier,

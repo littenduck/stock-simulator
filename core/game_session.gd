@@ -121,6 +121,12 @@ func _build_market(companies: Array[CompanyDef]) -> void:
 ## ISO date (YYYY-MM-DD) of a trading day of this run (0 = start date; negative = pre-game lookback).
 ## "" when the run has no real calendar (GBM fallback).
 func date_of_day(day_index: int) -> String:
+	return real_date_of_day(day_index)
+
+
+## The real date of a day, even where the game hides dates (the table game keeps them secret until the end). Saves
+## record the start date through this so a loaded run finds its window of real prices again.
+func real_date_of_day(day_index: int) -> String:
 	if window_start < 0 or _history == null:
 		return ""
 	return _history.date_at(window_start + clampi(day_index, -PRE_GAME_DAYS, config.trading_days))
@@ -234,6 +240,8 @@ func to_dict() -> Dictionary:
 		"margin_enabled": config.margin_enabled,
 		"mode": int(config.mode),
 		"fees_enabled": config.fees_enabled,
+		"trading_days": config.trading_days,
+		"quarter_days": config.quarter_days,
 		"rng_seed": str(_rng.seed),
 		"rng_state": str(_rng.state),
 		"companies": market.symbols(),
@@ -243,7 +251,7 @@ func to_dict() -> Dictionary:
 		"iron_hands_used": mods.iron_hands_used,
 		"finished": _finished,
 		"window_start": window_start,
-		"start_date": date_of_day(0),
+		"start_date": real_date_of_day(0),
 		"market": market.to_dict(),
 		"portfolio": portfolio.to_dict(),
 		"book": book.to_dict(),
@@ -270,7 +278,9 @@ static func config_from_dict(data: Dictionary) -> RunConfig:
 	var c := RunConfig.make(character, int(data.get("difficulty", 1)), int(data.get("seed", 1)), bool(data.get("margin_enabled", false)))
 	c.mode = int(data.get("mode", 0)) as RunConfig.Mode
 	if c.mode == RunConfig.Mode.TABLE:
-		c.trading_days = RunConfig.TABLE_DAYS
+		# Runs saved before the length became a choice were 30 days of 10-day quarters.
+		c.trading_days = int(data.get("trading_days", 30))
+		c.quarter_days = int(data.get("quarter_days", 10))
 	c.fees_enabled = bool(data.get("fees_enabled", true))
 	return c
 
@@ -306,7 +316,7 @@ func _restore(d: Dictionary, p_config: RunConfig, company_pool: Array[CompanyDef
 	var ws := int(d.get("window_start", -1))
 	if _history == null or ws < PRE_GAME_DAYS or ws + p_config.trading_days >= _history.row_count() \
 			or not _window_has_data(_history, drawn, ws) \
-			or (d.has("start_date") and _history.date_at(ws) != String(d["start_date"])):
+			or (String(d.get("start_date", "")) != "" and _history.date_at(ws) != String(d["start_date"])):
 		ws = -1
 	window_start = ws
 	_build_market(drawn)

@@ -4,7 +4,7 @@ const CHARACTERS: Array[StringName] = [&"insider_inu", &"copilot_cody", &"double
 
 
 func _session(char_id: StringName, seed_value: int) -> TableSession:
-	var cfg := RunConfig.make_table(ContentDb.character_by_id(char_id), seed_value)
+	var cfg := RunConfig.make_table(ContentDb.character_by_id(char_id), seed_value, false, 4)
 	var s := TableSession.new(cfg, ContentDb.companies(), ContentDb.perks(), ContentDb.news())
 	s.start()
 	return s
@@ -40,7 +40,7 @@ func test_every_character_can_play_a_whole_run() -> void:
 			var s := _session(id, seed_value)
 			_play(s)
 			assert_true(s.is_finished(), "%s seed %d finished" % [id, seed_value])
-			assert_true(s.day <= 30)
+			assert_true(s.day <= 28)
 			assert_true(is_finite(s.net_worth()), "net worth is a number")
 			assert_true(s.net_worth() > 0.0, "%s still has money" % id)
 			assert_eq(s.standings().size(), 4)

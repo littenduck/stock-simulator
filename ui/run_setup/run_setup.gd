@@ -29,6 +29,7 @@ func _ready() -> void:
 	_difficulty_row.get_parent().get_node("DifficultyHeader").visible = false
 	_difficulty_row.visible = false
 	_build_characters()
+	_build_length_row()
 	_margin_label.text = tr("TABLE_SETUP_RIVALS") + "   ·   " + tr("TABLE_SETUP_FEES_ON" if GameSettings.fees_enabled() else "TABLE_SETUP_FEES_OFF")
 	_start_button.disabled = _character == null
 	var selected := _character_group.get_pressed_button()
@@ -187,6 +188,31 @@ func _update_difficulty_text() -> void:
 	_difficulty_label.text = text
 
 
+## "Game length": three buttons, one quarter (the quick game, 7 days), two quarters (14) or four (28).
+func _build_length_row() -> void:
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 10)
+	var caption := Label.new()
+	caption.text = tr("TABLE_SETUP_LENGTH")
+	row.add_child(caption)
+	var group := ButtonGroup.new()
+	for quarters: int in RunConfig.QUARTER_CHOICES:
+		var b := Button.new()
+		b.toggle_mode = true
+		b.button_group = group
+		b.custom_minimum_size = Vector2(230, 40)
+		b.text = tr("TABLE_LEN_%d" % quarters)
+		b.button_pressed = quarters == GameSettings.table_quarters()
+		b.toggled.connect(func(on: bool) -> void:
+			if on:
+				GameSettings.set_table_quarters(quarters))
+		row.add_child(b)
+	var parent := _margin_label.get_parent()
+	parent.add_child(row)
+	parent.move_child(row, _margin_label.get_index())
+
+
 func _on_character_card_toggled(pressed: bool, def: CharacterDef) -> void:
 	if pressed:
 		_character = def
@@ -206,7 +232,7 @@ func _on_start_button_pressed() -> void:
 		return
 	_start_button.disabled = true
 	_back_button.disabled = true
-	if not GameManager.prepare_run(RunConfig.make_table(_character, 0, GameSettings.fees_enabled())):
+	if not GameManager.prepare_run(RunConfig.make_table(_character, 0, GameSettings.fees_enabled(), GameSettings.table_quarters())):
 		_start_button.disabled = false
 		_back_button.disabled = false
 		return

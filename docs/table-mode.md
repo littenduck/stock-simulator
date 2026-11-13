@@ -1,6 +1,6 @@
 # Table mode (branch feat/05-characters)
 
-You and three computer seats trade the same market for **30 days = 3 quarters of 10 days**. Every day one rumor is
+You and three computer seats trade the same market for **one, two or four quarters of 7 days (7, 14 or 28 days; one quarter is the quick game, chosen on the character screen)**. Every day one rumor is
 shown, everybody secretly bets on it, and the bets are revealed together. The classic 60-day game is still in the
 code (`RunConfig.Mode.CLASSIC`) but the menu now starts table runs only.
 
@@ -24,9 +24,9 @@ percentages, so the edge comes from reading the market and from the characters.
 
 ## Quarters
 
-- **Boss rumor** on days 7, 17, 27: sector or market wide, resolves 3 days later (the review day), stake 30%.
+- **Boss rumor** on day 4 of every quarter: sector or market wide, resolves 3 days later (day 7, the review day and the Boss day), stake 30%.
 - **Review** after day 10 and 20: nobody is fired any more (`FIRE_LAST_PLACE` is off; the code is still there). The run
-  always lasts 30 days and the final standings by net worth decide.
+  always lasts the whole chosen length and the final standings by net worth decide.
 - Active skills are once per quarter and come back at each review.
 - The calendar date is hidden during the run and shown on the game over screen (blind market).
 
@@ -109,8 +109,8 @@ scene (about 4 seconds), later days a short version (about 3). Space skips it. T
 
 ## Quarter board and podium
 
-At the end of quarters 1 and 2 `RankingBoard` shows the four players in last quarter's order, rolls their net worth and
-swaps them place by place; a new leader gets the crown. After day 30 `Podium` builds a podium from the bottom up with the
+At the end of every quarter but the last `RankingBoard` shows the four players in last quarter's order, rolls their net worth and
+swaps them place by place; a new leader gets the crown. After the last day `Podium` builds a podium from the bottom up with the
 3D characters (the winner jumps, a crown and confetti; YOU WIN when it is you) and only then does the game-over dialog open.
 
 ## Sounds

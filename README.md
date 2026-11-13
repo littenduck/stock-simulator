@@ -1,6 +1,6 @@
 # Stock Simulator
 
-A turn-based stock Roguelike. **Table mode** (new): 30 days in 3 quarters, you and three rivals bet every day on one
+A turn-based stock Roguelike. **Table mode** (new): a quick game of 7 days (one quarter), or 14 or 28 days (2 or 4 quarters): you and three rivals bet every day on one
 funny rumor (BELIEVE / BULLSHIT / PASS), a Boss rumor ends every quarter, and six characters
 (Insider Inu, Copilot Cody, Double Dan, Saving Son, Goldfish Gus, Hodl Hana) each bend the rules. See [docs/table-mode.md](docs/table-mode.md).
 The classic 60-day game (6 of 30 real-world-flavored companies in 4 sectors, a perk every 10 days) is still in the code. Web build first; Steam later.

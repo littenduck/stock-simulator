@@ -36,6 +36,16 @@ static func set_opening_enabled(value: bool) -> void:
 	_set_value("opening_enabled", value)
 
 
+## How many quarters (7 days each) a new table run lasts: 1, 2 or 4. The last choice is remembered; the first is the quick game.
+static func table_quarters() -> int:
+	var saved := int(_get_value("table_quarters", 1))
+	return saved if saved in RunConfig.QUARTER_CHOICES else 1
+
+
+static func set_table_quarters(value: int) -> void:
+	_set_value("table_quarters", value)
+
+
 ## "en" or "zh". With nothing saved yet the language of the computer is used (Chinese computers start in Chinese).
 static func language() -> String:
 	var saved: Variant = _get_value("language", "")
