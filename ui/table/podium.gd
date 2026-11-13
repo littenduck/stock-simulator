@@ -207,6 +207,6 @@ func _celebrate(column: Control, x: float, top_y: float) -> void:
 	crown.custom_minimum_size = Vector2(64, 40)
 	crown.position = Vector2(COL_W * 0.5 - 32.0, -10.0)
 	column.add_child(crown)
-	TableFx.sfx(&"win")
+	TableFx.sfx(&"fanfare")
 	TableFx.confetti(self, Vector2(x - 160.0, top_y), 90, 0.55)
 	TableFx.confetti(self, Vector2(x + 160.0, top_y), 90, -0.55)

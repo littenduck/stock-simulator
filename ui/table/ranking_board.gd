@@ -226,8 +226,8 @@ func _swap(upper: int, lower: int) -> void:
 	up.chain().tween_property(climber, "scale", Vector2.ONE, 0.2)
 	var down := faller.create_tween()
 	down.tween_property(faller, "position:y", lower * ROW_H, 0.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
-	TableFx.sfx(&"slot_land")
-	get_tree().create_timer(0.25).timeout.connect(func() -> void: TableFx.sfx(&"reveal_tick"))
+	TableFx.sfx(&"swap_up")
+	get_tree().create_timer(0.2).timeout.connect(func() -> void: TableFx.sfx(&"swap_down"))
 	_refresh_ranks()
 	await _wait(0.55)
 	climber.z_index = 0
@@ -270,7 +270,7 @@ func _crown_the_leader() -> void:
 	_crown.position = Vector2(ROW_W - 90.0, -90.0)
 	var tw := _crown.create_tween()
 	tw.tween_property(_crown, "position:y", -34.0, 0.4).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
-	TableFx.sfx(&"win")
+	TableFx.sfx(&"fanfare")
 	TableFx.confetti(self, _track.global_position + Vector2(ROW_W * 0.5, 40.0), 80, 0.0)
 	TableFx.jolt(row, 1.08)
 

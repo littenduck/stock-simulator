@@ -91,3 +91,30 @@ Every skill animation waits for Space (or a click) before the next one plays, so
 Code: `ui/table/table_opening.gd` (the director), `slot_pick.gd` (the arcade pick), `character_model.gd` (3D models).
 
 Every time the turn moves to a new step a banner sweeps across the screen ("PRE-MARKET", "MARKET OPEN", "AFTER-MARKET", "NEXT DAY") with a line about what happens now (`ui/table/step_banner.gd`).
+
+## The feed (right board)
+
+Newest first, three kinds of entries: **rumors** (today's rumor with your call, the open Boss rumor under it, then every
+resolved rumor with its stamp), **summary** (one card per day: what everybody played, what it paid) and **skills** (a line
+whenever a public skill was played; the Insider's hidden skills never show). The log lives in `TableSession.feed_log`
+and is saved with the run.
+
+## The night between two days
+
+After the verdict the screen turns to night (`ui/table/day_transition.gd`): your net worth rolls to its new value, a
+face-down card for the new rumor arrives (its border colour is the credibility; Goldfish Gus sees grey) with two
+countdowns (the Boss rumor, the end of the quarter), the moon sets and the sun comes up, the day counter flips, and an
+arcade pick over your six stocks lands on the stock the rumor is about and flips the card. The first three days play the
+whole thing (about 5 seconds), later days a short version (about 3). Space skips it. The four players then stretch awake.
+
+## Quarter board and podium
+
+At the end of quarters 1 and 2 `RankingBoard` shows the four players in last quarter's order, rolls their net worth and
+swaps them place by place; a new leader gets the crown. After day 30 `Podium` builds a podium from the bottom up with the
+3D characters (the winner jumps, a crown and confetti; YOU WIN when it is you) and only then does the game-over dialog open.
+
+## Sounds
+
+All sounds come from the four Kenney packs in `audio/`. `AudioFeedback.SFX` maps an event to several files; each play
+picks one (never the same twice in a row) and bends the pitch a little. Every skill, banner and board has its own family.
+

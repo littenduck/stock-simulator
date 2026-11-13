@@ -6,38 +6,74 @@
 extends Node
 
 const IFACE := "res://audio/kenney_interface-sounds/Audio/"
+const UIA := "res://audio/kenney_ui-audio/Audio/"
+const DIGI := "res://audio/kenney_digital-audio/Audio/"
 const IMPACT := "res://audio/kenney_impact-sounds/Audio/"
-## Event -> file. All effects come from Kenney "Interface Sounds" so the style stays consistent.
-## The other Kenney packs in audio/ are bundled unused for now (see CREDITS.md).
-const SFX: Dictionary = {
-	&"buy": IFACE + "confirmation_001.ogg",
-	&"sell": IFACE + "drop_001.ogg",
-	&"next_day": IFACE + "toggle_001.ogg",
-	&"perk": IFACE + "maximize_001.ogg",
-	&"perk_picked": IFACE + "pluck_001.ogg",
-	&"margin_call": IFACE + "glitch_001.ogg",
-	&"error": IFACE + "error_001.ogg",
-	&"win": IFACE + "glass_001.ogg",
-	&"lose": IFACE + "scratch_001.ogg",
-	&"order_placed": IFACE + "open_001.ogg",
-	&"order_cancelled": IFACE + "close_001.ogg",
-	&"rumor_posted": IFACE + "question_001.ogg",
-	&"rumor_resolved": IFACE + "bong_001.ogg",
-	&"reveal_tick": IFACE + "click_003.ogg",
-	&"stamp": IFACE + "drop_003.ogg",
-	&"slot_tick": IFACE + "tick_001.ogg",
-	&"slot_land": IFACE + "confirmation_002.ogg",
-	&"chart_tick": IFACE + "tick_002.ogg",
-	&"board_drop": IMPACT + "impactPlank_medium_000.ogg",
-	&"board_fill": IFACE + "scroll_001.ogg",
-}
-const POLYPHONY := 4
+## Event -> the files it may play. Each play picks one of them (never the same twice in a row) and bends the pitch a
+## little, so the same event never sounds the same twice. Every file is from the four Kenney packs in audio/.
+var SFX: Dictionary = _build_table()
+## Events whose pitch varies more than the default (the arcade ticks climb and fall).
+const JITTER := {&"slot_tick": 0.1, &"chart_tick": 0.08, &"reveal_tick": 0.06}
+const POLYPHONY := 6
 
 var _streams: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
 var _next_player: int = 0
+var _last_pick: Dictionary = {}
 ## Counts plays per effect; tests read it (also works with a headless audio driver).
 var played: Dictionary = {}
+
+
+## `dir` + prefix + number (001..) for the given numbers: ("confirmation_", [1, 2, 3, 4]) -> confirmation_001.ogg ...
+static func _seq(dir: String, prefix: String, numbers: Array, digits: int = 3, ext: String = ".ogg") -> Array:
+	var out: Array = []
+	for n: int in numbers:
+		out.append(dir + prefix + str(n).pad_zeros(digits) + ext)
+	return out
+
+
+static func _build_table() -> Dictionary:
+	var t := {}
+	# The things you do.
+	t[&"buy"] = _seq(IFACE, "confirmation_", [1, 2, 3, 4])
+	t[&"sell"] = _seq(IFACE, "drop_", [1, 2, 4])
+	t[&"error"] = _seq(IFACE, "error_", [1, 2, 3, 5])
+	t[&"order_placed"] = _seq(IFACE, "open_", [1, 2, 3, 4])
+	t[&"order_cancelled"] = _seq(IFACE, "close_", [1, 2, 3, 4])
+	t[&"perk"] = _seq(IFACE, "maximize_", [1, 2, 3])
+	t[&"perk_picked"] = _seq(IFACE, "pluck_", [1, 2])
+	t[&"margin_call"] = _seq(IFACE, "glitch_", [1, 2, 3, 4])
+	# The day.
+	t[&"next_day"] = _seq(IFACE, "toggle_", [1, 2, 3, 4])
+	t[&"rumor_posted"] = _seq(IFACE, "question_", [1, 2, 3, 4])
+	t[&"rumor_resolved"] = [IFACE + "bong_001.ogg"] + _seq(IMPACT, "impactBell_heavy_", [0, 1, 2], 3)
+	t[&"win"] = _seq(IFACE, "glass_", [1, 2, 3, 4, 5, 6]) + [DIGI + "powerUp3.ogg", DIGI + "powerUp7.ogg"]
+	t[&"lose"] = _seq(IFACE, "scratch_", [1, 2, 3, 4, 5]) + [DIGI + "lowDown.ogg"]
+	t[&"reveal_tick"] = _seq(IFACE, "click_", [1, 2, 3, 4, 5]) + _seq(UIA, "click", [1, 2, 3, 4, 5], 1)
+	t[&"stamp"] = _seq(IFACE, "drop_", [3, 4]) + _seq(IMPACT, "impactPlate_heavy_", [0, 1, 2], 3) + _seq(IMPACT, "impactWood_heavy_", [0, 1], 3)
+	# The arcade picks and the boards.
+	t[&"slot_tick"] = _seq(IFACE, "tick_", [1, 2, 4]) + _seq(UIA, "rollover", [1, 2, 3, 4, 5], 1)
+	t[&"slot_land"] = _seq(IFACE, "confirmation_", [2, 3, 4]) + _seq(DIGI, "pepSound", [1, 2, 3, 4, 5], 1)
+	t[&"chart_tick"] = _seq(IFACE, "select_", [1, 2, 3, 4, 5, 6, 7, 8])
+	t[&"board_drop"] = _seq(IMPACT, "impactPlank_medium_", [0, 1, 2, 3, 4], 3) + _seq(IMPACT, "impactWood_heavy_", [2, 3, 4], 3)
+	t[&"board_fill"] = _seq(IFACE, "scroll_", [1, 2, 3, 4, 5])
+	# The banners of the day.
+	t[&"banner_dawn"] = [DIGI + "highUp.ogg"] + _seq(DIGI, "phaserUp", [1, 2, 3], 1)
+	t[&"banner_day"] = _seq(IFACE, "maximize_", [4, 5, 6, 7])
+	t[&"banner_night"] = [DIGI + "lowDown.ogg"] + _seq(DIGI, "phaserDown", [1, 2, 3], 1)
+	t[&"night_card"] = _seq(IMPACT, "impactSoft_medium_", [0, 1, 2, 3, 4], 3)
+	t[&"swap_up"] = _seq(DIGI, "phaserUp", [4, 5, 6, 7], 1)
+	t[&"swap_down"] = _seq(DIGI, "phaserDown", [1, 2, 3], 1)
+	t[&"fanfare"] = _seq(DIGI, "powerUp", [5, 8, 9, 10, 11, 12], 1)
+	# One sound family for each skill.
+	t[&"skill_tip"] = _seq(DIGI, "phaseJump", [1, 2, 3], 1) + [DIGI + "zapThreeToneUp.ogg"]
+	t[&"skill_hodl"] = _seq(DIGI, "powerUp", [1, 2, 4, 6], 1)
+	t[&"skill_copy"] = [DIGI + "zap1.ogg", DIGI + "zap2.ogg", DIGI + "zapTwoTone.ogg", DIGI + "zapTwoTone2.ogg"]
+	t[&"skill_double"] = _seq(IMPACT, "impactPunch_heavy_", [0, 1, 2, 3, 4], 3)
+	t[&"skill_interest"] = _seq(IFACE, "pluck_", [1, 2]) + [DIGI + "twoTone1.ogg", DIGI + "twoTone2.ogg"]
+	t[&"skill_bubble"] = _seq(UIA, "rollover", [1, 2, 3, 4, 5], 1)
+	t[&"skill_sparkle"] = [DIGI + "threeTone1.ogg", DIGI + "threeTone2.ogg", DIGI + "tone1.ogg"]
+	return t
 
 
 func _ready() -> void:
@@ -46,9 +82,12 @@ func _ready() -> void:
 		add_child(p)
 		_players.append(p)
 	for key: StringName in SFX:
-		var path: String = SFX[key]
-		if ResourceLoader.exists(path):
-			_streams[key] = load(path)
+		var list: Array = []
+		for path: String in SFX[key]:
+			if ResourceLoader.exists(path):
+				list.append(load(path))
+		if not list.is_empty():
+			_streams[key] = list
 	if is_inside_tree():
 		bind_bus(get_node_or_null("/root/EventBus"))
 
@@ -75,12 +114,18 @@ func bind_bus(bus: Node) -> void:
 ## Plays an effect by name. Unknown names and missing files are ignored.
 func play(sfx: StringName) -> void:
 	played[sfx] = int(played.get(sfx, 0)) + 1
-	var stream: AudioStream = _streams.get(sfx)
-	if stream == null or _players.is_empty():
+	var list: Array = _streams.get(sfx, [])
+	if list.is_empty() or _players.is_empty():
 		return
+	var index := randi() % list.size()
+	if list.size() > 1 and index == int(_last_pick.get(sfx, -1)):
+		index = (index + 1 + randi() % (list.size() - 1)) % list.size()
+	_last_pick[sfx] = index
 	var p := _players[_next_player]
 	_next_player = (_next_player + 1) % _players.size()
-	p.stream = stream
+	p.stream = list[index]
+	var jitter: float = float(JITTER.get(sfx, 0.04))
+	p.pitch_scale = 1.0 + randf_range(-jitter, jitter)
 	p.play()
 
 

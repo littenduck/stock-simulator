@@ -22,9 +22,9 @@ with its original `License.txt`. Credit is not required but appreciated: "Sound 
 | Folder | Pack | Used by the game |
 |---|---|---|
 | `audio/kenney_interface-sounds/` | Interface Sounds 1.0 | yes, all effects (`ui/audio/audio_feedback.gd`) |
-| `audio/kenney_ui-audio/` | UI Audio | not yet |
-| `audio/kenney_digital-audio/` | Digital Audio | not yet |
-| `audio/kenney_impact-sounds/` | Impact Sounds 1.0 | not yet |
+| `audio/kenney_ui-audio/` | UI Audio | yes (ticks, clicks) |
+| `audio/kenney_digital-audio/` | Digital Audio | yes (skills, banners, fanfares) |
+| `audio/kenney_impact-sounds/` | Impact Sounds 1.0 | yes (boards, stamps, punches) |
 
 ## Art / fonts
 `icon.svg` belongs to the project. The company and perk icons are 16x16 pixel bitmaps written as text in

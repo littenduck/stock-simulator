@@ -62,7 +62,9 @@ func test_all_sfx_files_exist() -> void:
 	var node: Node = load("res://ui/audio/audio_feedback.tscn").instantiate()
 	var sfx: Dictionary = node.get("SFX")
 	for key in sfx:
-		assert_true(ResourceLoader.exists(String(sfx[key])), "missing audio " + String(sfx[key]))
+		for path in sfx[key]:
+			assert_true(ResourceLoader.exists(String(path)), "missing audio " + String(path))
+		assert_true((sfx[key] as Array).size() >= 1, "no sound for " + String(key))
 	node.free()
 
 

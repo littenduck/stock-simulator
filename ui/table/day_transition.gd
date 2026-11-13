@@ -177,7 +177,7 @@ func _run(chip_col: Control, pick_row: Control) -> void:
 		drop.tween_property(_card, "modulate:a", 1.0, 0.1)
 		drop.tween_property(_card, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		drop.tween_property(_card, "rotation", 0.0, 0.3)
-		TableFx.sfx(&"stamp")
+		TableFx.sfx(&"night_card")
 		await _wait(0.35)
 		create_tween().tween_property(chip_col, "modulate:a", 1.0, 0.3)
 		await _wait(0.5 if _short else 0.9)

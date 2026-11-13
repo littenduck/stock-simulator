@@ -55,7 +55,7 @@ func show_step(step: int) -> void:
 	var rest := Vector2((size.x - SIZE.x) * 0.5, size.y * 0.13)
 	sky.position = Vector2(-SIZE.x - 40.0, rest.y)
 	sky.rotation = -0.03
-	TableFx.sfx(&"slot_land")
+	TableFx.sfx([&"banner_dawn", &"banner_day", &"banner_night"][step])
 	_tween = create_tween()
 	_tween.tween_property(sky, "position:x", rest.x, SLIDE).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_tween.parallel().tween_property(sky, "rotation", 0.0, SLIDE)

@@ -112,7 +112,7 @@ func run(event: Dictionary, session: TableSession) -> void:
 	intro.tween_property(dim, "color:a", 0.5 if skill == TableSkills.INSIDER_TIP else 0.3, 0.2)
 	intro.tween_property(card, "modulate:a", 1.0, 0.12)
 	intro.tween_property(card, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	TableFx.sfx(&"stamp")
+	TableFx.sfx(_skill_sound(skill))
 	if skill == TableSkills.DOUBLE_DOWN:
 		_slam_double(card)
 	# The animation keeps looping until you press Space (or click): nothing moves on by itself, so the text can be read.
@@ -138,6 +138,26 @@ func run(event: Dictionary, session: TableSession) -> void:
 	TableUi.set_busy(false)
 	TableUi.modal_open = was_modal
 	_done = true
+
+
+## Each skill has its own family of sounds.
+func _skill_sound(skill: StringName) -> StringName:
+	match skill:
+		TableSkills.INSIDER_TIP:
+			return &"skill_tip"
+		TableSkills.HODL_BUY:
+			return &"skill_hodl"
+		TableSkills.COPILOT:
+			return &"skill_copy"
+		TableSkills.DOUBLE_DOWN:
+			return &"skill_double"
+		TableSkills.INTEREST:
+			return &"skill_interest"
+		TableSkills.GOLDFISH_ODDS:
+			return &"skill_bubble"
+		TableSkills.HODL_SECTOR:
+			return &"skill_sparkle"
+	return &"stamp"
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -184,7 +204,7 @@ func _slam_double(card: Control) -> void:
 		if scene != null:
 			TableFx.shake(scene, 16.0, 0.5)
 		TableFx.confetti(self, card.global_position + card.size * 0.5, 80, 0.0)
-		TableFx.sfx(&"win"))
+		TableFx.sfx(&"fanfare"))
 
 
 # ---------------------------------------------------------------- the looks
