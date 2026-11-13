@@ -28,7 +28,23 @@ func _ready() -> void:
 		_new_run_button.grab_focus()
 	_add_version_label()
 	_add_language_toggle()
+	_add_cast()
 	_animate_in()
+
+
+## The six characters under the menu panel (live 3D, small); they follow the panel when the window changes size.
+func _add_cast() -> void:
+	var cast := TitleCast.new()
+	cast.name = "TitleCast"
+	cast.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(cast)
+	var panel: Control = $Center/Panel
+	var refit := func() -> void: cast.fit_under(panel)
+	panel.resized.connect(refit)
+	get_viewport().size_changed.connect(refit)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	refit.call()
 
 
 ## The language buttons in the bottom-left corner.
