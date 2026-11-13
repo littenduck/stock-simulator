@@ -101,7 +101,11 @@ func _update_blind_note() -> void:
 func _on_result_closed() -> void:
 	if _card_due:
 		_card_due = false
-		_begin_day(0.2)
+		var t := TableUi.session()
+		if t != null:
+			# The day turns over: night to dawn, the day counter flips, and only then the pre-market begins.
+			await DayTransition.play(self, t.day - 1, t.day, t.config.trading_days)
+		_begin_day(0.3)
 
 
 ## Pre-market, after the verdict: today's news pops up and flies into the feed (the Boss rumor too, when a new one

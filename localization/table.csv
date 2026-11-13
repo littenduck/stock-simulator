@@ -139,4 +139,7 @@ TABLE_BANNER_STEP,STEP
 TABLE_BANNER_PRE,Today's news is coming in
 TABLE_BANNER_OPEN,Trade and make your call
 TABLE_BANNER_AFTER,Everybody's bets are revealed
-TABLE_BANNER_NEXT,The day turns over
+TABLE_BANNER_DAWN,Dawn
+TABLE_BANNER_DAY,Daytime
+TABLE_BANNER_NIGHT,Night
+TABLE_DAY_OF,Day %d / %d
