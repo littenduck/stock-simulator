@@ -70,9 +70,9 @@ static func make_viewport(model: Node3D, px: Vector2i) -> SubViewport:
 	vp.add_child(model)
 	var cam := Camera3D.new()
 	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
-	cam.size = 1.0
+	cam.size = 1.25
 	vp.add_child(cam)
-	cam.look_at_from_position(Vector3(0, 0.43, 3), Vector3(0, 0.43, 0))
+	cam.look_at_from_position(Vector3(0, 0.46, 3), Vector3(0, 0.46, 0))
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-30, 20, 0)
 	vp.add_child(light)

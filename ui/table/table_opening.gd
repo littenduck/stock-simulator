@@ -40,6 +40,8 @@ func _ready() -> void:
 func prepare(parts: Dictionary) -> void:
 	_parts = parts
 	TableUi.modal_open = true
+	# The boards drop in from the top edge of the middle area, not over the bars.
+	(parts["body"] as Control).clip_contents = true
 	for key in ["board_left", "board_center", "board_right"]:
 		(parts[key] as Control).modulate.a = 0.0
 	for key in ["chart_card", "trade"]:
@@ -76,7 +78,7 @@ func play() -> void:
 	await get_tree().process_frame
 	var body: Control = _parts["body"]
 	_bg = ColorRect.new()
-	_bg.color = Color(BG.r, BG.g, BG.b, 0.97)
+	_bg.color = Color(0, 0, 0, 0.45)
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_bg)
 	move_child(_bg, 0)
@@ -128,6 +130,7 @@ func _finish() -> void:
 	TableUi.modal_open = false
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	# A board still in the air is put back by the container.
+	(_parts["body"] as Control).clip_contents = false
 	(_parts["body"] as Control).queue_sort()
 	finished.emit()
 
@@ -170,27 +173,50 @@ func _scene_player(t: TableSession, index: int) -> void:
 	var seat: Seat = t.seats[index]
 	var id := String(seat.character.id)
 	var key := id.to_upper()
+	# A small framed block in the middle of the screen (the game stays visible around it).
+	var frame := PanelContainer.new()
+	frame.set_anchors_preset(Control.PRESET_CENTER)
+	frame.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	frame.grow_vertical = Control.GROW_DIRECTION_BOTH
+	frame.custom_minimum_size = Vector2(880, 420)    # the same size for every player
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.set_meta("no_fx", true)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color("#1b1830")
+	sb.border_color = Color("#f4efe0")
+	sb.set_border_width_all(4)
+	sb.content_margin_left = 24
+	sb.content_margin_right = 24
+	sb.content_margin_top = 18
+	sb.content_margin_bottom = 18
+	frame.add_theme_stylebox_override("panel", sb)
+	_stage.add_child(frame)
 	var column := HBoxContainer.new()
-	column.set_anchors_preset(Control.PRESET_CENTER)
-	column.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	column.grow_vertical = Control.GROW_DIRECTION_BOTH
-	column.add_theme_constant_override("separation", 30)
+	column.add_theme_constant_override("separation", 26)
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(column)
-	# Left: the live 3D character.
-	var holder := SubViewportContainer.new()
-	holder.stretch = true
-	holder.custom_minimum_size = Vector2(340, 420)
+	frame.add_child(column)
+	# Left: the live 3D character, rendered at twice the size and shown smaller so it stays sharp.
+	var holder := Control.new()
+	holder.custom_minimum_size = Vector2(300, 360)
 	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(holder)
 	var model := CharacterModel.make(id)
 	if model != null:
-		holder.add_child(CharacterModel.make_viewport(model, Vector2i(340, 420)))
+		var vp := CharacterModel.make_viewport(model, Vector2i(600, 720))
+		holder.add_child(vp)
+		var view := TextureRect.new()
+		view.texture = vp.get_texture()
+		view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		view.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		view.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		view.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		view.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		holder.add_child(view)
 	else:
 		holder.add_child(PortraitView.make(id, 14))
 	# Right: who it is, then the two skills.
 	var text := VBoxContainer.new()
-	text.custom_minimum_size = Vector2(500, 0)
+	text.custom_minimum_size = Vector2(460, 0)
 	text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	text.add_theme_constant_override("separation", 12)
 	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -240,7 +266,7 @@ func _scene_player(t: TableSession, index: int) -> void:
 func _skill_panel(head: String, body: String) -> PanelContainer:
 	var panel := PanelContainer.new()
 	panel.theme_type_variation = &"DialogPanel"
-	panel.custom_minimum_size = Vector2(500, 0)
+	panel.custom_minimum_size = Vector2(460, 0)
 	panel.modulate.a = 0.0
 	var box := TableUi.column(panel, 2, 10)
 	box.add_child(GameFmt.label(head.to_upper(), Color("#c77d0a"), 14))

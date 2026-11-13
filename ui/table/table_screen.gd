@@ -29,9 +29,6 @@ func _init() -> void:
 
 func _ready() -> void:
 	UiFx.install(get_tree())
-	# The top and bottom bars stay in front of the boards: the boards of the opening drop in from behind them.
-	for bar: Control in [%TopBar, %StandingsBar, %TurnBar]:
-		bar.z_index = 2
 	PanelFx.decorate_tree($Layout)
 	_stock_list.stock_selected.connect(select_symbol)
 	_top_bar.menu_requested.connect(_menu.toggle)
