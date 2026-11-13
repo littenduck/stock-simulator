@@ -16,7 +16,7 @@ random window of 60 trading days (the same calendar dates for every company) plu
 Companies are real stocks with joke names (Nvideo, Macro Hard, Pineapple, Foogl, SpaceZ, Tezla, Starducks, ...); each company file maps to its real ticker through `history_key`. Late listings (SanDisk 2025, SpaceX 2026) only appear in windows where they have data, and every run draws at least one space or finance company. News events are
 fictional rumors layered on top of the real price path.
 
-Refresh the data (needs network) with `python3 tools/fetch_history.py`; it rewrites `data/market/history.csv`.
+Refresh the data (needs network) with `python3 tools/fetch_history.py`; it rewrites `data/market/history.csv`. Note: the stored prices are modified, scaled to 1/10 of the real quotes (percentage moves are unchanged), so they are processed data, not original Yahoo values.
 The export preset ships the CSV (`include_filter="data/market/*.csv"`). See [CREDITS.md](CREDITS.md) for the data source.
 
 ## Run

@@ -3,8 +3,11 @@
 Columns: date, then <TICKER>_o,_h,_l,_c per ticker. Rows are the trading days of the first ticker (AAPL).
 Late-listed tickers (SNDK, SPCX, LUNR...) have empty cells before their first row; HistoryData reads that as
 "no data yet". Gaps after a ticker's first row are forward-filled with the previous close (flat bar).
-Usage: python3 tools/fetch_history.py"""
+Prices are scaled by SCALE (0.1), see below. Usage: python3 tools/fetch_history.py"""
 import json, urllib.request, datetime, sys
+# MODIFIED DATA: every price is multiplied by SCALE before it is written, so the CSV is a processed derivative of the
+# Yahoo Finance prices, not the original values. Daily % moves are unchanged; absolute levels are 1/10 of the real ones.
+SCALE = 0.1
 TICKERS = ["NVDA","AMD","AVGO","MU","SNDK","MRVL","MSFT","AAPL","GOOGL","META","PLTR",
            "SPCX","RKLB","ASTS","LUNR",
            "AMZN","TSLA","RIVN","LCID","NFLX","RBLX","GME","AMC","COST","SBUX","KO","PEP",
@@ -37,9 +40,9 @@ with open("data/market/history.csv", "w") as f:
         cells = []
         for t in TICKERS:
             if d in data[t]:
-                last[t] = data[t][d]; cells += [f"{x:.2f}" for x in last[t]]
+                last[t] = data[t][d]; cells += [f"{x*SCALE:.3f}" for x in last[t]]
             elif t in last:   # gap after listing: flat bar at the previous close
-                c = last[t][3]; cells += [f"{c:.2f}"] * 4
+                c = last[t][3]; cells += [f"{c*SCALE:.3f}"] * 4
             else:
                 cells += [""] * 4
         f.write(d + "," + ",".join(cells) + "\n")

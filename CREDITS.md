@@ -8,7 +8,7 @@ Built with [Godot Engine](https://godotengine.org) 4.7 (MIT licence, (c) Godot E
 
 ## Market data (`data/market/history.csv`)
 Daily open/high/low/close prices for 24 stocks (2022-2026), downloaded from Yahoo Finance with
-`tools/fetch_history.py`. Fetched for personal, non-commercial prototyping. Yahoo's terms may restrict
+`tools/fetch_history.py`. Fetched for personal, non-commercial prototyping. **The values in the CSV are modified: every price was multiplied by 0.1 (scaled down to one tenth) by `tools/fetch_history.py`, so they are processed data derived from Yahoo Finance, not the original quotes. Daily percentage moves are unchanged.** Scaling does not change where the data comes from, so the licensing caveat below still applies. Yahoo's terms may restrict
 redistribution: check them (or switch to a licensed data source) before a public or commercial release.
 
 ## Audio (`audio/`)
