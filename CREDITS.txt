@@ -50,3 +50,10 @@ characters), character-male-b (head painted goldfish orange, with a few red bloc
 character-male-e, character-male-d and character-female-e (the last three unchanged).
 `tools/kenney_portraits.gd` makes the images and shows how to regenerate them from the downloaded pack. The six 3D models used by the opening animation are in `ui/theme/models/` (with the pack's `License.txt`). Credit is not required but appreciated:
 "Characters by Kenney (kenney.nl)".
+
+Font: Fusion Pixel Font 12px (proportional, zh_hans) by TakWolf (https://github.com/TakWolf/fusion-pixel-font), licence SIL
+Open Font License 1.1, files in `ui/theme/fonts/` (`OFL.txt`; the font merges glyphs from Ark Pixel (OFL), Cubic 11 (M+ BITMAP
+FONTS, free to use and distribute) and Galmuri (OFL), whose licences are in `ui/theme/fonts/LICENSES/`). The font has no
+Reserved Font Name and is used unmodified. The OFL does not ask for credit inside the game, only that the copyright notice
+and the licence text travel with the font files; the font may not be sold on its own.
+

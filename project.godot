@@ -30,6 +30,7 @@ window/stretch/aspect="expand"
 [gui]
 
 theme/custom="res://ui/theme/main_theme.tres"
+theme/custom_font="res://ui/theme/fonts/fusion-pixel-12px-proportional-zh_hans.otf.woff2"
 
 [input]
 
