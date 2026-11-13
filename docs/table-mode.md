@@ -103,9 +103,9 @@ and is saved with the run.
 
 After the verdict the screen turns to night (`ui/table/day_transition.gd`): your net worth rolls to its new value, a
 face-down card for the new rumor arrives (its border colour is the credibility; Goldfish Gus sees grey) with two
-countdowns (the Boss rumor, the end of the quarter), the moon sets and the sun comes up, the day counter flips, and an
-arcade pick over your six stocks lands on the stock the rumor is about and flips the card. The first three days play the
-whole thing (about 5 seconds), later days a short version (about 3). Space skips it. The four players then stretch awake.
+countdowns (the Boss rumor, the end of the quarter), the moon sets and the sun comes up and the day counter flips. The card
+stays face down: what the rumor is about is only told the next morning with the news. The first three days play the whole
+scene (about 4 seconds), later days a short version (about 3). Space skips it. The four players then stretch awake.
 
 ## Quarter board and podium
 

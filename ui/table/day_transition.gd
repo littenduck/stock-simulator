@@ -2,9 +2,9 @@
 ##   1 your net worth rolls to its new value (the first days only),
 ##   2 a face-down card arrives for tomorrow's rumor, its border showing how credible the rumor is, with two small
 ##     countdowns (the Boss rumor, the end of the quarter),
-##   3 the moon sets and the sun comes up, the day counter flips,
-##   4 an arcade pick runs over your six stocks and lands on the one the rumor is about: the card flips over to show it.
-## Space skips all of it. The first days play the whole thing (about 5 seconds), later days a short version (about 3).
+##   3 the moon sets and the sun comes up, the day counter flips.
+## The card stays face down: what the rumor is about is only told the next morning, with the news.
+## Space skips all of it. The first days play the whole thing (about 4 seconds), later days a short version (about 3).
 class_name DayTransition
 extends Control
 
@@ -26,12 +26,10 @@ var _number: Label
 var _recap: Label
 var _card: PanelContainer
 var _chips: HBoxContainer
-var _badges: Array = []
 var _short: bool = false
 
 
-## `info`: net_from, net_to, tier (-1 = hidden), symbols (your six), target (the rumor's symbol), boss_days,
-## quarter_days.
+## `info`: net_from, net_to, tier (-1 = hidden), boss_days, quarter_days.
 static func play(host: Control, p_from: int, p_to: int, p_total: int, p_info: Dictionary = {}) -> void:
 	var scene := DayTransition.new()
 	scene.from_day = p_from
@@ -85,21 +83,8 @@ func _ready() -> void:
 	if boss_days >= 0:
 		chip_col.add_child(_chip(tr("TABLE_NIGHT_BOSS") % boss_days if boss_days > 0 else tr("TABLE_NIGHT_BOSS_NOW"), Color("#b57bee")))
 	chip_col.add_child(_chip(tr("TABLE_NIGHT_QUARTER") % int(info.get("quarter_days", 0)), Color("#4aa3ff")))
-	var pick_row := HBoxContainer.new()
-	pick_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	pick_row.add_theme_constant_override("separation", 10)
-	pick_row.modulate.a = 0.0
-	pick_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(pick_row)
-	var session := TableUi.session()
-	for symbol: String in info.get("symbols", []):
-		var company: CompanyDef = session.market.company_of(symbol) if session != null else null
-		var badge := CompanyBadge.make(company.icon if company != null else "", 44, company.sector if company != null else "")
-		badge.set_meta("symbol", symbol)
-		pick_row.add_child(badge)
-		_badges.append(badge)
 	modulate.a = 0.0
-	_run(chip_col, pick_row)
+	_run(chip_col)
 
 
 func _chip(text: String, color: Color) -> Control:
@@ -156,7 +141,7 @@ func _wait(sec: float) -> void:
 		left -= get_process_delta_time()
 
 
-func _run(chip_col: Control, pick_row: Control) -> void:
+func _run(chip_col: Control) -> void:
 	create_tween().tween_property(self, "modulate:a", 1.0, 0.3)
 	TableFx.sfx(&"next_day")
 	await _wait(0.3)
@@ -192,25 +177,7 @@ func _run(chip_col: Control, pick_row: Control) -> void:
 		TableFx.sfx(&"reveal_tick")
 		await _wait(sweep_time * 0.5 + 0.1)
 	progress = 1.0
-	# 4 The pick over your six stocks lands on the one in the rumor, and the card flips.
-	var target := String(info.get("target", ""))
-	if not _skipped and target != "" and not _badges.is_empty():
-		create_tween().tween_property(pick_row, "modulate:a", 1.0, 0.2)
-		await _wait(0.2)
-		var cells: Array = _badges
-		var open: Array = range(cells.size())
-		var index := 0
-		for i in cells.size():
-			if String((cells[i] as Control).get_meta("symbol")) == target:
-				index = i
-		var frame := SlotPick.make_frame(Color("#e3524f"), 5)
-		add_child(frame)
-		await SlotPick.run(self, frame, cells, open, index, 0.8 if _short else 1.4, func() -> bool: return _skipped)
-		await _flip_card(target)
-		frame.queue_free()
-		await _wait(0.5)
-	else:
-		await _flip_card(target)
+	await _wait(0.5)
 	await _wait(0.1)
 	create_tween().tween_property(self, "modulate:a", 0.0, 0.35)
 	await _wait(0.35)
@@ -218,43 +185,6 @@ func _run(chip_col: Control, pick_row: Control) -> void:
 		modulate.a = 0.0
 	TableUi.locks = maxi(TableUi.locks - 1, 0)
 	finished.emit()
-
-
-## The card turns over and shows the company the rumor is about.
-func _flip_card(symbol: String) -> void:
-	var session := TableUi.session()
-	var company: CompanyDef = session.market.company_of(symbol) if session != null and symbol != "" else null
-	if company == null:
-		return
-	if _skipped:
-		_show_front(company, symbol)
-		return
-	var tw := create_tween()
-	tw.tween_property(_card, "scale:x", 0.0, 0.12)
-	tw.tween_callback(func() -> void: _show_front(company, symbol))
-	tw.tween_property(_card, "scale:x", 1.0, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	TableFx.sfx(&"slot_land")
-	await tw.finished
-
-
-func _show_front(company: CompanyDef, symbol: String) -> void:
-	for child in _card.get_children():
-		child.queue_free()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color("#f4efe0")
-	sb.border_color = UiPalette.sector_color(company.sector)
-	sb.set_border_width_all(6)
-	_card.add_theme_stylebox_override("panel", sb)
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 14)
-	_card.add_child(row)
-	row.add_child(CompanyBadge.make(company.icon, 72, company.sector))
-	var col := VBoxContainer.new()
-	col.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	row.add_child(col)
-	col.add_child(GameFmt.label(symbol, Color("#2b2540"), 32))
-	col.add_child(GameFmt.label(tr(company.display_name), Color("#5d5870"), 16))
 
 
 func _draw() -> void:

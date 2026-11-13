@@ -133,7 +133,6 @@ func _night_info(t: TableSession) -> Dictionary:
 	var info := {
 		"net_from": _net_before, "net_to": t.human().portfolio.net_worth(t.market),
 		"tier": -1 if t.human().has_flag(&"goldfish") or t.today_rumor == null else t.today_rumor.tier,
-		"symbols": t.market.symbols(), "target": t.today_rumor.primary_symbol() if t.today_rumor != null else "",
 		"boss_days": days_to_boss, "quarter_days": t.days_left_in_quarter(),
 	}
 	return info
