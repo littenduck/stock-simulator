@@ -35,7 +35,10 @@ func _refresh() -> void:
 
 
 func _chip(seat: Seat, rank: int, net_worth: float) -> Control:
-	var row := HBoxContainer.new()
+	var row := _SeatChip.new()
+	row.seat = seat
+	row.tooltip_text = String(seat.character.id)    # any text turns the tooltip on; _SeatChip draws its own
+	row.mouse_filter = Control.MOUSE_FILTER_STOP
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_theme_constant_override("separation", 8)
 	var portrait := PortraitView.make(String(seat.character.id), 1.9)
@@ -63,3 +66,42 @@ func _chip(seat: Seat, rank: int, net_worth: float) -> Control:
 		detail_color = GameColors.GOLD
 	box.add_child(GameFmt.label(detail, detail_color, 14))
 	return row
+
+
+## One player of the bar. Hover it for the character: portrait, name and both skills with their windows of the day.
+class _SeatChip extends HBoxContainer:
+	var seat: Seat
+
+	func _make_custom_tooltip(_for_text: String) -> Object:
+		if seat == null or seat.character == null:
+			return null
+		var key := String(seat.character.id).to_upper()
+		var panel := PanelContainer.new()
+		panel.theme_type_variation = &"DialogPanel"
+		var margin := MarginContainer.new()
+		for side in ["left", "right", "top", "bottom"]:
+			margin.add_theme_constant_override("margin_" + side, 6)
+		panel.add_child(margin)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 14)
+		margin.add_child(row)
+		row.add_child(PortraitView.make(String(seat.character.id), 6))
+		var col := VBoxContainer.new()
+		col.custom_minimum_size = Vector2(380, 0)
+		col.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		col.add_theme_constant_override("separation", 4)
+		row.add_child(col)
+		col.add_child(GameFmt.label(TableUi.seat_name(seat, self), Color("#2b2540"), 22))
+		col.add_child(_wrapped(tr(seat.character.description_key), Color("#5d5870"), 14))
+		for part in [["TABLE_PASSIVE", "CHAR_%s_PASSIVE"], ["TABLE_ACTIVE", "CHAR_%s_ACTIVE"]]:
+			col.add_child(GameFmt.label(tr(part[0]).to_upper(), Color("#c77d0a"), 13))
+			col.add_child(_wrapped(tr(part[1] % key), Color("#2b2540"), 15))
+		if seat.is_human and seat.skill_used:
+			col.add_child(GameFmt.label(tr("TABLE_SKILL_SPENT"), GameColors.DOWN, 14))
+		return panel
+
+	## A wrapped line with a fixed width: a tooltip has no parent to give it one, so it would wrap at one letter.
+	func _wrapped(text: String, color: Color, size: int) -> Label:
+		var l := TableUi.wrapped(text, color, size)
+		l.custom_minimum_size = Vector2(380, 0)
+		return l
