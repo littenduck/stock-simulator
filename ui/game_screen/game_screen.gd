@@ -19,6 +19,8 @@ func _init() -> void:
 
 
 func _ready() -> void:
+	UiFx.install(get_tree())
+	PanelFx.decorate_tree($Layout)
 	_stock_list.stock_selected.connect(select_symbol)
 	_portfolio.stock_selected.connect(select_symbol)
 	_top_bar.menu_requested.connect(_menu.toggle)

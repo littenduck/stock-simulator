@@ -114,10 +114,12 @@ func abandon_run() -> void:
 func go_to_menu() -> void:
 	_change_state(State.MENU)
 	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+	UiFx.fade_from_black(get_tree())
 
 
 func open_scene(path: String) -> void:
 	get_tree().change_scene_to_file(path)
+	UiFx.fade_from_black(get_tree())
 
 
 func _unlocked_ids() -> Array[StringName]:
@@ -132,6 +134,7 @@ func _unlocked_ids() -> Array[StringName]:
 func _enter_game() -> void:
 	_change_state(State.DRAFTING if not session.pending_draft.is_empty() else State.PLAYING)
 	get_tree().change_scene_to_file(GAME_SCENE)
+	UiFx.fade_from_black(get_tree())
 	# change_scene_to_file is deferred; wait until the new scene's _ready has run.
 	await get_tree().process_frame
 	await get_tree().process_frame

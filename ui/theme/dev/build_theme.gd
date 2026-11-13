@@ -19,8 +19,9 @@ func _init() -> void:
 	quit(0 if err == OK else 1)
 
 
-func _tex(art: String, pad_h: int = 16, pad_v: int = 8) -> StyleBoxTexture:
+func _tex(art: String, pad_h: int = 16, pad_v: int = 8, tint: Color = Color.WHITE) -> StyleBoxTexture:
 	var s := StyleBoxTexture.new()
+	s.modulate_color = tint
 	s.texture = load(ART + art + ".png")
 	s.set_texture_margin_all(MARGIN)
 	s.content_margin_left = pad_h
@@ -43,8 +44,8 @@ func _focus() -> StyleBoxFlat:
 func _base(t: Theme) -> void:
 	t.set_color("font_color", "Label", UiPalette.INK)
 	t.set_constant("line_spacing", "Label", 3)
-	t.set_stylebox("panel", "Panel", _tex("colored_grey", 20, 16))
-	t.set_stylebox("panel", "PanelContainer", _tex("colored_grey", 28, 20))
+	t.set_stylebox("panel", "Panel", _tex("colored_grey", 20, 16, UiPalette.PANEL_TINT))
+	t.set_stylebox("panel", "PanelContainer", _tex("colored_grey", 28, 20, UiPalette.PANEL_TINT))
 	t.set_constant("separation", "VBoxContainer", 10)
 	t.set_constant("separation", "HBoxContainer", 10)
 	t.set_constant("h_separation", "GridContainer", 16)
@@ -98,7 +99,7 @@ func _variations(t: Theme) -> void:
 	t.set_type_variation("CardPanel", "PanelContainer")
 	t.set_stylebox("panel", "CardPanel", _tex("ancient_tan", 20, 14))
 	t.set_type_variation("DialogPanel", "PanelContainer")
-	t.set_stylebox("panel", "DialogPanel", _tex("colored_grey", 36, 28))
+	t.set_stylebox("panel", "DialogPanel", _tex("colored_grey", 36, 28, UiPalette.PANEL_TINT))
 
 	# Selectable cards: light panels. Selected = green outline, rarity = outline colour.
 	_card_var(t, "SelectCard", "ancient_tan", "outline_green")

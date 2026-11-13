@@ -14,6 +14,7 @@ var symbol: String = "":
 
 var _side: Order.Dir = Order.Dir.BUY
 var _title: Label
+var _badge: CompanyBadge
 var _position: Label
 var _buy: Button
 var _sell: Button
@@ -36,7 +37,14 @@ func _ready() -> void:
 	add_child(box)
 
 	_title = GameFmt.label("", Color.WHITE, 20)
-	box.add_child(_title)
+	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	var title_row := HBoxContainer.new()
+	title_row.add_theme_constant_override("separation", 8)
+	_badge = CompanyBadge.make("", 34)
+	title_row.add_child(_badge)
+	title_row.add_child(_title)
+	box.add_child(title_row)
 	_position = GameFmt.label("", GameColors.MUTED, 13)
 	box.add_child(_position)
 
@@ -185,6 +193,9 @@ func _refresh() -> void:
 	var n: int = int(_shares.value)
 
 	_title.text = "%s  @ %s" % [symbol, GameFmt.price(price)]
+	var co: CompanyDef = s.market.company_of(symbol)
+	_badge.sector = co.sector if co != null else ""
+	_badge.icon_name = co.icon if co != null else ""
 	if pos > 0:
 		_position.text = tr("UI_GAME_POSITION_LONG") % [pos, GameFmt.price(float(s.portfolio.positions[symbol].get("avg_cost", 0.0)))]
 	elif pos < 0:

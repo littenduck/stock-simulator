@@ -65,6 +65,7 @@ func _make_entry(r: Rumor) -> Control:
 		accent = GameColors.GOLD
 
 	var panel := PanelContainer.new()
+	panel.set_meta("no_fx", true)
 	var style := StyleBoxFlat.new()
 	style.bg_color = GameColors.CARD
 	style.border_color = accent
@@ -75,9 +76,14 @@ func _make_entry(r: Rumor) -> Control:
 	style.content_margin_top = 4
 	style.content_margin_bottom = 4
 	panel.add_theme_stylebox_override("panel", style)
+	var outer := HBoxContainer.new()
+	outer.add_theme_constant_override("separation", 8)
+	panel.add_child(outer)
+	outer.add_child(CompanyBadge.make(_icon_for(r), 32))
 	var box := VBoxContainer.new()
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box.add_theme_constant_override("separation", 2)
-	panel.add_child(box)
+	outer.add_child(box)
 
 	var headline: String = tr(r.event.headline_key) if r.event != null else ""
 	var target: String = r.target_symbol if r.target_symbol != "" else (r.event.target_sector.capitalize() if r.event != null and r.event.target_sector != "" else "")
@@ -122,6 +128,18 @@ func _make_entry(r: Rumor) -> Control:
 	cred.tooltip_text = tr("UI_GAME_CRED_TIP_RANGE") if fact_checker else tr("UI_GAME_CRED_TIP")
 	box.add_child(cred)
 	return panel
+
+
+## The event's own icon, else the target company's, else the generic one.
+func _icon_for(r: Rumor) -> String:
+	if r.event != null and r.event.icon != "":
+		return r.event.icon
+	var s: GameSession = GameManager.session
+	if s != null and r.target_symbol != "":
+		var c: CompanyDef = s.market.company_of(r.target_symbol)
+		if c != null:
+			return c.icon
+	return ""
 
 
 func _on_rumor_posted(rumor: Rumor) -> void:

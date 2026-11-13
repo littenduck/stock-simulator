@@ -42,6 +42,7 @@ static func shot_if_requested(node: Node) -> void:
 		return
 	for i in 6:
 		await node.get_tree().process_frame
+	await node.get_tree().create_timer(1.8).timeout  # let entrance animations finish
 	var img := node.get_viewport().get_texture().get_image()
 	img.save_png(path)
 	node.get_tree().quit()

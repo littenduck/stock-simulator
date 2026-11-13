@@ -56,6 +56,8 @@ func _make_row(order: Order) -> Control:
 	row.add_theme_constant_override("separation", 8)
 	var is_buy: bool = order.side == Order.Dir.BUY
 	var kind_text: String = tr("UI_GAME_KIND_LIMIT") if order.kind == Order.Kind.LIMIT else tr("UI_GAME_KIND_STOP")
+	var company: CompanyDef = GameManager.session.market.company_of(order.symbol) if GameManager.session != null else null
+	row.add_child(CompanyBadge.make(company.icon if company != null else "", 32, company.sector if company != null else ""))
 	var text := VBoxContainer.new()
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text.add_theme_constant_override("separation", 0)

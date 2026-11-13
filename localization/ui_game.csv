@@ -55,10 +55,10 @@ UI_GAME_SUM_WORTH,Net worth
 UI_GAME_MARGIN_STATUS,Margin %.0f%% (liquidation below %.0f%%) · exposure %.1fx
 UI_GAME_MARGIN_NONE,No margin used
 UI_GAME_COL_SYMBOL,Stock
-UI_GAME_COL_SHARES,Shares
-UI_GAME_COL_AVG,Avg cost
+UI_GAME_COL_SHARES,Qty
+UI_GAME_COL_AVG,Avg
 UI_GAME_COL_PRICE,Price
-UI_GAME_COL_PNL,Profit / loss
+UI_GAME_COL_PNL,P/L
 UI_GAME_SHORT_TAG,short
 UI_GAME_NO_POSITIONS,No open positions. Pick a stock and place an order.
 UI_GAME_PENDING_ORDERS,PENDING ORDERS
@@ -90,3 +90,10 @@ UI_GAME_DEV_PERK_INSIDER,Insider Friend
 UI_GAME_DEV_PERK_INSIDER_DESC,"Every 10 days, one guaranteed-true rumor."
 UI_GAME_DEV_ERR_CASH,Not enough cash for this order (dev harness rule)
 UI_GAME_DEV_ERR_SHORT,Short selling is not allowed (dev harness rule)
+UI_GAME_CHART_CANDLES,Candles
+UI_GAME_CHART_LINE,Line
+UI_GAME_TODAY,Run starts
+UI_GAME_PREGAME,Before the run
+UI_GAME_OHLC,O %s   H %s   L %s   C %s
+UI_GAME_DAY_DATE,Day %d/%d · %s
+UI_GAME_DAY_ONLY,Day %d/%d

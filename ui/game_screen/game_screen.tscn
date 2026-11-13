@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://ui/game_screen/game_screen.gd" id="1"]
 [ext_resource type="PackedScene" path="res://ui/audio/music_player.tscn" id="music"]
-[ext_resource type="Texture2D" path="res://ui/game_screen/skins/pixel/bg_tile.png" id="2"]
+[ext_resource type="PackedScene" path="res://ui/theme/animated_background.tscn" id="2"]
 [ext_resource type="Script" path="res://ui/game_screen/top_bar.gd" id="3"]
 [ext_resource type="Script" path="res://ui/game_screen/stock_list.gd" id="4"]
 [ext_resource type="Script" path="res://ui/game_screen/price_chart.gd" id="5"]
@@ -25,27 +25,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Background" type="ColorRect" parent="."]
-mouse_filter = 2
-color = Color(0.059, 0.078, 0.102, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Tile" type="TextureRect" parent="."]
-mouse_filter = 2
-texture = ExtResource("2")
-stretch_mode = 1
-modulate = Color(1, 1, 1, 0.35)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Background" parent="." instance=ExtResource("2")]
 
 [node name="Layout" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -78,7 +58,7 @@ theme_override_constants/separation = 8
 unique_name_in_owner = true
 script = ExtResource("4")
 layout_mode = 2
-custom_minimum_size = Vector2(236, 0)
+custom_minimum_size = Vector2(262, 0)
 row_height = 56
 
 [node name="Center" type="VBoxContainer" parent="Layout/Rows/Body"]

@@ -9,14 +9,14 @@ const PIXEL_DIR := "res://ui/game_screen/skins/pixel/"
 
 ## Kenney Pixel UI pack, matching ui-flow's theme: light panels, ink text, coloured buttons.
 static func pixel() -> Theme:
-	var ink := Color("#232130")
-	GameColors.UP = Color("#2a8a3c")
-	GameColors.DOWN = Color("#c0392b")
-	GameColors.FLAT = Color("#5d6270")
-	GameColors.MUTED = Color("#5d6270")
-	GameColors.GOLD = Color("#b9770e")
-	GameColors.WARN = Color("#b9770e")
-	GameColors.GRID = Color(0, 0, 0, 0.10)
+	var ink := UiPalette.INK
+	GameColors.UP = UiPalette.INK_UP
+	GameColors.DOWN = UiPalette.INK_DOWN
+	GameColors.FLAT = UiPalette.INK_MUTED
+	GameColors.MUTED = UiPalette.INK_MUTED
+	GameColors.GOLD = Color("#c77d0a")
+	GameColors.WARN = Color("#c77d0a")
+	GameColors.GRID = Color(0.2, 0.1, 0.3, 0.10)
 	GameColors.CROSSHAIR = Color(0, 0, 0, 0.45)
 	GameColors.CARD = Color(1, 1, 1, 0.45)
 	GameColors.TRACK = Color(0, 0, 0, 0.15)
@@ -24,11 +24,18 @@ static func pixel() -> Theme:
 	t.set_color("font_color", "Label", ink)
 	t.set_constant("separation", "VBoxContainer", 6)
 	t.set_constant("separation", "HBoxContainer", 8)
-	t.set_stylebox("panel", "PanelContainer", _tex("colored_grey", 20, 14, 10))
+	t.set_stylebox("panel", "PanelContainer", _tex("colored_grey", 20, 14, 10, UiPalette.PANEL_TINT))
 	t.set_type_variation("ChartPanel", "PanelContainer")
 	t.set_stylebox("panel", "ChartPanel", StyleBoxEmpty.new())
 	t.set_type_variation("DialogPanel", "PanelContainer")
-	t.set_stylebox("panel", "DialogPanel", _tex("colored_grey", 36, 28, 22))
+	t.set_stylebox("panel", "DialogPanel", _tex("colored_grey", 36, 28, 22, UiPalette.PANEL_TINT))
+	_pixel_button(t, "ChipButton", "Button", "blue", "green")
+	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
+		var chip := t.get_stylebox(state, "ChipButton") as StyleBoxTexture
+		chip.content_margin_top = 2
+		chip.content_margin_bottom = 4
+		chip.content_margin_left = 10
+		chip.content_margin_right = 10
 
 	_pixel_button(t, "Button", "Button", "blue", "green")
 	_pixel_button(t, "OptionButton", "OptionButton", "blue", "blue")
@@ -45,7 +52,7 @@ static func pixel() -> Theme:
 		t.set_color(state, "RowButton", ink)
 
 	var field := StyleBoxFlat.new()
-	field.bg_color = Color("#fbfbfb")
+	field.bg_color = Color("#fffaf0")
 	field.border_color = ink
 	field.set_border_width_all(2)
 	field.set_corner_radius_all(3)
@@ -61,12 +68,12 @@ static func pixel() -> Theme:
 	var none := StyleBoxEmpty.new()
 	t.set_stylebox("panel", "Tree", none)
 	var sel := StyleBoxFlat.new()
-	sel.bg_color = Color("#1fa7e2", 0.28)
+	sel.bg_color = Color("#ffb347", 0.35)
 	sel.set_corner_radius_all(3)
 	t.set_stylebox("selected", "Tree", sel)
 	t.set_stylebox("selected_focus", "Tree", sel)
 	var head := StyleBoxFlat.new()
-	head.bg_color = Color("#d3c093")
+	head.bg_color = Color("#e8c98f")
 	head.content_margin_left = 4
 	head.content_margin_right = 4
 	head.content_margin_top = 4
@@ -85,8 +92,9 @@ static func pixel() -> Theme:
 	return t
 
 
-static func _tex(name: String, _unused: int, cm_h: int, cm_v: int) -> StyleBoxTexture:
+static func _tex(name: String, _unused: int, cm_h: int, cm_v: int, tint: Color = Color.WHITE) -> StyleBoxTexture:
 	var s := StyleBoxTexture.new()
+	s.modulate_color = tint
 	s.texture = load(PIXEL_DIR + name + ".png") as Texture2D
 	s.texture_margin_left = 12
 	s.texture_margin_right = 12

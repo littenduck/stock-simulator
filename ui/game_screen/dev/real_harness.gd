@@ -41,6 +41,21 @@ func _ready() -> void:
 		_next_day()
 	await get_tree().create_timer(0.5).timeout
 	print("day=%d cash=%.2f net=%.2f pending=%d rumors=%d" % [_session.day, _session.portfolio.cash, _session.net_worth(), _session.book.pending().size(), _session.news.pending().size()])
+	var chart: GamePriceChart = _screen.find_child("PriceChart", true, false) as GamePriceChart
+	if args.has("select"):
+		_screen.select_symbol(symbols[int(args["select"])])
+	if args.has("line"):  # --line=1
+		chart.set_mode(GamePriceChart.Mode.LINE)
+	if args.has("advance_shot"):
+		# Capture mid-growth of the newest candle.
+		_next_day()
+		await get_tree().create_timer(float(args["advance_shot"])).timeout
+	if args.has("hover"):
+		await get_tree().process_frame
+		var ev := InputEventMouseMotion.new()
+		ev.position = Vector2(float(args["hover"]), 100)
+		chart._on_canvas_gui_input(ev)
+		await get_tree().process_frame
 	if args.has("shot"):
 		get_viewport().get_texture().get_image().save_png(String(args["shot"]))
 	get_tree().quit()

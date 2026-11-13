@@ -2,13 +2,17 @@
 class_name UiPalette
 extends RefCounted
 
-const BG := Color("#0f141a")
+const BG := Color("#2b2150")
+
+## Warm cream multiplied over the grey Kenney panels.
+const PANEL_TINT := Color("#fff1dc")
+const ACCENT := Color("#ffb347")
 
 ## Text on the light Kenney panels.
-const INK := Color("#232130")
-const INK_MUTED := Color("#5d6270")
-const INK_UP := Color("#2a8a3c")
-const INK_DOWN := Color("#c0392b")
+const INK := Color("#2a2140")
+const INK_MUTED := Color("#665c78")
+const INK_UP := Color("#1f8f4e")
+const INK_DOWN := Color("#cf3a36")
 
 const RARITY_COMMON := Color("#5d6270")
 const RARITY_RARE := Color("#1f6fc4")

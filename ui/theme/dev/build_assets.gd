@@ -15,8 +15,8 @@ const SLICES: Array[String] = [
 const COIN: Array[String] = ["..yyyy..", ".yooooy.", "yoyyyyoy", "yoyooyoy", "yoyooyoy", "yoyyyyoy", ".yooooy.", "..yyyy.."]
 const PLUS: Array[String] = ["...bb...", "...bb...", ".bbbbbb.", ".bbbbbb.", ".bbbbbb.", ".bbbbbb.", "...bb...", "...bb..."]
 ## Lighter, calmer background: sprites are only slightly different from it, so panels stand out.
-const BG := Color("#2d5a4c")
-const SPRITE_BLEND := 0.35  ## 0 = invisible (BG colour), 1 = full sprite colour
+const BG := Color("#2b2150")
+const SPRITE_BLEND := 0.3  ## 0 = invisible (BG colour), 1 = full sprite colour
 
 
 func _init() -> void:

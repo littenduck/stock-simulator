@@ -32,12 +32,29 @@ func _input(event: InputEvent) -> void:
 
 
 func _on_run_finished(score: float) -> void:
-	_score_label.text = UiFormat.money(score)
+	_score_label.text = UiFormat.money(0.0)
 	_run_info_label.text = _run_info()
 	_rank_label.text = _rank_text(score)
 	_fill_unlocks()
 	show()
 	_menu_button.grab_focus()
+	_animate_in(score)
+
+
+## Dim fades in, the panel pops up, the score counts up from zero.
+func _animate_in(score: float) -> void:
+	UiFx.install(get_tree())
+	PanelFx.decorate_tree($Center)
+	var dim: CanvasItem = $Dim
+	dim.modulate.a = 0.0
+	dim.create_tween().tween_property(dim, "modulate:a", 1.0, 0.35)
+	await get_tree().process_frame
+	var panel: Control = $Center/Panel
+	UiFx.bounce_in(panel, 0.1)
+	_score_label.remove_meta("fx_value")
+	UiFx.count_label(_score_label, 0.0, UiFormat.money)
+	await get_tree().create_timer(0.5).timeout
+	UiFx.count_label(_score_label, score, UiFormat.money, Color.WHITE, 1.2)
 
 
 func _run_info() -> String:

@@ -54,7 +54,9 @@ func _ready() -> void:
 			_tree.set_column_title_alignment(i, HORIZONTAL_ALIGNMENT_RIGHT)
 	for i in titles.size():
 		_tree.set_column_expand_ratio(i, 3 if i == 4 else 2 if i == 0 else 2)
-		_tree.set_column_custom_minimum_width(i, 80 if i == 4 else 76 if i == 0 else 52)
+		_tree.set_column_custom_minimum_width(i, 64 if i == 4 else 92 if i == 0 else 40)
+	_tree.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_tree.add_theme_constant_override("icon_max_width", PixelIcons.BADGE_SIZE)
 	_tree.item_selected.connect(_on_item_selected)
 	box.add_child(_tree)
 	_empty = GameFmt.label(tr("UI_GAME_NO_POSITIONS"), GameColors.MUTED, 14)
@@ -109,6 +111,8 @@ func _refresh() -> void:
 		var item: TreeItem = _tree.create_item(root)
 		item.set_metadata(0, symbol)
 		item.set_text(0, symbol)
+		var held_company: CompanyDef = s.market.company_of(symbol)
+		item.set_icon(0, PixelIcons.badge_texture(held_company.icon if held_company != null else "", held_company.sector if held_company != null else ""))
 		item.set_text(1, str(shares))
 		item.set_text(2, GameFmt.price(avg))
 		item.set_text(3, GameFmt.price(price))

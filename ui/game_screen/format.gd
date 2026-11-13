@@ -15,8 +15,14 @@ static func money(value: float, decimals: int = 2) -> String:
 	return ("-$" if value < 0.0 and scaled > 0 else "$") + text
 
 
+## "51.73" / "1,453.00" (thousands grouped so four-digit prices stay readable).
 static func price(value: float) -> String:
-	return "%.2f" % value
+	var text: String = "%.2f" % absf(value)
+	var dot: int = text.find(".")
+	var whole: String = text.substr(0, dot)
+	if whole.length() > 3:
+		whole = _group(int(whole))
+	return ("-" if value < 0.0 and text != "0.00" else "") + whole + text.substr(dot)
 
 
 ## Signed money: "+$12.00" / "-$12.00".

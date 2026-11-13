@@ -19,6 +19,9 @@ var _difficulty_group := ButtonGroup.new()
 
 
 func _ready() -> void:
+	UiFx.install(get_tree())
+	PanelFx.decorate_tree($Center)
+	_animate_in()
 	_back_button.pressed.connect(_on_back_button_pressed)
 	_start_button.pressed.connect(_on_start_button_pressed)
 	_build_characters()
@@ -32,6 +35,14 @@ func _ready() -> void:
 		selected.grab_focus()
 	else:
 		_back_button.grab_focus()
+
+
+## Sections of the panel fade and pop in one after another (waits a frame so the layout is known).
+func _animate_in() -> void:
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	UiFx.stagger_in($Center/Panel/Column, 0.07)
 
 
 func _unhandled_input(event: InputEvent) -> void:
