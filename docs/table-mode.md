@@ -26,7 +26,7 @@ percentages, so the edge comes from reading the market and from the characters.
 
 ## Characters (`data/characters/*.tres`, flags drive the code)
 
-The picker lists them as: Saving Son, Double Dan (they look alike, so they sit together), Goldfish Gus, Hodl Hana, Copilot Cody, Insider Inu.
+The picker numbers them: 01 Saving Son, 02 Double Dan, 03 Hodl Hana, 04 Goldfish Gus, 05 Copilot Cody, 06 Insider Inu. There is no easy / hard label.
 Portraits are renders of the free Kenney Mini Characters pack (CC0): the stock models, except Saving Son (lighter skin) and Goldfish Gus (painted goldfish orange with red fins). See `CREDITS.txt` and `tools/kenney_portraits.gd`.
 
 | Character | Rules |

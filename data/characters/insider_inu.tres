@@ -12,4 +12,3 @@ start_cash = 10000.0
 flags = Array[StringName]([&"insider"])
 unlock_id = &""
 table_role = true
-difficulty_tag = "advanced"

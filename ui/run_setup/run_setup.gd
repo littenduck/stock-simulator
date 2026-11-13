@@ -52,9 +52,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		GameManager.go_to_menu()
 
 
-## Saving Son first (the one to start with); Double Dan right after him because the two look alike (round glasses);
-## then the other easy character, Goldfish Gus and Hodl Hana, and the harder ones, Copilot Cody and Insider Inu, last.
-const ROSTER_ORDER := ["saving_son", "double_dan", "goldfish_gus", "hodl_hana", "copilot_cody", "insider_inu"]
+## The seat numbers: 01 Saving Son, 02 Double Dan, 03 Hodl Hana, 04 Goldfish Gus, 05 Copilot Cody, 06 Insider Inu.
+## A character's number is its place in this list.
+const ROSTER_ORDER := ["saving_son", "double_dan", "hodl_hana", "goldfish_gus", "copilot_cody", "insider_inu"]
 
 
 func _characters() -> Array[CharacterDef]:
@@ -70,7 +70,9 @@ func _characters() -> Array[CharacterDef]:
 
 func _build_characters() -> void:
 	var profile := SaveManager.profile
+	var number := 0
 	for def in _characters():
+		number += 1
 		var unlocked := profile.is_unlocked(def.unlock_id)
 		var card := Button.new()
 		card.theme_type_variation = &"SelectCard"
@@ -81,14 +83,11 @@ func _build_characters() -> void:
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		card.focus_mode = Control.FOCUS_ALL
 		_style_card(card, unlocked)
-		card.add_child(_character_card_body(def, unlocked))
+		card.add_child(_character_card_body(def, number))
 		card.toggled.connect(_on_character_card_toggled.bind(def))
 		_character_row.add_child(card)
 		if unlocked and _character == null:
 			card.button_pressed = true  # also fires toggled -> _character
-
-
-const AVATARS := {"rookie": "star", "day_trader": "bolt", "value_investor": "bank", "insider_inu": "eye", "copilot_cody": "people", "double_dan": "coin", "saving_son": "bank", "goldfish_gus": "clover", "hodl_hana": "gem"}
 
 
 ## Same cream card for every state: unselected is dimmer with a grey frame, selected has a green frame and glow.
@@ -125,7 +124,7 @@ func _restyle_card(card: Button, on: bool, unlocked: bool, animate: bool = true)
 		t.tween_property(card, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
-func _character_card_body(def: CharacterDef, _unlocked: bool) -> Control:
+func _character_card_body(def: CharacterDef, number: int) -> Control:
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -136,6 +135,7 @@ func _character_card_body(def: CharacterDef, _unlocked: bool) -> Control:
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
 	box.add_theme_constant_override("separation", 5)
 	margin.add_child(box)
+	box.add_child(_label("%02d" % number, &"SubtleLabel"))
 	var portrait := PortraitView.make(String(def.id), 6)
 	portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	box.add_child(portrait)
@@ -143,10 +143,6 @@ func _character_card_body(def: CharacterDef, _unlocked: bool) -> Control:
 	name_label.add_theme_font_size_override("font_size", 16)
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(name_label)
-	var advanced := def.difficulty_tag == "advanced"
-	var tag := _label(tr("TABLE_ADVANCED" if advanced else "TABLE_EASY"), &"RarityLegendaryLabel" if advanced else &"PositiveLabel")
-	tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	box.add_child(tag)
 	return margin
 
 

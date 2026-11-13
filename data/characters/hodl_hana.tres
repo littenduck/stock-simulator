@@ -19,4 +19,3 @@ effects = Array[ExtResource("2")]([SubResource("Resource_0")])
 flags = Array[StringName]([&"hodl"])
 unlock_id = &""
 table_role = true
-difficulty_tag = "easy"

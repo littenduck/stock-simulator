@@ -15,5 +15,3 @@ extends Resource
 @export var unlock_id: StringName = &""
 ## True for the six table-mode seats (rivals draw from these); the classic characters stay out of the table.
 @export var table_role: bool = false
-## One-line "easy / advanced" hint for the character picker: "easy" or "advanced".
-@export var difficulty_tag: String = "easy"

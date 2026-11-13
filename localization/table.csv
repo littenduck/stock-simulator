@@ -74,8 +74,6 @@ TABLE_SETUP_TITLE,Pick your seat
 TABLE_SETUP_CHARACTER,Character
 TABLE_SETUP_FEES_ON,Trading fees: On (change it in Settings)
 TABLE_SETUP_FEES_OFF,Trading fees: Off (turn them on in Settings)
-TABLE_EASY,EASY
-TABLE_ADVANCED,ADVANCED
 TABLE_PASSIVE,Passive
 TABLE_ACTIVE,Active
 TIER_LOW,Low
