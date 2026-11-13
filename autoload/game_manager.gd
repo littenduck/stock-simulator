@@ -24,6 +24,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		next_day()
 
 
+## True from the start of a new table run until its screen has played (or skipped) the opening.
+var opening_pending: bool = false
+
+
 func start_run(config: RunConfig) -> void:
 	if config == null or config.character == null:
 		return
@@ -32,12 +36,14 @@ func start_run(config: RunConfig) -> void:
 	else:
 		session = GameSession.new(config, ContentDb.companies(), ContentDb.perks(), ContentDb.news(), _unlocked_ids())
 	session.start()
+	opening_pending = config.mode == RunConfig.Mode.TABLE
 	SaveManager.save_run(session)
 	_enter_game()
 
 
 ## Resumes the saved run. Returns false if there is none.
 func continue_run() -> bool:
+	opening_pending = false
 	var data := SaveManager.load_run_data()
 	if data.is_empty():
 		return false

@@ -27,6 +27,15 @@ static func set_auto_reveal(value: bool) -> void:
 	_set_value("auto_reveal", value)
 
 
+## Table mode: the 25-second opening of a new run (Space skips it). On by default.
+static func opening_enabled() -> bool:
+	return bool(_get_value("opening_enabled", true))
+
+
+static func set_opening_enabled(value: bool) -> void:
+	_set_value("opening_enabled", value)
+
+
 ## Trading fees in table mode (off by default).
 static func fees_enabled() -> bool:
 	return bool(_get_value("fees_enabled", false))

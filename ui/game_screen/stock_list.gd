@@ -39,6 +39,26 @@ func select(symbol: String) -> void:
 			(_rows[symbol]["badge"] as CompanyBadge).bounce()
 
 
+## The row of a stock (the opening animation flies the company badge into it).
+func row_button(symbol: String) -> Button:
+	return _rows[symbol]["button"] as Button
+
+
+## Hides or shows every row but keeps its place, so the opening can bring them in one by one.
+func set_rows_hidden(hidden: bool) -> void:
+	for symbol: String in _rows:
+		(_rows[symbol]["button"] as Button).modulate.a = 0.0 if hidden else 1.0
+
+
+## One row appears and its badge pops.
+func reveal_row(symbol: String) -> void:
+	if not _rows.has(symbol):
+		return
+	var button := _rows[symbol]["button"] as Button
+	button.modulate.a = 1.0
+	(_rows[symbol]["badge"] as CompanyBadge).bounce()
+
+
 func _new_button(symbol: String) -> Button:
 	var button := Button.new()
 	button.name = "Row_" + symbol

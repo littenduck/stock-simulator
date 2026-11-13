@@ -33,6 +33,13 @@ var grow: float = 1.0:
 		if _canvas != null:
 			_canvas.queue_redraw()
 
+## 0..1 share of the bars drawn, left to right. Only the opening animation sets it below 1.
+var reveal: float = 1.0:
+	set(value):
+		reveal = value
+		if _canvas != null:
+			_canvas.queue_redraw()
+
 var _badge: CompanyBadge
 var _title: Label
 var _company: Label
@@ -282,9 +289,10 @@ func _on_canvas_draw() -> void:
 		_canvas.draw_string(font, Vector2(dx + 4, _plot.end.y - 5), tag, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, GameColors.MUTED)
 
 	var last_color: Color
+	var shown: int = n if reveal >= 1.0 else clampi(ceili(float(n) * reveal), 0, n)
 	if candles_on:
 		var bw: float = ChartMath.body_width(n, _plot.size.x)
-		for i in n:
+		for i in shown:
 			var x: float = ChartMath.x_of(i, n, _plot.position.x, _plot.size.x)
 			var up: bool = closes[i] >= opens[i]
 			var col: Color = GameColors.UP if up else GameColors.DOWN
@@ -302,20 +310,22 @@ func _on_canvas_draw() -> void:
 		last_color = GameColors.UP if closes[n - 1] >= opens[n - 1] else GameColors.DOWN
 	else:
 		var points := PackedVector2Array()
-		for i in n:
+		for i in maxi(shown, 2):
 			points.append(Vector2(ChartMath.x_of(i, n, _plot.position.x, _plot.size.x), ChartMath.y_of(closes[i], lo, hi, _plot.position.y, _plot.size.y)))
 		last_color = GameColors.for_change(s.market.day_change(symbol))
 		if last_color == GameColors.FLAT:
 			last_color = GameColors.UP
 		var area := PackedVector2Array(points)
-		area.append(Vector2(points[n - 1].x, _plot.end.y))
+		area.append(Vector2(points[points.size() - 1].x, _plot.end.y))
 		area.append(Vector2(points[0].x, _plot.end.y))
 		if not Geometry2D.triangulate_polygon(area).is_empty():
 			_canvas.draw_colored_polygon(area, Color(last_color.r, last_color.g, last_color.b, 0.12))
 		_canvas.draw_polyline(points, last_color, 2.5, true)
-		_canvas.draw_circle(points[n - 1], 4.5, last_color)
+		_canvas.draw_circle(points[points.size() - 1], 4.5, last_color)
 
-	# Last-price line and tag in the right margin.
+	# Last-price line and tag in the right margin (not while the opening is still drawing the bars).
+	if shown < n:
+		return
 	var y_last: float = ChartMath.y_of(closes[n - 1], lo, hi, _plot.position.y, _plot.size.y)
 	_dotted_horizontal(y_last, last_color)
 	var tag_text: String = GameFmt.price(closes[n - 1])

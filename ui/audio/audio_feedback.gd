@@ -24,6 +24,9 @@ const SFX: Dictionary = {
 	&"rumor_resolved": IFACE + "bong_001.ogg",
 	&"reveal_tick": IFACE + "click_003.ogg",
 	&"stamp": IFACE + "drop_003.ogg",
+	&"slot_tick": IFACE + "tick_001.ogg",
+	&"slot_land": IFACE + "confirmation_002.ogg",
+	&"chart_tick": IFACE + "tick_002.ogg",
 }
 const POLYPHONY := 4
 

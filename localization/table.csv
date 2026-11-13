@@ -109,7 +109,7 @@ TABLE_CARD_PASS_OPTION,do nothing  ·  pay $0
 TABLE_CARD_CHANCE_SHORT,chance it is true
 TABLE_CARD_BOSS_HEAD,BOSS
 UI_FLOW_SETTINGS_AUTO,Auto reveal
-UI_FLOW_SETTINGS_AUTO_HINT,"After the bets are revealed, the day resolves by itself. Off by default: you press Next at every step."
+UI_FLOW_SETTINGS_AUTO_HINT,The day resolves by itself after the reveal. Off: you press Next.
 TABLE_AUTO_NOTE,The day resolves in a moment...
 TABLE_COPILOT_ON,COPILOT: copying %s today (change it on the rumor card)
 TABLE_COPILOT_OFF,COPILOT: pick a rival to copy on the rumor card
@@ -127,3 +127,11 @@ TABLE_FEED_NEW,NEW
 TABLE_NEXT_TIP,End your turn (Space)
 TABLE_ERR_CLOSED,The market is closed. Trading is only open before the after-market.
 TABLE_PRESS_NEXT,Press Next to finish the day
+UI_FLOW_SETTINGS_OPENING,Opening animation
+UI_FLOW_SETTINGS_OPENING_HINT,Plays the intro of a new run (about 25 seconds). Space skips it.
+TABLE_SKIP_HINT,Space: skip
+TABLE_INTRO_RIVALS,Choosing your rivals
+TABLE_INTRO_YOU,YOU
+TABLE_INTRO_RIVAL,RIVAL %d
+TABLE_INTRO_PLAYER,PLAYER %d / %d
+TABLE_INTRO_STOCKS,Today's six stocks

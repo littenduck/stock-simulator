@@ -58,3 +58,20 @@ Portraits are renders of the free Kenney Mini Characters pack (CC0): the stock m
 
 Perks (switched off in table mode, the characters replace them), the delayed public positions, an Insider tip for the Boss rumor, player-planted rumors
 by other characters, real-money odds mode (odds scaled by the actual price move).
+
+## The opening of a new run
+
+A new run does not show everything at once. It opens with five short scenes, about 25 seconds in all; Space skips the
+whole thing, and the "Opening animation" switch in Settings turns it off (on by default). Continued runs skip it.
+
+1. **The rivals.** A frame runs over the six characters like an arcade pick, fast and then slower, and lands on the three
+   rivals one after another. You are already seated.
+2. **The four players, 3 seconds each.** A live 3D character (Kenney Mini Characters, `ui/theme/models/`) makes its
+   move, then its passive and active skills are stuck on.
+3. **The stocks.** The same pick over all 30 companies; each of the six lands in the left list.
+4. **The chart.** The first stock's 30 days are drawn bar by bar, fast and then slower.
+5. **The feed.** The feed and the turn bar appear and the first news comes in: its frame takes the colour of the
+   claim (green for a rise, red for a fall, purple for the Boss), with the company icon and a typewriter headline.
+
+Code: `ui/table/table_opening.gd` (the director), `slot_pick.gd` (the arcade pick), `character_model.gd` (3D models).
+

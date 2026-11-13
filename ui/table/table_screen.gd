@@ -60,8 +60,24 @@ func _start_of_screen() -> void:
 		get_tree().create_timer(0.8).timeout.connect(GameManager.next_day)
 	elif t.calls.has(0) or t.copy_targets.has(0) or t.day > 0:
 		EventBus.table_step.emit(TurnBar.Step.OPEN)
+	elif GameSettings.opening_enabled() and GameManager.opening_pending:
+		GameManager.opening_pending = false
+		_play_opening()
 	else:
 		_begin_day(0.8)
+
+
+## The opening of a new run: everything is hidden, then rivals, players, stocks, chart and feed come in one by one.
+## When it is over (or skipped) the first day starts as usual.
+func _play_opening() -> void:
+	var opening := TableOpening.new()
+	add_child(opening)
+	opening.prepare({"stock_list": _stock_list, "chart_card": _chart_card, "chart": _chart, "trade": _trade,
+			"feed": _feed, "turn_bar": %TurnBar})
+	opening.play()
+	await opening.finished
+	opening.queue_free()
+	_begin_day(0.3)
 
 
 func select_symbol(symbol: String) -> void:
@@ -112,14 +128,37 @@ func _play_news(boss: bool) -> void:
 	var window := PanelContainer.new()
 	window.theme_type_variation = &"DialogPanel"
 	window.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	window.custom_minimum_size = Vector2(380, 0)
+	window.custom_minimum_size = Vector2(420, 0)
+	# The frame takes the colour of the news: purple for the Boss, green for a rise, red for a fall.
+	var accent := Color("#b57bee") if boss else (Color("#3fb950") if rumor.claim_dir > 0 else Color("#f85149"))
+	window.self_modulate = Color.WHITE.lerp(accent, 0.07)
 	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 6)
+	col.add_theme_constant_override("separation", 8)
 	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	window.add_child(col)
-	var title := GameFmt.label(tr("TABLE_BOSS_TAG").to_upper() + " " + tr("TABLE_NEWS") if boss else tr("TABLE_NEWS"), Color("#cf534f") if boss else Color("#c77d0a"), 16)
-	col.add_child(title)
-	col.add_child(TableUi.wrapped(rumor.headline(tr, t.market), Color("#2b2540"), 18))
+	var stripe := ColorRect.new()
+	stripe.color = accent
+	stripe.custom_minimum_size = Vector2(0, 8)
+	stripe.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stripe.set_meta("no_fx", true)
+	col.add_child(stripe)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	col.add_child(row)
+	var company: CompanyDef = t.market.company_of(rumor.primary_symbol())
+	if company != null:
+		row.add_child(CompanyBadge.make(company.icon, 60, company.sector))
+	var text_col := VBoxContainer.new()
+	text_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	text_col.add_theme_constant_override("separation", 4)
+	text_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(text_col)
+	var tag_text := (tr("TABLE_BOSS_TAG") + " " + tr("TABLE_NEWS")).to_upper() if boss else tr("TABLE_NEWS")
+	text_col.add_child(GameFmt.label(tag_text, accent.darkened(0.25), 16))
+	var headline := TableUi.wrapped(rumor.headline(tr, t.market), Color("#2b2540"), 18)
+	headline.visible_ratio = 0.0
+	text_col.add_child(headline)
 	_overlays.add_child(window)
 	await get_tree().process_frame
 	window.size = window.get_combined_minimum_size()
@@ -134,6 +173,9 @@ func _play_news(boss: bool) -> void:
 	pop.tween_property(window, "scale", Vector2.ONE, 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	pop.tween_property(window, "rotation", -0.03, 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	await pop.finished
+	var type := headline.create_tween()
+	type.tween_property(headline, "visible_ratio", 1.0, clampf(headline.text.length() * 0.02, 0.5, 1.2))
+	await type.finished
 	await get_tree().create_timer(1.0).timeout
 	# Fly into the feed.
 	var target := _feed.global_position + Vector2(_feed.size.x * 0.5, 80.0) - window.size * 0.5
