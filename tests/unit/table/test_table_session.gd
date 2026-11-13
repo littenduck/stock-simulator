@@ -376,3 +376,49 @@ func test_button_previews_match_what_the_trade_really_does() -> void:
 	s.sell_fraction(0, sym, 0.5)
 	assert_almost(s.portfolio.cash - cash_now, float(half["proceeds"]), 0.01, "proceeds of selling half")
 	assert_eq(int(s.sell_preview(0, "NOPE_" + sym, 1.0)["shares"]), 0, "nothing to sell")
+
+
+func test_turn_order_open_then_reveal_then_next_day() -> void:
+	var s := _session(&"double_dan", 6)
+	assert_eq(s.phase, TableSession.Phase.ACTION, "the turn starts with the market open")
+	assert_eq(s.history.size(), 0, "nothing has been judged yet")
+	var rumor := s.today_rumor
+	s.set_call(RumorTier.Side.BELIEVE)
+	s.reveal()
+	assert_eq(s.phase, TableSession.Phase.REVEALED, "after-market: the bets are out")
+	assert_false(rumor.resolved, "today's rumor is not judged before the next day's price exists")
+	assert_eq(s.day, 0)
+	s.advance()
+	assert_eq(s.phase, TableSession.Phase.ACTION, "the next day opens with the market open")
+	assert_eq(s.day, 1)
+	assert_true(rumor.resolved, "the verdict on yesterday's rumor arrives with the new day")
+	assert_eq(s.history.size(), 1)
+	assert_true(s.today_rumor.id != rumor.id, "and a new rumor is out")
+
+
+func test_no_trading_after_the_market_closed() -> void:
+	var s := _session(&"double_dan", 6)
+	var sym := s.market.symbols()[0]
+	assert_true(s.buy_fraction(0, sym, 0.25).ok, "trading works while the market is open")
+	s.reveal()
+	for res in [s.buy_fraction(0, sym, 0.25), s.sell_fraction(0, sym, 0.5), s.swap(0, sym, s.market.symbols()[1])]:
+		assert_false(res.ok, "no trade in the after-market")
+		assert_eq(res.reason, TableSession.ERR_MARKET_CLOSED)
+	s.advance()
+	assert_true(s.buy_fraction(0, sym, 0.25).ok, "the next day the market is open again")
+
+
+func test_skills_still_work_in_the_after_market() -> void:
+	var s := _session(&"double_dan", 9)
+	s.set_call(RumorTier.Side.BELIEVE)
+	s.reveal()
+	assert_true(s.can_double(0), "Double Down is an after-market skill")
+	assert_true(s.double_down(0))
+
+
+func test_ending_the_turn_without_a_call_counts_as_pass() -> void:
+	var s := _session(&"saving_son", 4)
+	var cash := s.portfolio.cash
+	s.reveal()
+	assert_true(s.daily_bet_of(0) == null, "no call, no bet")
+	assert_almost(s.portfolio.cash, cash, 0.001, "and no money spent")

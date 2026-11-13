@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" path="res://ui/game_over/game_over_dialog.tscn" id="13"]
 [ext_resource type="PackedScene" path="res://ui/audio/audio_feedback.tscn" id="14"]
 [ext_resource type="Script" path="res://ui/table/table_overlay.gd" id="15"]
-[ext_resource type="Script" path="res://ui/table/skill_bar.gd" id="17"]
+[ext_resource type="Script" path="res://ui/table/turn_bar.gd" id="17"]
 [ext_resource type="Script" path="res://ui/table/rumor_feed.gd" id="18"]
 
 [node name="TableScreen" type="Control"]
@@ -111,7 +111,7 @@ script = ExtResource("18")
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SkillBar" type="PanelContainer" parent="Layout/Rows"]
+[node name="TurnBar" type="PanelContainer" parent="Layout/Rows"]
 unique_name_in_owner = true
 script = ExtResource("17")
 layout_mode = 2

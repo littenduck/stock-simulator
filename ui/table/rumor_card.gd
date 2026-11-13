@@ -56,6 +56,7 @@ func open(boss: bool = false) -> void:
 	_boss = boss
 	_build(t, rumor)
 	_open = true
+	TableUi.modal_open = true
 	show()
 	TableFx.sfx(&"rumor_posted")
 	_pop_in()
@@ -254,16 +255,13 @@ func close() -> void:
 	tw.tween_property(_panel, "rotation", 0.12, 0.16)
 	await tw.finished
 	hide()
+	TableUi.modal_open = false
 	GameManager.table_refresh()
 	closed.emit(_boss)
 
 
 func _input(event: InputEvent) -> void:
 	if not _open:
-		return
-	if event.is_action_pressed("next_day"):
-		get_viewport().set_input_as_handled()
-		TableFx.jolt(_panel, 1.05)     # first choose, then reveal
 		return
 	if event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()

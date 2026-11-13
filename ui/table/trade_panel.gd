@@ -45,8 +45,8 @@ func _ready() -> void:
 func _big_button(text: String) -> Button:
 	var b := GameFmt.button(text)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.custom_minimum_size = Vector2(0, 66)
-	b.add_theme_font_size_override("font_size", 14)
+	b.custom_minimum_size = Vector2(0, 64)
+	b.add_theme_font_size_override("font_size", 15)
 	return b
 
 

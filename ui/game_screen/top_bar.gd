@@ -90,9 +90,8 @@ func _refresh() -> void:
 		_alert.text = ""
 	var blocked: bool = GameManager.state == GameManager.State.DRAFTING or GameManager.state == GameManager.State.GAME_OVER
 	_next_day.disabled = blocked or s.is_finished()
-	if s is TableSession:
-		_next_day.text = tr("TABLE_BTN_CONTINUE" if (s as TableSession).phase == TableSession.Phase.REVEALED else "TABLE_BTN_REVEAL") + "  [Space]"
-	else:
+	_next_day.visible = not s is TableSession    # table mode moves the turn from the bar at the bottom
+	if not s is TableSession:
 		_next_day.text = (tr("UI_GAME_FINAL_DAY") if s.day == s.config.trading_days - 1 else tr("UI_GAME_NEXT_DAY")) + "  [Space]"
 
 

@@ -98,7 +98,7 @@ func _ready() -> void:
 	add_child(frame)
 	_canvas = Control.new()
 	_canvas.name = "Canvas"
-	_canvas.custom_minimum_size = Vector2(200, 140)
+	_canvas.custom_minimum_size = Vector2(200, 100)
 	_canvas.clip_contents = true
 	_canvas.draw.connect(_on_canvas_draw)
 	_canvas.gui_input.connect(_on_canvas_gui_input)

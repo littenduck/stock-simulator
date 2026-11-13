@@ -11,7 +11,7 @@ TABLE_Q2,1/2
 TABLE_Q3,3/4
 TABLE_ALL_IN,All in
 TABLE_SELL_HALF,Sell half
-TABLE_SELL_ALL,Out
+TABLE_SELL_ALL,Sell all
 TABLE_TRADE_TITLE,Trade %s  %s
 TABLE_BOUGHT,Bought %d %s at %s
 TABLE_SOLD,Sold %d %s at %s
@@ -115,3 +115,16 @@ UI_FLOW_SETTINGS_AUTO_HINT,"After you end the turn, everybody's bets are reveale
 TABLE_AUTO_NOTE,The day resolves in a moment...
 TABLE_COPILOT_ON,COPILOT: copying %s today (change it on the rumor card)
 TABLE_COPILOT_OFF,COPILOT: pick a rival to copy on the rumor card
+TABLE_STEP_PRE,Pre-market
+TABLE_STEP_OPEN,Market open
+TABLE_STEP_AFTER,After-market
+TABLE_STEP_NEXT,Next day
+TABLE_WAIT_PRE,Verdict...
+TABLE_WAIT_AFTER,Bets revealed...
+TABLE_WAIT_NEXT,Next day...
+TABLE_NEXT,Next
+TABLE_NO_CALL_WARN,No call yet: this counts as PASS
+TABLE_NEWS,NEWS
+TABLE_FEED_NEW,NEW
+TABLE_NEXT_TIP,End your turn (Space)
+TABLE_ERR_CLOSED,The market is closed. Trading is only open before the after-market.

@@ -10,6 +10,8 @@ enum Mode { NONE, REVEAL, RESULT }
 const ROW_STEP := 0.24
 const STAMP_DELAY := 0.4
 const STAMP_GAP := 1.35
+## The pause between pressing Next and the verdict (step 4, Next day, shows on the bar meanwhile).
+const RESULT_DELAY := 0.6
 ## How long the revealed bets stay on screen before the day resolves by itself.
 const AUTO_HOLD := 1.3
 
@@ -28,6 +30,9 @@ func _ready() -> void:
 	_dim.color = Color(0, 0, 0, 0.55)
 	_dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	_dim.gui_input.connect(func(event: InputEvent) -> void:
+		if _mode == Mode.RESULT and event is InputEventMouseButton and event.pressed:
+			_close())
 	add_child(_dim)
 	var center := CenterContainer.new()
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -44,17 +49,29 @@ func _ready() -> void:
 	EventBus.table_changed.connect(_refresh_reveal)
 
 
-## In the result pop-up Space only closes it, so the verdicts can be read before the next day starts.
+## Space (or Enter) moves a pop-up on: it closes the verdict, or skips the wait after the bets are revealed.
 func _input(event: InputEvent) -> void:
-	if _mode == Mode.RESULT and visible and (event.is_action_pressed("next_day") or event.is_action_pressed("ui_accept")):
+	if not visible or not (event.is_action_pressed("next_day") or event.is_action_pressed("ui_accept")):
+		return
+	if _mode == Mode.RESULT:
 		get_viewport().set_input_as_handled()
 		_close()
+	elif _mode == Mode.REVEAL:
+		var t := TableUi.session()
+		if t != null and t.phase == TableSession.Phase.REVEALED:
+			get_viewport().set_input_as_handled()
+			GameManager.next_day()
+
+
+func _set_modal(on: bool) -> void:
+	TableUi.modal_open = on
+	visible = on
 
 
 func _close() -> void:
 	var was_result := _mode == Mode.RESULT
 	_mode = Mode.NONE
-	hide()
+	_set_modal(false)
 	if was_result:
 		result_closed.emit()
 
@@ -65,7 +82,7 @@ func _on_revealed(_entries: Array) -> void:
 	_mode = Mode.REVEAL
 	_play_intro = true
 	_refresh_reveal()
-	show()
+	_set_modal(true)
 	TableFx.sfx(&"order_placed")
 	UiFx.bounce_in(_panel, 0.0)
 
@@ -94,17 +111,17 @@ func _refresh_reveal() -> void:
 			GameManager.table_refresh())
 		_body.add_child(dbl)
 		extras.append(dbl)
-	var go := GameFmt.button(tr("TABLE_BTN_CONTINUE") + "  [Space]")
-	go.custom_minimum_size = Vector2(0, 44)
-	go.pressed.connect(GameManager.next_day)
-	_body.add_child(go)
-	extras.append(go)
 	var auto_on := GameSettings.auto_reveal() and not t.can_double(0)
+	if not auto_on:
+		var go := GameFmt.button(tr("TABLE_BTN_CONTINUE"))
+		go.custom_minimum_size = Vector2(0, 44)
+		go.pressed.connect(GameManager.next_day)
+		_body.add_child(go)
+		extras.append(go)
 	if auto_on:
 		var note := GameFmt.label(tr("TABLE_AUTO_NOTE"), GameColors.MUTED, 12)
 		note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_body.add_child(note)
-		_body.move_child(note, _body.get_child_count() - 3 if _body.get_child_count() > 3 else 0)
 	var intro_time := 0.3 + ROW_STEP * rows.size()
 	if _play_intro:
 		_play_intro = false
@@ -175,6 +192,9 @@ func _on_resolved(report: TableReport) -> void:
 	if t == null:
 		return
 	_auto_token += 1
+	_mode = Mode.NONE
+	_set_modal(false)
+	await get_tree().create_timer(RESULT_DELAY).timeout    # the "Next day" beat before the verdict
 	_mode = Mode.RESULT
 	_clear()
 	_body.add_child(GameFmt.label(tr("TABLE_RESULT_TITLE") % report.day, Color.WHITE, 22))
@@ -193,7 +213,7 @@ func _on_resolved(report: TableReport) -> void:
 		var boss := TableUi.wrapped(tr("TABLE_BOSS_NEW") + "\n" + report.boss_announced.headline(tr, t.market), GameColors.GOLD, 15)
 		_body.add_child(boss)
 		extras.append(boss)
-	var ok := GameFmt.button(tr("TABLE_OK") + "  [Space]")
+	var ok := GameFmt.button(tr("TABLE_OK"))
 	ok.custom_minimum_size = Vector2(0, 44)
 	ok.pressed.connect(_close)
 	_body.add_child(ok)
@@ -201,7 +221,8 @@ func _on_resolved(report: TableReport) -> void:
 	for e in extras:
 		e.modulate.a = 0.0
 		e.create_tween().tween_property(e, "modulate:a", 1.0, 0.3).set_delay(at)
-	show()
+	_set_modal(true)
+	EventBus.table_step.emit(TurnBar.Step.PRE)
 	TableFx.sfx(&"order_placed")
 	UiFx.bounce_in(_panel, 0.0)
 

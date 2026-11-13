@@ -76,38 +76,37 @@ func _call_text(_t: TableSession, side: int) -> String:
 	return tr(TableUi.side_key(side))
 
 
+## Today's rumor: click the card, or the blue Choose button under it, to open the choice card.
 func _today_entry(t: TableSession) -> Control:
 	var rumor := t.today_rumor
+	var decided := t.calls.has(0) or t.copy_targets.has(0)
 	var col := _card(GameColors.GOLD)
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 8)
+	if not decided:
+		head.add_child(GameFmt.label(tr("TABLE_FEED_NEW"), Color("#cf534f"), 13))
 	head.add_child(GameFmt.label(tr("TABLE_FEED_TODAY") % t.day, GameColors.GOLD, 13))
 	head.add_child(GameFmt.label(tr("TABLE_FEED_RESOLVES"), GameColors.MUTED, 12))
 	col.add_child(head)
 	col.add_child(TableUi.wrapped(rumor.headline(tr, t.market), Color.WHITE, 14))
 	col.add_child(_tier_line(t, rumor))
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
-	var copying := t.copy_targets.has(0)
 	var side := t.call_of(0)
 	var text := ""
 	var color := GameColors.MUTED
-	if copying:
+	if t.copy_targets.has(0):
 		text = tr("TABLE_COPYING") % TableUi.seat_name(t.seats[int(t.copy_targets[0])], self)
 		color = GameColors.GOLD
-	elif side == RumorTier.Side.PASS and not t.calls.has(0):
+	elif not t.calls.has(0):
 		text = tr("TABLE_FEED_NO_CALL")
 	else:
 		text = tr("TABLE_FEED_CALL") % _call_text(t, side)
 		color = TableUi.side_color(side)
-	var label := TableUi.wrapped(text, color, 14)
-	row.add_child(label)
+	col.add_child(TableUi.wrapped(text, color, 14))
+	var panel := _panel_of(col)
 	if t.phase == TableSession.Phase.ACTION and t.human().alive:
-		var change := GameFmt.button(tr("TABLE_FEED_CHANGE") if t.calls.has(0) or copying else tr("TABLE_FEED_CHOOSE"))
-		change.pressed.connect(func() -> void: EventBus.rumor_card_requested.emit(false))
-		row.add_child(change)
-	col.add_child(row)
-	return _panel_of(col)
+		col.add_child(_blue_button(tr("TABLE_FEED_CHANGE") if decided else tr("TABLE_FEED_CHOOSE"), false))
+		_make_clickable(panel, false)
+	return panel
 
 
 func _boss_entry(t: TableSession) -> Control:
@@ -117,20 +116,34 @@ func _boss_entry(t: TableSession) -> Control:
 	col.add_child(TableUi.wrapped(boss.headline(tr, t.market), Color.WHITE, 14))
 	col.add_child(_tier_line(t, boss))
 	var placed := t.boss_bet_of(0)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
+	var panel := _panel_of(col)
 	if placed != null:
-		row.add_child(TableUi.wrapped(tr("TABLE_BOSS_BET") % [tr(TableUi.side_key(placed.side)), GameFmt.money(placed.premium, 0)], TableUi.side_color(placed.side), 14))
-	else:
-		var chosen := int(t.boss_calls.get(0, RumorTier.Side.PASS))
-		var text := tr("TABLE_FEED_CALL") % _call_text(t, chosen) if t.boss_calls.has(0) else tr("TABLE_FEED_NO_CALL")
-		row.add_child(TableUi.wrapped(text, TableUi.side_color(chosen) if t.boss_calls.has(0) else GameColors.MUTED, 14))
-		if t.phase == TableSession.Phase.ACTION and t.human().alive:
-			var open := GameFmt.button(tr("TABLE_FEED_OPEN"))
-			open.pressed.connect(func() -> void: EventBus.rumor_card_requested.emit(true))
-			row.add_child(open)
-	col.add_child(row)
-	return _panel_of(col)
+		col.add_child(TableUi.wrapped(tr("TABLE_BOSS_BET") % [tr(TableUi.side_key(placed.side)), GameFmt.money(placed.premium, 0)], TableUi.side_color(placed.side), 14))
+		return panel
+	var chosen := t.boss_calls.has(0)
+	var side := int(t.boss_calls.get(0, RumorTier.Side.PASS))
+	col.add_child(TableUi.wrapped(tr("TABLE_FEED_CALL") % _call_text(t, side) if chosen else tr("TABLE_FEED_NO_CALL"), TableUi.side_color(side) if chosen else GameColors.MUTED, 14))
+	if t.phase == TableSession.Phase.ACTION and t.human().alive:
+		col.add_child(_blue_button(tr("TABLE_FEED_CHANGE") if chosen else tr("TABLE_FEED_CHOOSE"), true))
+		_make_clickable(panel, true)
+	return panel
+
+
+## A big blue button across the card: the thing to press.
+func _blue_button(text: String, boss: bool) -> Button:
+	var b := GameFmt.button(text)
+	b.custom_minimum_size = Vector2(0, 40)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.add_theme_font_size_override("font_size", 17)
+	b.pressed.connect(func() -> void: EventBus.rumor_card_requested.emit(boss))
+	return b
+
+
+func _make_clickable(panel: Control, boss: bool) -> void:
+	panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	panel.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			EventBus.rumor_card_requested.emit(boss))
 
 
 func _tier_line(t: TableSession, rumor: TableRumor) -> Control:
