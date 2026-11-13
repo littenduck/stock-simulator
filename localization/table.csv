@@ -165,3 +165,7 @@ TABLE_FEED_SKILL_COPY,%s copied %s
 TABLE_FEED_SKILL_DOUBLE,%s doubled down: +%s
 TABLE_FEED_SKILL_HODL,%s bought %d %s at its low
 TABLE_FEED_SKILL_INTEREST,%s earned %s interest
+TABLE_NIGHT_NET,Net worth %s  (%s)
+TABLE_NIGHT_BOSS,Boss rumor in %d days
+TABLE_NIGHT_BOSS_NOW,The Boss rumor is out
+TABLE_NIGHT_QUARTER,Quarter ends in %d days

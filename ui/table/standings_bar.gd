@@ -34,6 +34,21 @@ func _refresh() -> void:
 		_row.add_child(_chip(entry["seat"] as Seat, int(entry["rank"]), float(entry["net_worth"])))
 
 
+## The four players stretch awake: each chip hops in turn, with a chime.
+func wake() -> void:
+	var delay := 0.0
+	for child in _row.get_children():
+		if child is HBoxContainer:
+			var c := child as Control
+			c.pivot_offset = c.size * 0.5
+			var tw := c.create_tween()
+			tw.tween_interval(delay)
+			tw.tween_property(c, "scale", Vector2(1.12, 1.12), 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			tw.tween_property(c, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			delay += 0.12
+	TableFx.sfx(&"slot_land")
+
+
 func _chip(seat: Seat, rank: int, net_worth: float) -> Control:
 	var row := _SeatChip.new()
 	row.seat = seat

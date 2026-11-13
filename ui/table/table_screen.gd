@@ -20,6 +20,8 @@ var selected_symbol: String = ""
 @onready var _overlays: Control = $Overlays
 
 var _card_due: bool = false
+## Your net worth when the day opened (the night scene shows how it changed).
+var _net_before: float = 0.0
 var _boss_shown_id: int = -1
 
 
@@ -99,14 +101,31 @@ func _update_blind_note() -> void:
 	_blind_note.text = tr("TABLE_BLIND_NOTE") % [selected_symbol, GameFmt.money(t.market.price_of(selected_symbol))]
 
 
+## What the night scene needs: your net worth, how credible tomorrow's rumor is, the countdowns and the pick.
+func _night_info(t: TableSession) -> Dictionary:
+	var days_to_boss := -1
+	if t.boss_rumor != null:
+		days_to_boss = maxi(t.boss_rumor.resolve_day - t.day, 0)
+	else:
+		days_to_boss = posmod(RunConfig.QUARTER_DAYS - TableRumor.BOSS_DAYS - t.day % RunConfig.QUARTER_DAYS, RunConfig.QUARTER_DAYS)
+	var info := {
+		"net_from": _net_before, "net_to": t.human().portfolio.net_worth(t.market),
+		"tier": -1 if t.human().has_flag(&"goldfish") or t.today_rumor == null else t.today_rumor.tier,
+		"symbols": t.market.symbols(), "target": t.today_rumor.primary_symbol() if t.today_rumor != null else "",
+		"boss_days": days_to_boss, "quarter_days": t.days_left_in_quarter(),
+	}
+	return info
+
+
 func _on_result_closed() -> void:
 	if _card_due:
 		_card_due = false
 		var t := TableUi.session()
 		if t != null:
 			# The day turns over: night to dawn, the day counter flips, and only then the pre-market begins.
-			await DayTransition.play(self, t.day - 1, t.day, t.config.trading_days)
+			await DayTransition.play(self, t.day - 1, t.day, t.config.trading_days, _night_info(t))
 			await SkillFx.play_all(self, t.take_skill_events(TableSkills.Slot.NEXT_DAY), t)
+			(%StandingsBar as StandingsBar).wake()
 		_begin_day(0.3)
 
 
@@ -119,6 +138,7 @@ func _begin_day(delay: float) -> void:
 	var t := TableUi.session()
 	if t == null or not is_inside_tree():
 		return
+	_net_before = t.human().portfolio.net_worth(t.market)
 	await _play_news(false)
 	t = TableUi.session()
 	if t != null and t.boss_rumor != null and t.boss_rumor.id != _boss_shown_id and t.boss_bet_of(0) == null:
