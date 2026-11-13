@@ -83,7 +83,7 @@ func _build(t: TableSession, rumor: TableRumor) -> void:
 		child.queue_free()
 	var seat := t.human()
 	var blind := seat.has_flag(&"goldfish")
-	var title := (tr("TABLE_BOSS_TITLE") % maxi(rumor.resolve_day - t.day, 1)) if _boss else (tr("TABLE_CARD_TODAY") % t.day)
+	var title := (tr("TABLE_BOSS_TITLE") % maxi(rumor.resolve_day - t.day, 1)) if _boss else (tr("TABLE_CARD_TODAY") % (t.day + 1))
 	var header := GameFmt.label(title, Color("#c77d0a") if not _boss else Color("#cf534f"), 16)
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_body.add_child(header)

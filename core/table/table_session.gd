@@ -55,9 +55,9 @@ var history: Array[Dictionary] = []
 ## The feed beside the rumors: {"kind":"summary","day","rows":[...]} once a day, and {"kind":"skill","day","seat","skill",
 ## "amount","target"} for a public skill. `day` is the day the bets were placed.
 var feed_log: Array[Dictionary] = []
-const HISTORY_LIMIT := 40
+const HISTORY_LIMIT := 80
 ## The feed's log of days and public skills (see feed_log).
-const FEED_LIMIT := 90
+const FEED_LIMIT := 300
 ## Public skills that get a line in the feed (the odds bonuses show in the daily summary instead).
 const FEED_SKILLS := [&"copilot", &"double_down", &"hodl_buy", &"interest"]
 

@@ -362,12 +362,17 @@ func _close_range(closes: PackedFloat32Array) -> Vector2:
 	return Vector2(lo, hi)
 
 
+## The table game counts its days from 1 (the classic game from 0).
+func _day_offset(s: GameSession) -> int:
+	return 1 if s is TableSession else 0
+
+
 func _x_label(s: GameSession, index: int, lookback: int) -> String:
 	var day_no: int = index - lookback
 	var date: String = ChartMath.short_date(s.date_of_day(day_no))
 	if date != "":
 		return date
-	return "%s %d" % [tr("UI_GAME_DAY"), day_no]
+	return "%s %d" % [tr("UI_GAME_DAY"), day_no + _day_offset(s)]
 
 
 func _pill(color: Color, radius: int) -> StyleBoxFlat:
@@ -395,11 +400,11 @@ func _draw_hover(s: GameSession, bars: Dictionary, lo: float, hi: float, lookbac
 		_canvas.draw_arc(Vector2(x, py), 4.5, 0, TAU, 16, GameColors.CROSSHAIR, 1.5)
 	var day_no: int = i - lookback
 	var date: String = ChartMath.long_date(s.date_of_day(day_no))
-	var head: String = date if date != "" else "%s %d" % [tr("UI_GAME_DAY"), day_no]
+	var head: String = date if date != "" else "%s %d" % [tr("UI_GAME_DAY"), day_no + _day_offset(s)]
 	if day_no < 0:
 		head += "  ·  " + tr("UI_GAME_PREGAME")
 	elif date != "":
-		head += "  ·  %s %d" % [tr("UI_GAME_DAY"), day_no]
+		head += "  ·  %s %d" % [tr("UI_GAME_DAY"), day_no + _day_offset(s)]
 	var line2: String
 	if candles_on:
 		line2 = tr("UI_GAME_OHLC") % [GameFmt.price(opens[i]), GameFmt.price(highs[i]), GameFmt.price(lows[i]), GameFmt.price(closes[i])]

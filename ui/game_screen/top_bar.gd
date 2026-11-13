@@ -79,10 +79,12 @@ func _refresh() -> void:
 	if s == null:
 		return
 	var date: String = ChartMath.long_date(s.date_of_day(s.day))
+	# The table game counts its days from 1: the first day is day 1, the last one day 30.
+	var shown: int = mini(s.day + 1, s.config.trading_days) if s is TableSession else s.day
 	if date != "":
-		_day.text = tr("UI_GAME_DAY_DATE") % [s.day, s.config.trading_days, date]
+		_day.text = tr("UI_GAME_DAY_DATE") % [shown, s.config.trading_days, date]
 	else:
-		_day.text = tr("UI_GAME_DAY_ONLY") % [s.day, s.config.trading_days]
+		_day.text = tr("UI_GAME_DAY_ONLY") % [shown, s.config.trading_days]
 	UiFx.count_label(_cash, s.portfolio.cash, _money, GameColors.DOWN if s.portfolio.cash < 0.0 else Color.WHITE)
 	var nw: float = s.net_worth()
 	UiFx.count_label(_net_worth, nw, _money)

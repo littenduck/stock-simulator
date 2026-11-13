@@ -5,10 +5,10 @@
 class_name TableFeed
 extends PanelContainer
 
-const SHOWN := 30
 const CARD_BG := Color("#e9e1cb")
 
 var _list: VBoxContainer
+var _scroll: ScrollContainer
 ## True while the board is only a frame (the opening): the first rumor is pasted on with reveal_content().
 var content_hidden: bool = false
 
@@ -17,6 +17,7 @@ func _ready() -> void:
 	var box := TableUi.column(self, 4)
 	box.add_child(GameFmt.label(tr("TABLE_FEED_TITLE"), GameColors.MUTED, 13))
 	var scroll := ScrollContainer.new()
+	_scroll = scroll
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	box.add_child(scroll)
@@ -35,6 +36,7 @@ func _refresh() -> void:
 	var t := TableUi.session()
 	if t == null or _list == null:
 		return
+	var keep := _scroll.scroll_vertical if _scroll != null else 0
 	for child in _list.get_children():
 		_list.remove_child(child)
 		child.queue_free()
@@ -50,7 +52,6 @@ func _refresh() -> void:
 		if not resolved_by_day.has(key):
 			resolved_by_day[key] = []
 		(resolved_by_day[key] as Array).append(h)
-	var count := 0
 	for d in range(t.day - 1, -1, -1):
 		for e in t.feed_log:
 			if String(e["kind"]) == "summary" and int(e["day"]) == d:
@@ -60,11 +61,11 @@ func _refresh() -> void:
 				_list.add_child(_skill_entry(t, e))
 		for h in (resolved_by_day.get(d, []) as Array):
 			_list.add_child(_history_entry(t, h))
-		count += 1
-		if count >= SHOWN:
-			break
+
 	if t.history.is_empty() and t.today_rumor == null:
 		_list.add_child(TableUi.wrapped(tr("TABLE_LOG_EMPTY"), GameColors.MUTED, 13))
+	# The feed keeps everything: wheel up and down through the whole run. A refresh does not jump back to the top.
+	_restore_scroll.call_deferred(keep)
 
 
 ## The board arrives empty; the contents are hidden until reveal_content().
@@ -90,10 +91,16 @@ func reveal_content() -> void:
 	TableFx.sfx(&"stamp")
 
 
+func _restore_scroll(value: int) -> void:
+	if _scroll != null and is_instance_valid(_scroll):
+		_scroll.scroll_vertical = value
+
+
 ## A feed card with a coloured edge; returns the column inside it.
 func _card(accent: Color) -> VBoxContainer:
 	var panel := PanelContainer.new()
 	panel.set_meta("no_fx", true)
+	panel.mouse_filter = Control.MOUSE_FILTER_PASS    # the wheel scrolls the feed even over a card
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = CARD_BG
 	sb.border_color = accent
@@ -125,9 +132,10 @@ func _today_entry(t: TableSession) -> Control:
 	var col := _card(GameColors.GOLD)
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 8)
+	head.add_child(GameFmt.label(tr("TABLE_LOG_DAY") % (t.day + 1), GameColors.GOLD, 13))
 	if not decided:
 		head.add_child(GameFmt.label(tr("TABLE_FEED_NEW"), Color("#cf534f"), 13))
-	head.add_child(GameFmt.label(tr("TABLE_FEED_TODAY") % t.day, GameColors.GOLD, 13))
+	head.add_child(GameFmt.label(tr("TABLE_FEED_TODAY"), GameColors.GOLD, 13))
 	head.add_child(GameFmt.label(tr("TABLE_FEED_RESOLVES"), GameColors.MUTED, 12))
 	col.add_child(head)
 	col.add_child(TableUi.wrapped(rumor.headline(tr, t.market), Color.WHITE, 14))
@@ -154,7 +162,11 @@ func _today_entry(t: TableSession) -> Control:
 func _boss_entry(t: TableSession) -> Control:
 	var boss := t.boss_rumor
 	var col := _card(Color("#e3b341"))
-	col.add_child(GameFmt.label(tr("TABLE_BOSS_TITLE") % maxi(boss.resolve_day - t.day, 1), GameColors.GOLD, 13))
+	var boss_head := HBoxContainer.new()
+	boss_head.add_theme_constant_override("separation", 8)
+	boss_head.add_child(GameFmt.label(tr("TABLE_LOG_DAY") % (boss.visible_day + 1), GameColors.GOLD, 13))
+	boss_head.add_child(GameFmt.label(tr("TABLE_BOSS_TITLE") % maxi(boss.resolve_day - t.day, 1), GameColors.GOLD, 13))
+	col.add_child(boss_head)
 	col.add_child(TableUi.wrapped(boss.headline(tr, t.market), Color.WHITE, 14))
 	col.add_child(_tier_line(t, boss))
 	var placed := t.boss_bet_of(0)
@@ -245,6 +257,7 @@ func _skill_entry(t: TableSession, e: Dictionary) -> Control:
 		"interest":
 			text = tr("TABLE_FEED_SKILL_INTEREST") % [who, GameFmt.money(float(e["amount"]), 2)]
 	var col := _card(Color("#b57bee"))
+	col.add_child(GameFmt.label(tr("TABLE_LOG_DAY") % (int(e["day"]) + 1), GameColors.MUTED, 12))
 	col.add_child(TableUi.wrapped(text, Color("#b57bee").darkened(0.2), 12))
 	return _panel_of(col)
 
@@ -255,7 +268,7 @@ func _history_entry(t: TableSession, h: Dictionary) -> Control:
 	var col := _card(accent)
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 8)
-	head.add_child(GameFmt.label(tr("TABLE_LOG_DAY") % rumor.visible_day, GameColors.MUTED, 12))
+	head.add_child(GameFmt.label(tr("TABLE_LOG_DAY") % (rumor.visible_day + 1), GameColors.MUTED, 12))
 	head.add_child(GameFmt.label(tr("TABLE_CONFIRMED") if rumor.came_true else tr("TABLE_DEBUNKED"), accent, 13))
 	if rumor.planted:
 		head.add_child(GameFmt.label(tr("TABLE_PLANTED"), TableFx.PLANTED_COLOR, 12))

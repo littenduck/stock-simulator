@@ -73,9 +73,11 @@ func _start_of_screen() -> void:
 		# Saved between the reveal and the verdict: let the day resolve.
 		EventBus.table_step.emit(TurnBar.Step.AFTER)
 		get_tree().create_timer(0.8).timeout.connect(GameManager.next_day)
-	elif t.calls.has(0) or t.copy_targets.has(0) or t.day > 0:
+	elif t.window == TableSkills.Slot.MARKET_OPEN or t.calls.has(0) or t.copy_targets.has(0):
+		# The market is open (a saved run, or the screen was rebuilt for another language): carry on from there.
+		t.open_market()
 		EventBus.table_step.emit(TurnBar.Step.OPEN)
-	elif GameSettings.opening_enabled() and GameManager.opening_pending:
+	elif t.day == 0 and GameSettings.opening_enabled() and GameManager.opening_pending:
 		GameManager.opening_pending = false
 		_play_opening()
 	else:
@@ -153,7 +155,7 @@ func _on_result_closed() -> void:
 		var t := TableUi.session()
 		if t != null:
 			# The day turns over: night to dawn, the day counter flips, and only then the pre-market begins.
-			await DayTransition.play(self, t.day - 1, t.day, t.config.trading_days, _night_info(t))
+			await DayTransition.play(self, t.day, t.day + 1, t.config.trading_days, _night_info(t))    # days count from 1
 			await SkillFx.play_all(self, t.take_skill_events(TableSkills.Slot.NEXT_DAY), t)
 			(%StandingsBar as StandingsBar).wake()
 		_begin_day(0.3)

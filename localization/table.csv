@@ -85,7 +85,7 @@ TABLE_LOG_DAY,Day %d,第%d天
 TABLE_KEYS_SHORT,[Q] [W] [E],[Q] [W] [E]
 TABLE_SETUP_RIVALS,Your three rivals are drawn at random,三位对手随机抽取
 TABLE_FEED_TITLE,RUMOR FEED,传闻动态
-TABLE_FEED_TODAY,TODAY · Day %d,今日 · 第%d天
+TABLE_FEED_TODAY,TODAY,今日
 TABLE_FEED_RESOLVES,resolves tomorrow,明天揭晓
 TABLE_FEED_CALL,Your call: %s,你的选择：%s
 TABLE_FEED_NO_CALL,No call yet,还没选
