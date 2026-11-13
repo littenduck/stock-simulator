@@ -105,6 +105,7 @@ func _swap() -> void:
 	var res := t.swap(0, symbol, target)
 	if res.ok:
 		_show(tr("TABLE_SWAPPED") % [symbol, target], GameColors.UP)
+		EventBus.order_filled.emit(res.order, res)
 		GameManager.table_refresh()
 	else:
 		_show(tr(res.reason), GameColors.DOWN)
@@ -115,6 +116,7 @@ func _report(res: TradeResult, key: String) -> void:
 		_show(tr(res.reason), GameColors.DOWN)
 		return
 	_show(tr(key) % [res.shares, res.order.symbol, GameFmt.price(res.price)], GameColors.UP)
+	EventBus.order_filled.emit(res.order, res)    # the buy / sell sound
 	GameManager.table_refresh()
 
 

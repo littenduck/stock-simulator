@@ -8,6 +8,8 @@ var _tier_line: Label
 var _know_line: Label
 var _buttons: Dictionary = {}     ## side -> Button
 var _stake_line: Label
+var _last_rumor_id: int = -1
+var _type_tween: Tween
 
 
 func _ready() -> void:
@@ -75,6 +77,9 @@ func _refresh() -> void:
 	var blind := seat.has_flag(&"goldfish")
 	var open := t.phase == TableSession.Phase.ACTION and seat.alive and not t.is_finished()
 	_headline.text = rumor.headline(tr, t.market)
+	if rumor.id != _last_rumor_id:
+		_announce(_last_rumor_id >= 0)
+		_last_rumor_id = rumor.id
 	var stock := "%s  %s" % [rumor.primary_symbol(), GameFmt.money(t.market.price_of(rumor.primary_symbol()))]
 	_tier_line.text = stock + "   ·   " + (tr("TABLE_CRED_HIDDEN") if blind else tr("TABLE_CRED") % TableUi.tier_text(rumor.tier, self))
 	GameFmt.tint(_tier_line, Color.WHITE if blind else TableUi.tier_color(rumor.tier))
@@ -96,6 +101,19 @@ func _refresh() -> void:
 		_stake_line.text = tr("TABLE_STAKE_NONE")
 	else:
 		_stake_line.text = tr("TABLE_STAKE") % [GameFmt.money(stake, 0), roundi(TableSession.DAILY_RATE * 100.0)] + "   " + tr("TABLE_KEYS_SHORT")
+
+
+## A new rumor types itself out and the credibility line fades in behind it.
+func _announce(with_sound: bool) -> void:
+	if _type_tween != null and _type_tween.is_valid():
+		_type_tween.kill()
+	_headline.visible_ratio = 0.0
+	_tier_line.modulate.a = 0.0
+	_type_tween = create_tween()
+	_type_tween.tween_property(_headline, "visible_ratio", 1.0, clampf(_headline.text.length() * 0.014, 0.4, 0.95))
+	_type_tween.tween_property(_tier_line, "modulate:a", 1.0, 0.25)
+	if with_sound:
+		TableFx.sfx(&"rumor_posted")
 
 
 func _button_text(side: int, rumor: TableRumor, blind: bool, t: TableSession, seat: Seat) -> String:

@@ -60,11 +60,19 @@ func _run(char_id: StringName, seed_value: int) -> void:
 	t.buy_fraction(0, t.market.symbols()[1], 0.25)
 	gm.table_refresh()
 	gm.next_day()
-	await _wait(10)
-	await _shot("3_reveal")
+	await create_timer(0.55).timeout
+	await _shot("3a_reveal_mid")
+	await create_timer(1.4).timeout
+	await _shot("3b_reveal")
 	gm.next_day()
-	await _wait(10)
-	await _shot("4_result")
+	await create_timer(0.45).timeout
+	await _shot("4a_stamp_in_the_air")
+	await create_timer(0.2).timeout
+	await _shot("4b_impact")
+	await create_timer(0.5).timeout
+	await _shot("4c_confetti")
+	await create_timer(1.5).timeout
+	await _shot("4d_result")
 	for i in 7:
 		t.set_call(RumorTier.Side.BELIEVE)
 		gm.next_day()

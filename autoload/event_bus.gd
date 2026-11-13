@@ -30,3 +30,5 @@ signal table_revealed(entries: Array)
 signal table_resolved(report: TableReport)
 ## Table mode. Calls, skills or trades changed: widgets refresh.
 signal table_changed
+## Any widget may ask for a sound effect by name (AudioFeedback.SFX).
+signal sfx_requested(sfx: StringName)

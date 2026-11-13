@@ -46,9 +46,14 @@ func _refresh() -> void:
 	if t == null or _title == null:
 		return
 	var boss := t.boss_rumor
+	var was_visible := visible
 	visible = boss != null
 	if boss == null:
 		return
+	if not was_visible:
+		UiFx.bounce_in(self)
+		TableFx.flash(get_tree().current_scene, GameColors.GOLD, 0.16, 0.5)
+		TableFx.sfx(&"perk")
 	var seat := t.human()
 	var blind := seat.has_flag(&"goldfish")
 	var open := t.phase == TableSession.Phase.ACTION and seat.alive and not t.is_finished()
