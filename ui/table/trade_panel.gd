@@ -18,9 +18,15 @@ var _sell_buttons: Array[Button] = []
 
 
 func _ready() -> void:
-	var box := TableUi.column(self, 8, 10)
-	_title = GameFmt.label("", Color.WHITE, 17)
-	box.add_child(_title)
+	var box := TableUi.column(self, 5, 8)
+	_title = GameFmt.label("", Color.WHITE, 15)
+	_title.clip_text = true
+	_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 12)
+	box.add_child(head)
+	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(_title)
 	var buy_row := _row(box, "TABLE_BUY")
 	for step in BUY_STEPS:
 		var b := _big_button(tr(step[0]))
@@ -33,9 +39,15 @@ func _ready() -> void:
 		b.pressed.connect(_sell.bind(float(step[1])))
 		sell_row.add_child(b)
 		_sell_buttons.append(b)
-	_status = TableUi.wrapped("", GameColors.MUTED, 13)
-	_status.visible = false
-	box.add_child(_status)
+	# One fixed line is always reserved for messages, so showing one never moves the layout.
+	_status = GameFmt.label(" ", GameColors.MUTED, 13)
+	_status.custom_minimum_size = Vector2(0, 18)
+	_status.clip_text = true
+	_status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_status.mouse_filter = Control.MOUSE_FILTER_PASS
+	_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	head.add_child(_status)
 	EventBus.portfolio_changed.connect(_refresh)
 	EventBus.table_changed.connect(_refresh)
 	EventBus.prices_updated.connect(_refresh)
@@ -45,8 +57,9 @@ func _ready() -> void:
 func _big_button(text: String) -> Button:
 	var b := GameFmt.button(text)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.custom_minimum_size = Vector2(0, 64)
-	b.add_theme_font_size_override("font_size", 15)
+	b.custom_minimum_size = Vector2(0, 50)    # always two lines tall (name + money), with or without a position
+	b.clip_text = true
+	b.add_theme_font_size_override("font_size", 14)
 	return b
 
 
@@ -66,7 +79,7 @@ func _refresh() -> void:
 	if t == null or _title == null or symbol == "" or not t.market.has_symbol(symbol):
 		return
 	var seat := t.human()
-	var open := t.phase == TableSession.Phase.ACTION and seat.alive and not t.is_finished()
+	var open := t.phase == TableSession.Phase.ACTION and TableUi.current_step == 1 and seat.alive and not t.is_finished()
 	var held := seat.portfolio.shares_of(symbol)
 	var avg: float = float(seat.portfolio.positions.get(symbol, {}).get("avg_cost", 0.0))
 	_title.text = "%s  %s    %s" % [symbol, GameFmt.price(t.market.price_of(symbol)),
@@ -105,6 +118,6 @@ func _report(res: TradeResult, key: String) -> void:
 
 func _show(text: String, color: Color) -> void:
 	if _status != null:
-		_status.text = text
-		_status.visible = text != ""
+		_status.text = text if text != "" else " "
+		_status.tooltip_text = text
 		GameFmt.tint(_status, color)

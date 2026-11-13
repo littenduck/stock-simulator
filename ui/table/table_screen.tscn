@@ -97,8 +97,6 @@ vertical_alignment = 1
 unique_name_in_owner = true
 script = ExtResource("8")
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 1.3
 
 [node name="Right" type="VBoxContainer" parent="Layout/Rows/Body"]
 layout_mode = 2

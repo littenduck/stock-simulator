@@ -18,9 +18,9 @@ static func margin_enabled() -> bool:
 	return bool(_get_value("margin_enabled", false))
 
 
-## Table mode: after you end the turn the bets are revealed and the day resolves by itself (on by default).
+## Table mode: after the bets are revealed the day resolves by itself. Off by default: you press Next at every step.
 static func auto_reveal() -> bool:
-	return bool(_get_value("auto_reveal", true))
+	return bool(_get_value("auto_reveal", false))
 
 
 static func set_auto_reveal(value: bool) -> void:

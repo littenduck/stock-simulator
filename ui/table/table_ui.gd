@@ -64,6 +64,9 @@ static func wrapped(text: String, color: Color = Color.WHITE, size: int = 0) -> 
 ## True while a pop-up (the rumor card or the reveal / verdict window) is in front: Space must not move the turn then.
 static var modal_open: bool = false
 
+## The step of the turn the screen is in (TurnBar.Step). Only step 1 (market open) lets you trade or open the rumor card.
+static var current_step: int = 0
+
 static var _arrow: ImageTexture = null
 
 const ARROW_ROWS := [

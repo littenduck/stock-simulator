@@ -48,7 +48,7 @@ func is_open() -> bool:
 ## Shows the card for today's rumor, or for the Boss rumor.
 func open(boss: bool = false) -> void:
 	var t := TableUi.session()
-	if t == null or t.phase != TableSession.Phase.ACTION or t.is_finished() or not t.human().alive:
+	if t == null or t.phase != TableSession.Phase.ACTION or TableUi.current_step != 1 or t.is_finished() or not t.human().alive:
 		return
 	var rumor := t.boss_rumor if boss else t.today_rumor
 	if rumor == null or (boss and t.boss_bet_of(0) != null):

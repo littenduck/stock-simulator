@@ -11,7 +11,7 @@ code (`RunConfig.Mode.CLASSIC`) but the menu now starts table runs only.
 2. **Market open.** The only step that waits for you: buy and sell, open the rumor card (click the feed entry or the blue
    Choose button) and pick **BELIEVE** (Buy Call), **BULLSHIT** (Buy Put) or **PASS**, use your skill. Then press **Next**
    (Space is the shortcut). Pressing it with no call counts as PASS.
-3. **After-market.** Everybody's bets are revealed together (automatic; Space skips the wait). Only skills work now,
+3. **After-market.** Everybody's bets are revealed together (manual by default: press Next (or Space) to reveal; a setting makes it automatic). Only skills work now,
    such as Double Down. Trading is closed, so nobody can trade on what they just saw.
 4. **Next day.** The price moves and the day turns over, back to step 1.
 

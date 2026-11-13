@@ -38,7 +38,7 @@ func _chip(seat: Seat, rank: int, net_worth: float) -> Control:
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_theme_constant_override("separation", 8)
-	var portrait := PortraitView.make(String(seat.character.id), 2.25)
+	var portrait := PortraitView.make(String(seat.character.id), 1.9)
 	if not seat.alive:
 		portrait.modulate = Color(1, 1, 1, 0.4)
 	row.add_child(portrait)

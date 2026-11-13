@@ -98,7 +98,7 @@ func _begin_day(delay: float) -> void:
 	if t != null and t.boss_rumor != null and t.boss_rumor.id != _boss_shown_id and t.boss_bet_of(0) == null:
 		_boss_shown_id = t.boss_rumor.id
 		await _play_news(true)
-	EventBus.table_step.emit(TurnBar.Step.OPEN)
+	EventBus.table_step_ready.emit(TurnBar.Step.PRE)    # the news is in the feed: Next opens the market
 
 
 ## The news window: it pops up in the middle, waits a moment, then shrinks and flies into the rumor feed.

@@ -101,17 +101,15 @@ TABLE_CARD_CLAIM_DOWN,claims a fall
 TABLE_HOLDING,"You hold %d shares, average cost %s"
 TABLE_HOLDING_NONE,You hold none of this stock
 UI_GAME_HELD_AVG,"%d shares, average price %s"
-TABLE_COST,"pay %s
-%d sh"
-TABLE_GAIN,"get %s
-%d sh"
+TABLE_COST,"-%s · %d sh"
+TABLE_GAIN,"+%s · %d sh"
 TABLE_CARD_OPTION,%s x%.2f  ·  pay %s  ·  win %s
 TABLE_CARD_OPTION_BLIND,%s  ·  pay %s
 TABLE_CARD_PASS_OPTION,do nothing  ·  pay $0
 TABLE_CARD_CHANCE_SHORT,chance it is true
 TABLE_CARD_BOSS_HEAD,BOSS
 UI_FLOW_SETTINGS_AUTO,Auto reveal
-UI_FLOW_SETTINGS_AUTO_HINT,"After you end the turn, everybody's bets are revealed and the day resolves by itself. Turn it off to press Space for every step."
+UI_FLOW_SETTINGS_AUTO_HINT,"After the bets are revealed, the day resolves by itself. Off by default: you press Next at every step."
 TABLE_AUTO_NOTE,The day resolves in a moment...
 TABLE_COPILOT_ON,COPILOT: copying %s today (change it on the rumor card)
 TABLE_COPILOT_OFF,COPILOT: pick a rival to copy on the rumor card
@@ -128,3 +126,4 @@ TABLE_NEWS,NEWS
 TABLE_FEED_NEW,NEW
 TABLE_NEXT_TIP,End your turn (Space)
 TABLE_ERR_CLOSED,The market is closed. Trading is only open before the after-market.
+TABLE_PRESS_NEXT,Press Next to finish the day

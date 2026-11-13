@@ -103,7 +103,7 @@ func _today_entry(t: TableSession) -> Control:
 		color = TableUi.side_color(side)
 	col.add_child(TableUi.wrapped(text, color, 14))
 	var panel := _panel_of(col)
-	if t.phase == TableSession.Phase.ACTION and t.human().alive:
+	if t.phase == TableSession.Phase.ACTION and TableUi.current_step == 1 and t.human().alive:
 		col.add_child(_blue_button(tr("TABLE_FEED_CHANGE") if decided else tr("TABLE_FEED_CHOOSE"), false))
 		_make_clickable(panel, false)
 	return panel
@@ -123,7 +123,7 @@ func _boss_entry(t: TableSession) -> Control:
 	var chosen := t.boss_calls.has(0)
 	var side := int(t.boss_calls.get(0, RumorTier.Side.PASS))
 	col.add_child(TableUi.wrapped(tr("TABLE_FEED_CALL") % _call_text(t, side) if chosen else tr("TABLE_FEED_NO_CALL"), TableUi.side_color(side) if chosen else GameColors.MUTED, 14))
-	if t.phase == TableSession.Phase.ACTION and t.human().alive:
+	if t.phase == TableSession.Phase.ACTION and TableUi.current_step == 1 and t.human().alive:
 		col.add_child(_blue_button(tr("TABLE_FEED_CHANGE") if chosen else tr("TABLE_FEED_CHOOSE"), true))
 		_make_clickable(panel, true)
 	return panel

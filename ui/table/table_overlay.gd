@@ -66,6 +66,10 @@ func _input(event: InputEvent) -> void:
 func _set_modal(on: bool) -> void:
 	TableUi.modal_open = on
 	visible = on
+	if on:
+		# The dim stops above the bottom bar, so the Next button stays in reach.
+		var bar := get_tree().current_scene.get_node_or_null("%TurnBar") as Control
+		_dim.offset_bottom = -(bar.size.y + 10.0) if bar != null else 0.0
 
 
 func _close() -> void:
@@ -113,11 +117,10 @@ func _refresh_reveal() -> void:
 		extras.append(dbl)
 	var auto_on := GameSettings.auto_reveal() and not t.can_double(0)
 	if not auto_on:
-		var go := GameFmt.button(tr("TABLE_BTN_CONTINUE"))
-		go.custom_minimum_size = Vector2(0, 44)
-		go.pressed.connect(GameManager.next_day)
-		_body.add_child(go)
-		extras.append(go)
+		var hint := GameFmt.label(tr("TABLE_PRESS_NEXT"), Color("#c77d0a"), 15)
+		hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_body.add_child(hint)
+		extras.append(hint)
 	if auto_on:
 		var note := GameFmt.label(tr("TABLE_AUTO_NOTE"), GameColors.MUTED, 12)
 		note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

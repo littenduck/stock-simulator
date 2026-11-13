@@ -36,3 +36,5 @@ signal sfx_requested(sfx: StringName)
 signal rumor_card_requested(boss: bool)
 ## Table mode. The turn moved to a step (TurnBar.Step: 0 pre-market, 1 market open, 2 after-market, 3 next day).
 signal table_step(step: int)
+## Table mode. The show of that step is over: the player may press Next now.
+signal table_step_ready(step: int)
