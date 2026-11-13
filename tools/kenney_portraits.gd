@@ -1,7 +1,8 @@
 ## Dev tool: renders the six table characters as transparent 192x192 busts from the Kenney Mini Characters pack
 ## (CC0, https://kenney.nl/assets/mini-characters) into ui/theme/portraits/<character id>.png.
 ##   godot --path . --script res://tools/kenney_portraits.gd -- <glb folder> <output folder> [sheet.png]
-## Each character is the pack model that looks most like the role; a few props (sunglasses, fishbowl, diamond) are added.
+## Each character is the pack model that looks most like the role, used as it is. The only changes: Saving Son gets the
+## light skin tone of the other default characters, and Goldfish Gus gets a goldfish head.
 extends SceneTree
 
 const CELL := 192
@@ -10,7 +11,7 @@ const MODELS := {
 	"saving_son": "character-male-a",
 	"goldfish_gus": "character-male-b",
 	"hodl_hana": "character-female-e",
-	"copilot_cody": "character-soldier",
+	"copilot_cody": "character-robot",
 	"double_dan": "character-male-e",
 	"insider_inu": "character-male-d",
 }
@@ -50,15 +51,6 @@ func _load(name: String) -> Node3D:
 	return doc.generate_scene(state)
 
 
-## Flat, see-through colour (no lighting, so glass never turns grey).
-func _glass(color: Color) -> StandardMaterial3D:
-	var m := StandardMaterial3D.new()
-	m.albedo_color = color
-	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	return m
-
-
 func _solid(color: Color) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = color
@@ -75,43 +67,36 @@ func _blob(parent: Node3D, mesh: Mesh, mat: Material, pos: Vector3, scale: Vecto
 	parent.add_child(mi)
 
 
-func _props(id: String, model: Node3D) -> void:
-	match id:
-		"insider_inu":
-			var shades := _load("aid-sunglasses")
-			if shades != null:
-				shades.position = Vector3(0, 0.505, 0.12)
-				shades.scale = Vector3.ONE * 1.0
-				model.add_child(shades)
-		"goldfish_gus":
-			var bowl := SphereMesh.new()
-			bowl.radius = 0.31
-			bowl.height = 0.62
-			_blob(model, bowl, _glass(Color(0.7, 0.95, 1.0, 0.16)), Vector3(0, 0.56, 0.0))
-			var rim := TorusMesh.new()
-			rim.inner_radius = 0.255
-			rim.outer_radius = 0.31
-			_blob(model, rim, _glass(Color(0.85, 0.98, 1.0, 0.85)), Vector3(0, 0.3, 0.0))
-			var shine := SphereMesh.new()
-			shine.radius = 0.03
-			shine.height = 0.06
-			_blob(model, shine, _glass(Color(1, 1, 1, 0.9)), Vector3(-0.2, 0.74, 0.25), Vector3(1.0, 2.6, 0.5))
-			var fish := SphereMesh.new()
-			fish.radius = 0.045
-			fish.height = 0.09
-			_blob(model, fish, _solid(Color("#f5963a")), Vector3(0.17, 0.77, 0.24), Vector3(1.5, 1.0, 0.8))
-			_blob(model, fish, _solid(Color("#e5484d")), Vector3(0.25, 0.77, 0.24), Vector3(0.6, 1.2, 0.5))
-		"hodl_hana":
-			var gem := SphereMesh.new()
-			gem.radius = 0.055
-			gem.height = 0.11
-			gem.radial_segments = 4
-			gem.rings = 2
-			var m := _solid(Color("#8eeef2"))
-			m.emission_enabled = true
-			m.emission = Color("#4aa3ff")
-			m.emission_energy_multiplier = 0.6
-			_blob(model, gem, m, Vector3(0, 0.285, 0.13), Vector3(1.0, 1.4, 0.7))
+## Every model paints from the same 8x8 colour grid (64 px cells). Cells (1,4) and (1,5) are the dark skin tone and its
+## shadow; copy the light tone of cells (2,4) and (2,5) over them, for this model only.
+func _light_skin(model: Node3D) -> void:
+	for part in ["head-mesh", "body-mesh"]:
+		var mi: MeshInstance3D = model.find_child(part, true, false)
+		var mat := (mi.mesh.surface_get_material(0) as StandardMaterial3D).duplicate() as StandardMaterial3D
+		var img: Image = mat.albedo_texture.get_image()
+		if img.is_compressed():
+			img.decompress()
+		for row in [4, 5]:
+			img.fill_rect(Rect2i(64, row * 64, 64, 64), img.get_pixel(2 * 64 + 32, row * 64 + 32))
+		mat.albedo_texture = ImageTexture.create_from_image(img)
+		mi.set_surface_override_material(0, mat)
+
+
+func _fish_head(model: Node3D) -> void:
+	(model.find_child("head-mesh", true, false) as MeshInstance3D).visible = false
+	var ball := SphereMesh.new()
+	ball.radius = 0.1
+	ball.height = 0.2
+	var orange := _solid(Color("#f5963a"))
+	var red := _solid(Color("#e5484d"))
+	_blob(model, ball, orange, Vector3(0, 0.57, 0.02), Vector3(1.7, 1.75, 1.6))          # the head
+	_blob(model, ball, _solid(Color("#ffb868")), Vector3(0, 0.5, 0.1), Vector3(1.2, 0.9, 0.8))   # lighter cheeks
+	_blob(model, ball, red, Vector3(0, 0.77, -0.02), Vector3(0.5, 1.1, 0.5))             # crest fin on top
+	for s in [-1.0, 1.0]:
+		_blob(model, ball, red, Vector3(0.19 * s, 0.55, 0.0), Vector3(0.35, 1.0, 0.7))   # side fins
+		_blob(model, ball, _solid(Color.WHITE), Vector3(0.085 * s, 0.63, 0.14), Vector3(0.62, 0.62, 0.5))   # eyes
+		_blob(model, ball, _solid(Color("#2b2540")), Vector3(0.09 * s, 0.63, 0.165), Vector3(0.3, 0.3, 0.3))
+	_blob(model, ball, _solid(Color("#c9402a")), Vector3(0, 0.49, 0.175), Vector3(0.55, 0.3, 0.3))    # little mouth
 
 
 func _bust(id: String) -> Image:
@@ -126,12 +111,15 @@ func _bust(id: String) -> Image:
 	if model == null:
 		return null
 	vp.add_child(model)
+	if id == "saving_son":
+		_light_skin(model)
+	elif id == "goldfish_gus":
+		_fish_head(model)
 	var anim: AnimationPlayer = model.find_child("AnimationPlayer", true, false)
 	if anim != null and anim.has_animation("idle"):
 		anim.play("idle")
 		anim.seek(0.4, true)
 		anim.pause()
-	_props(id, model)
 	var cam := Camera3D.new()
 	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
 	cam.size = 0.7
