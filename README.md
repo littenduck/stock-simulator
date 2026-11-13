@@ -4,6 +4,8 @@ A turn-based stock Roguelike (60 trading days, 6 of 30 real-world-flavored compa
 rumors that come true or not). Web build first; Steam later.
 
 - Licence: source-available, noncommercial use only (PolyForm Noncommercial 1.0.0), see [LICENSE.txt](LICENSE.txt) and [CREDITS.txt](CREDITS.txt)
+- Version: single source is `config/version` under `[application]` in [project.godot](project.godot) (shown in the main menu corner); releases are tagged `v<version>`
+
 ## Features
 
 - **Real market history.** Prices replay real market history 2022-2026 with company names altered by one letter
@@ -32,7 +34,6 @@ scripts/test.sh                     # re-run the tests after a refresh
 The roster and the one-letter name changes are in `docs/iteration2-spec.md`. The price data comes from Yahoo
 Finance for personal, non-commercial prototyping; see `CREDITS.txt` before any public release.
 
-- Version: v0.2
 - Engine: Godot 4.7 (GDScript, Compatibility renderer)
 - Game design: [docs/game-design.md](docs/game-design.md)
 - Implementation plan: [docs/implementation-plan.md](docs/implementation-plan.md) (section 13 overrides 1-12)

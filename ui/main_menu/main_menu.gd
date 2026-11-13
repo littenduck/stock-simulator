@@ -26,7 +26,25 @@ func _ready() -> void:
 		_continue_button.grab_focus()
 	else:
 		_new_run_button.grab_focus()
+	_add_version_label()
 	_animate_in()
+
+
+## Small muted version text in the bottom-right corner, read from project.godot (application/config/version).
+func _add_version_label() -> void:
+	var version: String = str(ProjectSettings.get_setting("application/config/version", ""))
+	if version == "":
+		return
+	var label := Label.new()
+	label.name = "VersionLabel"
+	label.text = "v%s Prototype" % version
+	label.add_theme_font_size_override("font_size", 12)
+	label.add_theme_color_override("font_color", Color(1, 1, 1, 0.55))
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_MINSIZE, 12)
+	label.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	label.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	add_child(label)
 
 
 ## Title bounces in, then the buttons rise one after another.
