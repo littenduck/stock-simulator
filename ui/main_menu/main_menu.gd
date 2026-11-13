@@ -2,6 +2,8 @@
 extends Control
 
 const SETTINGS_SCENE := "res://ui/main_menu/settings.tscn"
+## Distance of the language buttons (bottom-left) and the version text (bottom-right) from the window edges.
+const CORNER_MARGIN := 16.0
 
 @onready var _new_run_button: Button = %NewRunButton
 @onready var _continue_button: Button = %ContinueButton
@@ -51,7 +53,7 @@ func _add_cast() -> void:
 func _add_language_toggle() -> void:
 	var toggle := LanguageToggle.new()
 	toggle.name = "LanguageToggle"
-	toggle.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_MINSIZE, 12)
+	toggle.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_MINSIZE, int(CORNER_MARGIN))
 	toggle.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	add_child(toggle)
 
@@ -68,15 +70,15 @@ func _add_version_label() -> void:
 	label.add_theme_font_size_override("font_size", 12)
 	label.add_theme_color_override("font_color", Color(1, 1, 1, 0.55))
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# Right in the bottom-right corner: anchored there and growing leftwards and upwards from a 16 / 12 px margin.
+	# Right in the bottom-right corner: anchored there and growing leftwards and upwards from the corner margin.
 	label.anchor_left = 1.0
 	label.anchor_right = 1.0
 	label.anchor_top = 1.0
 	label.anchor_bottom = 1.0
 	label.offset_left = 0.0
 	label.offset_top = 0.0
-	label.offset_right = -16.0
-	label.offset_bottom = -12.0
+	label.offset_right = -CORNER_MARGIN
+	label.offset_bottom = -CORNER_MARGIN
 	label.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	label.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
