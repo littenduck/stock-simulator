@@ -328,3 +328,30 @@ func test_table_mode_has_no_perks() -> void:
 	assert_true(s.owned_perks.is_empty())
 	s.choose_perk(ContentDb.perks()[0])
 	assert_true(s.owned_perks.is_empty(), "perks cannot be picked")
+
+
+func test_rumor_log_remembers_every_verdict_and_my_result() -> void:
+	var s := _session(&"double_dan", 12)
+	s.set_call(RumorTier.Side.BELIEVE)
+	var rumor := s.today_rumor
+	s.next_day()
+	s.set_call(RumorTier.Side.PASS)
+	s.next_day()
+	assert_eq(s.history.size(), 2)
+	var first: Dictionary = s.history[0]
+	assert_eq(int((first["rumor"] as Dictionary)["id"]), rumor.id)
+	assert_eq(int(first["side"]), RumorTier.Side.BELIEVE)
+	assert_true(float(first["net"]) != 0.0, "a bet has a result")
+	assert_eq(int(s.history[1]["side"]), RumorTier.Side.PASS)
+	assert_eq(float(s.history[1]["net"]), 0.0, "a pass costs nothing")
+
+
+func test_rumor_log_survives_saving() -> void:
+	var s := _session(&"double_dan", 14)
+	for i in 3:
+		s.set_call(RumorTier.Side.BULLSHIT)
+		s.next_day()
+	var data: Dictionary = JSON.parse_string(JSON.stringify(s.to_dict()))
+	var t := TableSession.from_dict(data, GameSession.config_from_dict(data), ContentDb.companies(), ContentDb.perks(), ContentDb.news()) as TableSession
+	assert_eq(t.history.size(), 3)
+	assert_almost(float(t.history[2]["net"]), float(s.history[2]["net"]), 0.01)

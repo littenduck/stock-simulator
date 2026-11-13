@@ -26,6 +26,9 @@ percentages, so the edge comes from reading the market and from the characters.
 
 ## Characters (`data/characters/*.tres`, flags drive the code)
 
+The picker lists them from easy to hard: Saving Son, Goldfish Gus, Hodl Hana, Copilot Cody, Double Dan, Insider Inu.
+Portraits are renders of the free Kenney Mini Characters pack (CC0), see `CREDITS.txt` and `tools/kenney_portraits.gd`.
+
 | Character | Rules |
 |---|---|
 | Insider Inu | One random day per quarter she learns tomorrow's rumor is true; she can FLIP it (publish the opposite). The flipped rumor is stamped planted when it resolves. |
@@ -48,4 +51,4 @@ percentages, so the edge comes from reading the market and from the characters.
 ## Not done yet
 
 Perks (switched off in table mode, the characters replace them), the delayed public positions, an Insider tip for the Boss rumor, player-planted rumors
-by other characters, 3D character art, real-money odds mode (odds scaled by the actual price move).
+by other characters, real-money odds mode (odds scaled by the actual price move).

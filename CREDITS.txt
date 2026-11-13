@@ -41,3 +41,12 @@ UI panel/button textures: Kenney pixel UI pack in `ui/theme/assets/kenney_pixel-
 
 The Suno tracks are subject to the terms of the Suno plan they were generated under: check them before a commercial release.
 The Suno masters are not in the repository (about 25 MB as WAV); only the compressed .ogg files are.
+
+
+## Character portraits (`ui/theme/portraits/`)
+Mini Characters 2.0 by Kenney (https://kenney.nl/assets/mini-characters), licence CC0 1.0, copy in
+`ui/theme/portraits/License.txt`. The six PNGs are renders of pack models (character-male-a, -b, -d, -e,
+character-female-e, character-soldier; the sunglasses are the pack's aid-sunglasses). The fishbowl and the diamond are
+simple shapes added by `tools/kenney_portraits.gd`, which also shows how to regenerate the images from the downloaded
+pack. The 3D models themselves are not part of the game files. Credit is not required but appreciated:
+"Characters by Kenney (kenney.nl)".

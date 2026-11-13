@@ -19,46 +19,48 @@ var _swap_button: Button
 
 func _ready() -> void:
 	var box := TableUi.column(self, 4, 6)
-	var top := HBoxContainer.new()
-	top.add_theme_constant_override("separation", 6)
-	box.add_child(top)
-	_title = GameFmt.label("", Color.WHITE, 16)
-	_title.custom_minimum_size = Vector2(96, 0)
-	top.add_child(_title)
-	top.add_child(GameFmt.label(tr("TABLE_BUY"), GameColors.MUTED, 13))
+	_title = GameFmt.label("", Color.WHITE, 15)    # kept for the refresh code, not shown
+	var buy_row := _row(box, "TABLE_BUY")
 	for pair in [["TABLE_Q1", 0.25], ["TABLE_Q2", 0.5], ["TABLE_Q3", 0.75], ["TABLE_ALL_IN", 1.0]]:
 		var b := GameFmt.button(tr(pair[0]))
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.pressed.connect(_buy.bind(float(pair[1])))
-		top.add_child(b)
+		buy_row.add_child(b)
 		_buy_buttons.append(b)
-	var bottom := HBoxContainer.new()
-	bottom.add_theme_constant_override("separation", 6)
-	box.add_child(bottom)
-	var sell_caption := GameFmt.label(tr("TABLE_SELL"), GameColors.MUTED, 13)
-	sell_caption.custom_minimum_size = Vector2(96, 0)
-	sell_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	bottom.add_child(sell_caption)
+	var sell_row := _row(box, "TABLE_SELL")
 	_sell_half = GameFmt.button(tr("TABLE_SELL_HALF"))
+	_sell_half.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_sell_half.pressed.connect(_sell.bind(0.5))
 	_sell_all = GameFmt.button(tr("TABLE_SELL_ALL"))
+	_sell_all.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_sell_all.pressed.connect(_sell.bind(1.0))
-	bottom.add_child(_sell_half)
-	bottom.add_child(_sell_all)
-	bottom.add_child(GameFmt.label(tr("TABLE_SWAP"), GameColors.MUTED, 13))
+	sell_row.add_child(_sell_half)
+	sell_row.add_child(_sell_all)
 	_swap_target = OptionButton.new()
 	_swap_target.focus_mode = Control.FOCUS_NONE
-	_swap_target.custom_minimum_size = Vector2(76, 0)
-	bottom.add_child(_swap_target)
+	_swap_target.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sell_row.add_child(_swap_target)
 	_swap_button = GameFmt.button(tr("TABLE_SWAP_BTN"))
 	_swap_button.pressed.connect(_swap)
-	bottom.add_child(_swap_button)
-	_status = TableUi.wrapped("", GameColors.MUTED, 13)
+	sell_row.add_child(_swap_button)
+	_status = TableUi.wrapped("", GameColors.MUTED, 12)
 	_status.visible = false
 	box.add_child(_status)
 	EventBus.portfolio_changed.connect(_refresh)
 	EventBus.table_changed.connect(_refresh)
 	EventBus.prices_updated.connect(_refresh)
 	_refresh()
+
+
+## A line with a short caption on the left; the buttons are added to the returned row.
+func _row(parent: VBoxContainer, caption_key: String) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 5)
+	var caption := GameFmt.label(tr(caption_key), GameColors.MUTED, 12)
+	caption.custom_minimum_size = Vector2(34, 0)
+	row.add_child(caption)
+	parent.add_child(row)
+	return row
 
 
 func _refresh() -> void:

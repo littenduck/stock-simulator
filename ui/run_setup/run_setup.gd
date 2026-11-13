@@ -29,7 +29,7 @@ func _ready() -> void:
 	_difficulty_row.get_parent().get_node("DifficultyHeader").visible = false
 	_difficulty_row.visible = false
 	_build_characters()
-	_margin_label.text = tr("TABLE_SETUP_FEES_ON" if GameSettings.fees_enabled() else "TABLE_SETUP_FEES_OFF")
+	_margin_label.text = tr("TABLE_SETUP_RIVALS") + "   ·   " + tr("TABLE_SETUP_FEES_ON" if GameSettings.fees_enabled() else "TABLE_SETUP_FEES_OFF")
 	_start_button.disabled = _character == null
 	var selected := _character_group.get_pressed_button()
 	if selected != null:
@@ -52,7 +52,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		GameManager.go_to_menu()
 
 
-const ROSTER_ORDER := ["insider_inu", "copilot_cody", "double_dan", "saving_son", "goldfish_gus", "hodl_hana"]
+## Easy to hard: the passive characters first (Saving Son is the one to start with), the skill characters after them.
+const ROSTER_ORDER := ["saving_son", "goldfish_gus", "hodl_hana", "copilot_cody", "double_dan", "insider_inu"]
 
 
 func _characters() -> Array[CharacterDef]:
@@ -75,7 +76,7 @@ func _build_characters() -> void:
 		card.toggle_mode = true
 		card.button_group = _character_group
 		card.disabled = not unlocked
-		card.custom_minimum_size = Vector2(300, 150)
+		card.custom_minimum_size = Vector2(150, 176)
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		card.focus_mode = Control.FOCUS_ALL
 		_style_card(card, unlocked)
@@ -123,41 +124,28 @@ func _restyle_card(card: Button, on: bool, unlocked: bool, animate: bool = true)
 		t.tween_property(card, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
-func _character_card_body(def: CharacterDef, unlocked: bool) -> Control:
+func _character_card_body(def: CharacterDef, _unlocked: bool) -> Control:
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 14)
+		margin.add_theme_constant_override("margin_" + side, 8)
 	var box := VBoxContainer.new()
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_theme_constant_override("separation", 6)
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_theme_constant_override("separation", 5)
 	margin.add_child(box)
-	var head := HBoxContainer.new()
-	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	head.add_theme_constant_override("separation", 12)
-	head.add_child(CompanyBadge.make(String(AVATARS.get(String(def.id), "star")), 64))
-	var names := VBoxContainer.new()
-	names.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	names.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	names.add_child(_label(tr(def.title_key), &"HeaderLabel"))
-	var tag_key := "TABLE_ADVANCED" if def.difficulty_tag == "advanced" else "TABLE_EASY"
-	names.add_child(_label(tr(tag_key), &"RarityLegendaryLabel" if def.difficulty_tag == "advanced" else &"PositiveLabel"))
-	head.add_child(names)
-	box.add_child(head)
-	var rule := ColorRect.new()
-	rule.color = Color(0.55, 0.54, 0.58, 0.5)
-	rule.custom_minimum_size = Vector2(0, 2)
-	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(rule)
-	var desc := _label(tr(def.description_key), &"")
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	box.add_child(desc)
-	if not unlocked:
-		var locked := _label(tr("UI_FLOW_LOCKED") + ": " + _unlock_hint(def), &"RarityLegendaryLabel")
-		locked.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		box.add_child(locked)
+	var portrait := PortraitView.make(String(def.id), 6)
+	portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	box.add_child(portrait)
+	var name_label := _label(tr(def.title_key), &"HeaderLabel")
+	name_label.add_theme_font_size_override("font_size", 16)
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(name_label)
+	var advanced := def.difficulty_tag == "advanced"
+	var tag := _label(tr("TABLE_ADVANCED" if advanced else "TABLE_EASY"), &"RarityLegendaryLabel" if advanced else &"PositiveLabel")
+	tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(tag)
 	return margin
 
 

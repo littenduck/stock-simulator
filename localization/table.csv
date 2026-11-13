@@ -83,3 +83,8 @@ TIER_MEDIUM,Medium
 TIER_HIGH,High
 UI_FLOW_SETTINGS_FEES,Trading fees
 UI_FLOW_SETTINGS_FEES_HINT,A small fee on every trade in the table game. Off by default. Applies from the start of your next run.
+TABLE_LOG_TITLE,RUMOR LOG
+TABLE_LOG_EMPTY,Nothing has resolved yet. Every verdict lands here.
+TABLE_LOG_DAY,Day %d
+TABLE_KEYS_SHORT,[Q] [W] [E]
+TABLE_SETUP_RIVALS,Your three rivals are drawn at random

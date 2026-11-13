@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://ui/table/table_screen.gd" id="1"]
 [ext_resource type="PackedScene" path="res://ui/audio/music_player.tscn" id="music"]
@@ -14,6 +14,9 @@
 [ext_resource type="PackedScene" path="res://ui/game_over/game_over_dialog.tscn" id="13"]
 [ext_resource type="PackedScene" path="res://ui/audio/audio_feedback.tscn" id="14"]
 [ext_resource type="Script" path="res://ui/table/table_overlay.gd" id="15"]
+[ext_resource type="Script" path="res://ui/table/boss_card.gd" id="16"]
+[ext_resource type="Script" path="res://ui/table/skill_bar.gd" id="17"]
+[ext_resource type="Script" path="res://ui/table/rumor_log.gd" id="18"]
 
 [node name="TableScreen" type="Control"]
 script = ExtResource("1")
@@ -34,19 +37,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 12
+theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_bottom = 6
 
 [node name="Rows" type="VBoxContainer" parent="Layout"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 5
 
 [node name="TopBar" type="PanelContainer" parent="Layout/Rows"]
 unique_name_in_owner = true
 script = ExtResource("3")
 layout_mode = 2
-hero_size = 24
+hero_size = 22
 
 [node name="StandingsBar" type="PanelContainer" parent="Layout/Rows"]
 unique_name_in_owner = true
@@ -62,13 +65,13 @@ theme_override_constants/separation = 8
 unique_name_in_owner = true
 script = ExtResource("4")
 layout_mode = 2
-custom_minimum_size = Vector2(250, 0)
-row_height = 56
+custom_minimum_size = Vector2(266, 0)
+row_height = 50
 
 [node name="Center" type="VBoxContainer" parent="Layout/Rows/Body"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="ChartCard" type="PanelContainer" parent="Layout/Rows/Body/Center"]
 unique_name_in_owner = true
@@ -92,33 +95,44 @@ size_flags_stretch_ratio = 3.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TradePanel" type="PanelContainer" parent="Layout/Rows/Body/Center"]
-unique_name_in_owner = true
-script = ExtResource("8")
-layout_mode = 2
-
 [node name="PortfolioView" type="PanelContainer" parent="Layout/Rows/Body/Center"]
 unique_name_in_owner = true
 script = ExtResource("6")
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 1.4
+size_flags_stretch_ratio = 1.3
+
+[node name="BossCard" type="PanelContainer" parent="Layout/Rows/Body/Center"]
+unique_name_in_owner = true
+script = ExtResource("16")
+layout_mode = 2
 
 [node name="Right" type="VBoxContainer" parent="Layout/Rows/Body"]
 layout_mode = 2
-custom_minimum_size = Vector2(360, 0)
-theme_override_constants/separation = 8
+custom_minimum_size = Vector2(342, 0)
+theme_override_constants/separation = 6
 
-[node name="Scroll" type="ScrollContainer" parent="Layout/Rows/Body/Right"]
-layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="TableHud" type="PanelContainer" parent="Layout/Rows/Body/Right/Scroll"]
+[node name="TableHud" type="PanelContainer" parent="Layout/Rows/Body/Right"]
 unique_name_in_owner = true
 script = ExtResource("9")
 layout_mode = 2
-size_flags_horizontal = 3
+
+[node name="TradePanel" type="PanelContainer" parent="Layout/Rows/Body/Right"]
+unique_name_in_owner = true
+script = ExtResource("8")
+layout_mode = 2
+
+[node name="RumorLog" type="PanelContainer" parent="Layout/Rows/Body/Right"]
+unique_name_in_owner = true
+script = ExtResource("18")
+layout_mode = 2
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 70)
+
+[node name="SkillBar" type="PanelContainer" parent="Layout/Rows"]
+unique_name_in_owner = true
+script = ExtResource("17")
+layout_mode = 2
 
 [node name="PauseMenu" type="Control" parent="."]
 unique_name_in_owner = true

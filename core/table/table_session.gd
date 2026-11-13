@@ -40,6 +40,10 @@ var insider_days: Array[int] = []
 var human_fired: bool = false
 ## What was shown at the last reveal: [{"seat","side","premium","odds","copied_from","boss"}].
 var last_reveal: Array[Dictionary] = []
+## Resolved rumors, newest last, for the rumor log: {"rumor": TableRumor.to_dict(), "side": your side (0 = passed),
+## "net": your profit or loss on it}.
+var history: Array[Dictionary] = []
+const HISTORY_LIMIT := 40
 
 var _events: Array[NewsEventDef] = []
 var _roster: Array[CharacterDef] = []
@@ -487,6 +491,14 @@ func _settle(rumor: TableRumor, list: Array[TableBet], report: TableReport) -> v
 	rumor.came_true = rumor.evaluate(market)
 	rumor.resolved = true
 	report.resolved_table.append(rumor)
+	var mine := {"rumor": rumor.to_dict(), "side": RumorTier.Side.PASS, "net": 0.0}
+	for b in list:
+		if b.seat_id == 0:
+			mine["side"] = b.side
+			mine["net"] = b.payout(rumor.came_true) - b.premium
+	history.append(mine)
+	while history.size() > HISTORY_LIMIT:
+		history.remove_at(0)
 	for b in list:
 		var seat := seats[b.seat_id]
 		var pay := b.payout(rumor.came_true)
@@ -553,7 +565,7 @@ func to_dict() -> Dictionary:
 		"bets": bets.map(func(b: TableBet) -> Dictionary: return b.to_dict()),
 		"boss_bets": boss_bets.map(func(b: TableBet) -> Dictionary: return b.to_dict()),
 		"insider_days": insider_days.duplicate(), "recent": _recent.duplicate(), "next_id": _next_rumor_id,
-		"fired_order": _fired_order.duplicate(), "human_fired": human_fired,
+		"fired_order": _fired_order.duplicate(), "human_fired": human_fired, "history": history.duplicate(true),
 	}
 	return d
 
@@ -604,6 +616,9 @@ func _restore_table(t: Dictionary) -> void:
 	_next_rumor_id = int(t.get("next_id", 1))
 	_fired_order.assign((t.get("fired_order", []) as Array).map(func(x: Variant) -> int: return int(x)))
 	human_fired = bool(t.get("human_fired", false))
+	history = []
+	for h in t.get("history", []):
+		history.append({"rumor": h["rumor"], "side": int(h.get("side", 0)), "net": float(h.get("net", 0.0))})
 
 
 static func _rumor_or_null(d: Dictionary) -> TableRumor:

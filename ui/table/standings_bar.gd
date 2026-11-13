@@ -8,7 +8,7 @@ var _row: HBoxContainer
 func _ready() -> void:
 	var margin := MarginContainer.new()
 	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 4)
+		margin.add_theme_constant_override("margin_" + side, 0)
 	add_child(margin)
 	_row = HBoxContainer.new()
 	_row.add_theme_constant_override("separation", 8)
@@ -26,14 +26,26 @@ func _refresh() -> void:
 	for child in _row.get_children():
 		_row.remove_child(child)
 		child.queue_free()
+	var first := true
 	for entry in t.standings():
+		if not first:
+			_row.add_child(VSeparator.new())
+		first = false
 		_row.add_child(_chip(entry["seat"] as Seat, int(entry["rank"]), float(entry["net_worth"])))
 
 
 func _chip(seat: Seat, rank: int, net_worth: float) -> Control:
-	var panel := PanelContainer.new()
-	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var box := TableUi.column(panel, 0, 6)
+	var row := HBoxContainer.new()
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_theme_constant_override("separation", 8)
+	var portrait := PortraitView.make(String(seat.character.id), 2.25)
+	if not seat.alive:
+		portrait.modulate = Color(1, 1, 1, 0.4)
+	row.add_child(portrait)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 0)
+	box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(box)
 	var name_color := GameColors.GOLD if seat.is_human else Color.WHITE
 	if not seat.alive:
 		name_color = GameColors.MUTED
@@ -50,4 +62,4 @@ func _chip(seat: Seat, rank: int, net_worth: float) -> Control:
 		detail += "   " + tr("TABLE_STREAK") % seat.streak
 		detail_color = GameColors.GOLD
 	box.add_child(GameFmt.label(detail, detail_color, 14))
-	return panel
+	return row
