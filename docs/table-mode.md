@@ -118,3 +118,12 @@ swaps them place by place; a new leader gets the crown. After day 30 `Podium` bu
 All sounds come from the four Kenney packs in `audio/`. `AudioFeedback.SFX` maps an event to several files; each play
 picks one (never the same twice in a row) and bends the pitch a little. Every skill, banner and board has its own family.
 
+## Languages
+
+English and Simplified Chinese; the buttons "EN" and "中" are in the bottom-left of the main menu, at the top of Settings
+and in the top bar during a game, and the choice is saved (`GameSettings.language()`, first start follows the computer's
+language). A switch rebuilds the screen you are on, because most text is written into the widgets when they are built; it
+waits while an animation or pop-up is open. Texts are in `localization/*.csv` (columns `keys,en,zh`); to translate a new
+string add the row with both columns and run `godot --headless --path . --import`. The font (Fusion Pixel 12px, OFL) draws
+both languages (`ui/theme/fonts/`, licences next to it); every Chinese glyph in the tables was checked to exist in it.
+

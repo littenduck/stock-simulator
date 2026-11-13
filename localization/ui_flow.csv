@@ -1,59 +1,59 @@
-keys,en
-UI_FLOW_GAME_TITLE,Stock Simulator
-UI_FLOW_TAGLINE,Sixty trading days. One score.
-UI_FLOW_NEW_RUN,New Run
-UI_FLOW_CONTINUE,Continue
-UI_FLOW_HIGH_SCORES,High Scores
-UI_FLOW_QUIT,Quit
-UI_FLOW_BACK,Back
-UI_FLOW_SETUP_TITLE,New Run
-UI_FLOW_SETUP_CHARACTER,Character
-UI_FLOW_SETUP_DIFFICULTY,Difficulty
-UI_FLOW_SETUP_START,Start Run
-UI_FLOW_START_CASH,Starting cash: %s
-UI_FLOW_LOCKED,Locked
-UI_FLOW_LOCKED_GENERIC,Keep playing to unlock this.
-UI_FLOW_UNLOCK_HINT_DAY_TRADER,Finish any run.
-UI_FLOW_UNLOCK_HINT_VALUE_INVESTOR,"Reach $20,000 net worth in a single run."
-UI_FLOW_DIFFICULTY_LEVEL,Level %d
-UI_FLOW_DIFFICULTY_1,Standard rules.
-UI_FLOW_DIFFICULTY_2,Fees +50%.
-UI_FLOW_DIFFICULTY_3,Rumors are 10% less likely to be true.
-UI_FLOW_DIFFICULTY_4,Daily volatility +20%.
-UI_FLOW_DIFFICULTY_5,Higher maintenance margin. Perk drafts offer one fewer choice.
-UI_FLOW_DIFFICULTY_NOTE,Each level adds its penalty to all lower levels.
-UI_FLOW_DRAFT_TITLE,Choose a perk
-UI_FLOW_DRAFT_HINT,Press 1-%d or click a card.
-UI_FLOW_RARITY_COMMON,Common
-UI_FLOW_RARITY_RARE,Rare
-UI_FLOW_RARITY_LEGENDARY,Legendary
-UI_FLOW_GAME_OVER_TITLE,Run complete
-UI_FLOW_FINAL_SCORE,Final score
-UI_FLOW_RANK,Rank #%d of your top %d
-UI_FLOW_RANK_NONE,Not in your top %d
-UI_FLOW_RUN_INFO,%s - difficulty %d
-UI_FLOW_NEW_UNLOCKS,New unlocks
-UI_FLOW_UNLOCK_CHARACTER,Character: %s
-UI_FLOW_UNLOCK_OTHER,Unlocked: %s
-UI_FLOW_BACK_TO_MENU,Back to Menu
-UI_FLOW_SCORES_TITLE,High Scores
-UI_FLOW_SCORES_EMPTY,No runs yet. Finish a run to set a score.
-UI_FLOW_COL_RANK,Rank
-UI_FLOW_COL_SCORE,Score
-UI_FLOW_COL_CHARACTER,Character
-UI_FLOW_COL_DIFFICULTY,Difficulty
-UI_FLOW_COL_DATE,Date
-UI_FLOW_SETTINGS,Settings
-UI_FLOW_SETTINGS_TITLE,Settings
-UI_FLOW_SETTINGS_GAME_MODE,Game mode
-UI_FLOW_SETTINGS_MARGIN,Margin trading
-UI_FLOW_SETTINGS_MARGIN_HINT,"Short selling and leverage. Harder to learn, so it is off by default. Applies from the start of your next run."
-UI_FLOW_SETTINGS_SOUND,Sound
-UI_FLOW_SETTINGS_VOLUME,Volume
-UI_FLOW_SETTINGS_MUTED,Muted
-UI_FLOW_SETTINGS_DISPLAY,Display
-UI_FLOW_SETTINGS_FULLSCREEN,Fullscreen
-UI_FLOW_SETTINGS_ON,On
-UI_FLOW_SETTINGS_OFF,Off
-UI_FLOW_SETUP_MARGIN_ON,Margin trading: On (change it in Settings)
-UI_FLOW_SETUP_MARGIN_OFF,Margin trading: Off (turn it on in Settings)
+keys,en,zh
+UI_FLOW_GAME_TITLE,Stock Simulator,股市模拟器
+UI_FLOW_TAGLINE,Thirty days. Three quarters. One winner.,三十天，三个季度，只有一个赢家。
+UI_FLOW_NEW_RUN,New Run,新一局
+UI_FLOW_CONTINUE,Continue,继续
+UI_FLOW_HIGH_SCORES,High Scores,最高分
+UI_FLOW_QUIT,Quit,退出
+UI_FLOW_BACK,Back,返回
+UI_FLOW_SETUP_TITLE,New Run,新一局
+UI_FLOW_SETUP_CHARACTER,Character,角色
+UI_FLOW_SETUP_DIFFICULTY,Difficulty,难度
+UI_FLOW_SETUP_START,Start Run,开局
+UI_FLOW_START_CASH,Starting cash: %s,初始现金：%s
+UI_FLOW_LOCKED,Locked,未解锁
+UI_FLOW_LOCKED_GENERIC,Keep playing to unlock this.,继续玩就能解锁。
+UI_FLOW_UNLOCK_HINT_DAY_TRADER,Finish any run.,完成任意一局。
+UI_FLOW_UNLOCK_HINT_VALUE_INVESTOR,"Reach $20,000 net worth in a single run.","单局净资产达到 $20,000。"
+UI_FLOW_DIFFICULTY_LEVEL,Level %d,%d 级
+UI_FLOW_DIFFICULTY_1,Standard rules.,标准规则。
+UI_FLOW_DIFFICULTY_2,Fees +50%.,手续费 +50%。
+UI_FLOW_DIFFICULTY_3,Rumors are 10% less likely to be true.,传闻属实的概率降低 10%。
+UI_FLOW_DIFFICULTY_4,Daily volatility +20%.,每日波动 +20%。
+UI_FLOW_DIFFICULTY_5,Higher maintenance margin. Perk drafts offer one fewer choice.,维持保证金更高，天赋选择少一项。
+UI_FLOW_DIFFICULTY_NOTE,Each level adds its penalty to all lower levels.,每一级都会叠加之前所有等级的惩罚。
+UI_FLOW_DRAFT_TITLE,Choose a perk,选一个天赋
+UI_FLOW_DRAFT_HINT,Press 1-%d or click a card.,按 1-%d 或点击卡牌。
+UI_FLOW_RARITY_COMMON,Common,普通
+UI_FLOW_RARITY_RARE,Rare,稀有
+UI_FLOW_RARITY_LEGENDARY,Legendary,传说
+UI_FLOW_GAME_OVER_TITLE,Run complete,本局结束
+UI_FLOW_FINAL_SCORE,Final score,最终得分
+UI_FLOW_RANK,Rank #%d of your top %d,名次 #%d（你的前 %d 名）
+UI_FLOW_RANK_NONE,Not in your top %d,未进入你的前 %d 名
+UI_FLOW_RUN_INFO,%s - difficulty %d,%s - 难度 %d
+UI_FLOW_NEW_UNLOCKS,New unlocks,新解锁
+UI_FLOW_UNLOCK_CHARACTER,Character: %s,角色：%s
+UI_FLOW_UNLOCK_OTHER,Unlocked: %s,已解锁：%s
+UI_FLOW_BACK_TO_MENU,Back to Menu,回菜单
+UI_FLOW_SCORES_TITLE,High Scores,最高分
+UI_FLOW_SCORES_EMPTY,No runs yet. Finish a run to set a score.,还没有记录。打完一局来留下分数吧。
+UI_FLOW_COL_RANK,Rank,名次
+UI_FLOW_COL_SCORE,Score,得分
+UI_FLOW_COL_CHARACTER,Character,角色
+UI_FLOW_COL_DIFFICULTY,Difficulty,难度
+UI_FLOW_COL_DATE,Date,日期
+UI_FLOW_SETTINGS,Settings,设置
+UI_FLOW_SETTINGS_TITLE,Settings,设置
+UI_FLOW_SETTINGS_GAME_MODE,Game mode,游戏模式
+UI_FLOW_SETTINGS_MARGIN,Margin trading,保证金交易
+UI_FLOW_SETTINGS_MARGIN_HINT,"Short selling and leverage. Harder to learn, so it is off by default. Applies from the start of your next run.",含做空和杠杆，上手更难，所以默认关闭。下一局开始时生效。
+UI_FLOW_SETTINGS_SOUND,Sound,声音
+UI_FLOW_SETTINGS_VOLUME,Volume,音量
+UI_FLOW_SETTINGS_MUTED,Muted,静音
+UI_FLOW_SETTINGS_DISPLAY,Display,显示
+UI_FLOW_SETTINGS_FULLSCREEN,Fullscreen,全屏
+UI_FLOW_SETTINGS_ON,On,开
+UI_FLOW_SETTINGS_OFF,Off,关
+UI_FLOW_SETUP_MARGIN_ON,Margin trading: On (change it in Settings),保证金交易：开（可在设置中更改）
+UI_FLOW_SETUP_MARGIN_OFF,Margin trading: Off (turn it on in Settings),保证金交易：关（可在设置中开启）

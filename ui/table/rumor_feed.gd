@@ -222,7 +222,10 @@ func _summary_entry(t: TableSession, e: Dictionary) -> Control:
 			detail.clip_text = true
 			detail.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 			line.add_child(detail)
-			line.add_child(GameFmt.label(("+" if net > 0.0 else "-") + GameFmt.money(absf(net), 0), GameColors.UP if net > 0.0 else GameColors.DOWN, 12))
+			if bool(r.get("pending", false)):
+				line.add_child(GameFmt.label("…", GameColors.MUTED, 12))    # a Boss bet pays out when its rumor resolves
+			else:
+				line.add_child(GameFmt.label(("+" if net > 0.0 else "-") + GameFmt.money(absf(net), 0), GameColors.UP if net > 0.0 else GameColors.DOWN, 12))
 		col.add_child(line)
 	return _panel_of(col)
 

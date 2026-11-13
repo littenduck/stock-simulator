@@ -1,31 +1,31 @@
-keys,en
-CHAR_ROOKIE_TITLE,Rookie
-CHAR_ROOKIE_DESC,"$10,000 and no special rules."
-CHAR_DAY_TRADER_TITLE,Day Trader
-CHAR_DAY_TRADER_DESC,"$8,000, starts with Low Fees, maximum leverage +1x."
-CHAR_VALUE_INVESTOR_TITLE,Value Investor
-CHAR_VALUE_INVESTOR_DESC,"$12,000, cannot short, long dividends are doubled."
-CHAR_INSIDER_INU_TITLE,Insider Inu
-CHAR_INSIDER_INU_DESC,"Knows one rumor a quarter is true, and can publish its opposite."
-CHAR_INSIDER_INU_PASSIVE,"Pre-market (once a quarter, on one random day): you learn that tomorrow's rumor is TRUE."
-CHAR_INSIDER_INU_ACTIVE,"Market open (once a quarter): FLIP that rumor. Next day: it is published as the opposite, and stamped as planted when it resolves. Nobody learns by whom."
-CHAR_COPILOT_CODY_TITLE,Copilot Cody
-CHAR_COPILOT_CODY_DESC,"Copies another player's bet whenever he likes."
-CHAR_COPILOT_CODY_PASSIVE,None.
-CHAR_COPILOT_CODY_ACTIVE,"Market open (every day): COPILOT one rival. After-market: you hold the same option as them, at the normal odds."
-CHAR_DOUBLE_DAN_TITLE,Double Dan
-CHAR_DOUBLE_DAN_DESC,"Sees every bet first, then decides whether to double his own."
-CHAR_DOUBLE_DAN_PASSIVE,None.
-CHAR_DOUBLE_DAN_ACTIVE,"After-market (once a quarter): DOUBLE DOWN. When the bets are revealed, double your own option before the result."
-CHAR_SAVING_SON_TITLE,Saving Son
-CHAR_SAVING_SON_DESC,Lets the cash work. Simple and steady.
-CHAR_SAVING_SON_PASSIVE,Next day: your cash earns 0.5% interest.
-CHAR_SAVING_SON_ACTIVE,None.
-CHAR_GOLDFISH_GUS_TITLE,Goldfish Gus
-CHAR_GOLDFISH_GUS_DESC,Forgets everything but today. Gets paid for it.
-CHAR_GOLDFISH_GUS_PASSIVE,"Market open: no credibility tiers and no chart, only today's price. After-market: your options pay +0.3 odds."
-CHAR_GOLDFISH_GUS_ACTIVE,None.
-CHAR_HODL_HANA_TITLE,Hodl Hana
-CHAR_HODL_HANA_DESC,"Never sells. Believes in one stock, loudly."
-CHAR_HODL_HANA_PASSIVE,"Pre-market, day 1: half your cash is already in the best stock of the pre-game weeks, bought at its low, and it can never be sold. After-market: options on rumors in its sector pay +0.5 odds."
-CHAR_HODL_HANA_ACTIVE,None.
+keys,en,zh
+CHAR_ROOKIE_TITLE,Rookie,新手
+CHAR_ROOKIE_DESC,"$10,000 and no special rules.","$10,000，没有特殊规则。"
+CHAR_DAY_TRADER_TITLE,Day Trader,日内交易员
+CHAR_DAY_TRADER_DESC,"$8,000, starts with Low Fees, maximum leverage +1x.","$8,000，自带低手续费，最大杠杆+1倍。"
+CHAR_VALUE_INVESTOR_TITLE,Value Investor,价值投资者
+CHAR_VALUE_INVESTOR_DESC,"$12,000, cannot short, long dividends are doubled.","$12,000，不能做空，做多分红翻倍。"
+CHAR_INSIDER_INU_TITLE,Insider Inu,内线·伊努
+CHAR_INSIDER_INU_DESC,"Knows one rumor a quarter is true, and can publish its opposite.",每季度知道一条传闻是真的，还能发布它的反面。
+CHAR_INSIDER_INU_PASSIVE,"Pre-market (once a quarter, on one random day): you learn that tomorrow's rumor is TRUE.",盘前（每季度一次，随机一天）：你得知次日的传闻属实。
+CHAR_INSIDER_INU_ACTIVE,"Market open (once a quarter): FLIP that rumor. Next day: it is published as the opposite, and stamped as planted when it resolves. Nobody learns by whom.",开盘（每季度一次）：翻转那条传闻。次日：它会以相反的内容发布，结算时被标记为被操纵。没人知道是谁干的。
+CHAR_COPILOT_CODY_TITLE,Copilot Cody,副驾·科迪
+CHAR_COPILOT_CODY_DESC,Copies another player's bet whenever he likes.,想抄谁的下注就抄谁的。
+CHAR_COPILOT_CODY_PASSIVE,None.,无。
+CHAR_COPILOT_CODY_ACTIVE,"Market open (every day): COPILOT one rival. After-market: you hold the same option as them, at the normal odds.",开盘（每天）：跟投一名对手。盘后：你持有和对方相同的期权，赔率按正常计算。
+CHAR_DOUBLE_DAN_TITLE,Double Dan,翻倍·丹
+CHAR_DOUBLE_DAN_DESC,"Sees every bet first, then decides whether to double his own.",先看完所有人的下注，再决定要不要给自己加倍。
+CHAR_DOUBLE_DAN_PASSIVE,None.,无。
+CHAR_DOUBLE_DAN_ACTIVE,"After-market (once a quarter): DOUBLE DOWN. When the bets are revealed, double your own option before the result.",盘后（每季度一次）：加倍下注。下注揭晓时，在出结果前把你自己的选项翻倍。
+CHAR_SAVING_SON_TITLE,Saving Son,存钱·桑
+CHAR_SAVING_SON_DESC,Lets the cash work. Simple and steady.,让现金自己干活。简单，稳当。
+CHAR_SAVING_SON_PASSIVE,Next day: your cash earns 0.5% interest.,次日：你的现金获得0.5%的利息。
+CHAR_SAVING_SON_ACTIVE,None.,无。
+CHAR_GOLDFISH_GUS_TITLE,Goldfish Gus,金鱼·格斯
+CHAR_GOLDFISH_GUS_DESC,Forgets everything but today. Gets paid for it.,除了今天什么都记不住，但这反而赚钱。
+CHAR_GOLDFISH_GUS_PASSIVE,"Market open: no credibility tiers and no chart, only today's price. After-market: your options pay +0.3 odds.",开盘：没有可信度等级，也没有走势图，只有今天的价格。盘后：你的期权赔率+0.3。
+CHAR_GOLDFISH_GUS_ACTIVE,None.,无。
+CHAR_HODL_HANA_TITLE,Hodl Hana,死拿·花奈
+CHAR_HODL_HANA_DESC,"Never sells. Believes in one stock, loudly.",从不卖出。只信一只股，还信得很大声。
+CHAR_HODL_HANA_PASSIVE,"Pre-market, day 1: half your cash is already in the best stock of the pre-game weeks, bought at its low, and it can never be sold. After-market: options on rumors in its sector pay +0.5 odds.",盘前，第1天：你一半现金已经在赛前几周表现最好的那只股票里，以最低价买入，且永远不能卖出。盘后：该股所在板块的传闻，期权赔率+0.5。
+CHAR_HODL_HANA_ACTIVE,None.,无。

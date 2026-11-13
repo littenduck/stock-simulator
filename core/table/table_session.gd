@@ -154,7 +154,7 @@ func _log_feed(entry: Dictionary) -> void:
 
 
 ## One summary per day: what everybody played and what it paid (the day has just turned over, so it is day - 1).
-func _log_summary(report: TableReport) -> void:
+func _log_summary(report: TableReport, boss_resolved: bool = false) -> void:
 	var rows: Array[Dictionary] = []
 	for entry in last_reveal:
 		var seat_id := int(entry["seat"])
@@ -166,7 +166,7 @@ func _log_summary(report: TableReport) -> void:
 		var bet := boss_bet_of(seat_id) if boss else daily_bet_of(seat_id)
 		rows.append({"seat": seat_id, "boss": boss, "side": int(entry["side"]), "premium": float(entry["premium"]),
 				"odds": float(entry["odds"]), "copied_from": int(entry["copied_from"]),
-				"doubled": bet != null and bet.doubled, "net": net})
+				"doubled": bet != null and bet.doubled, "net": net, "pending": boss and not boss_resolved})
 	_log_feed({"kind": "summary", "day": day - 1, "rows": rows})
 
 
@@ -429,7 +429,7 @@ func advance() -> TableReport:
 	var boss_resolved := boss_rumor != null and boss_rumor.resolve_day == day
 	if boss_resolved:
 		_settle(boss_rumor, boss_bets, report)
-	_log_summary(report)
+	_log_summary(report, boss_resolved)
 	if boss_resolved:
 		boss_rumor = null
 		boss_bets.clear()

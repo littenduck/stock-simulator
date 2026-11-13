@@ -1,31 +1,31 @@
-keys,en
-PERK_LOW_FEES_TITLE,Low Fees
-PERK_LOW_FEES_DESC,Trading fees are halved.
-PERK_SAVINGS_ACCOUNT_TITLE,Savings Account
-PERK_SAVINGS_ACCOUNT_DESC,Positive cash earns 0.05% interest per day.
-PERK_EARLY_BIRD_TITLE,Early Bird
-PERK_EARLY_BIRD_DESC,Rumors appear 1 day earlier.
-PERK_FACT_CHECKER_TITLE,Fact Checker
-PERK_FACT_CHECKER_DESC,Rumors show their true credibility range.
-PERK_STOP_GUARD_TITLE,Stop Guard
-PERK_STOP_GUARD_DESC,Stop orders cost no fee.
-PERK_SECTOR_FAN_TITLE,Sector Fan
-PERK_SECTOR_FAN_DESC,One random sector's rumors are 15% more credible.
-PERK_MARGIN_ACCOUNT_TITLE,Margin Account
-PERK_MARGIN_ACCOUNT_DESC,Maximum leverage +1x.
-PERK_CHEAP_BORROW_TITLE,Cheap Borrow
-PERK_CHEAP_BORROW_DESC,Borrow fees and loan interest are halved.
-PERK_DIVERSIFIER_TITLE,Diversifier
-PERK_DIVERSIFIER_DESC,Holding 4+ different stocks earns +0.1% of equity per day.
-PERK_DIVIDEND_HUNTER_TITLE,Dividend Hunter
-PERK_DIVIDEND_HUNTER_DESC,Long positions earn 0.03% dividends per day.
-PERK_SECOND_OPINION_TITLE,Second Opinion
-PERK_SECOND_OPINION_DESC,Every perk draft offers 1 extra choice.
-PERK_INSIDER_FRIEND_TITLE,Insider Friend
-PERK_INSIDER_FRIEND_DESC,Every 10 days one rumor is guaranteed true and marked.
-PERK_IRON_HANDS_TITLE,Iron Hands
-PERK_IRON_HANDS_DESC,The first forced liquidation is turned into a warning.
-PERK_COMPOUNDER_TITLE,Compounder
-PERK_COMPOUNDER_DESC,Final score x1.1.
-PERK_MARKET_MAKER_TITLE,Market Maker
-PERK_MARKET_MAKER_DESC,No trading fees, and limit orders fill 1% better.
+keys,en,zh
+PERK_LOW_FEES_TITLE,Low Fees,低手续费
+PERK_LOW_FEES_DESC,Trading fees are halved.,交易手续费减半。
+PERK_SAVINGS_ACCOUNT_TITLE,Savings Account,储蓄账户
+PERK_SAVINGS_ACCOUNT_DESC,Positive cash earns 0.05% interest per day.,正数现金每天赚 0.05% 利息。
+PERK_EARLY_BIRD_TITLE,Early Bird,早起鸟
+PERK_EARLY_BIRD_DESC,Rumors appear 1 day earlier.,传闻提前 1 天出现。
+PERK_FACT_CHECKER_TITLE,Fact Checker,事实核查员
+PERK_FACT_CHECKER_DESC,Rumors show their true credibility range.,传闻会显示真实的可信度范围。
+PERK_STOP_GUARD_TITLE,Stop Guard,止损护卫
+PERK_STOP_GUARD_DESC,Stop orders cost no fee.,止损单不收手续费。
+PERK_SECTOR_FAN_TITLE,Sector Fan,板块粉丝
+PERK_SECTOR_FAN_DESC,One random sector's rumors are 15% more credible.,随机一个板块的传闻可信度提高 15%。
+PERK_MARGIN_ACCOUNT_TITLE,Margin Account,保证金账户
+PERK_MARGIN_ACCOUNT_DESC,Maximum leverage +1x.,最大杠杆 +1 倍。
+PERK_CHEAP_BORROW_TITLE,Cheap Borrow,低息借贷
+PERK_CHEAP_BORROW_DESC,Borrow fees and loan interest are halved.,借券费和贷款利息减半。
+PERK_DIVERSIFIER_TITLE,Diversifier,分散投资家
+PERK_DIVERSIFIER_DESC,Holding 4+ different stocks earns +0.1% of equity per day.,持有 4 只以上不同股票，每天额外赚净资产的 0.1%。
+PERK_DIVIDEND_HUNTER_TITLE,Dividend Hunter,分红猎人
+PERK_DIVIDEND_HUNTER_DESC,Long positions earn 0.03% dividends per day.,多头持仓每天获得 0.03% 的分红。
+PERK_SECOND_OPINION_TITLE,Second Opinion,再想想
+PERK_SECOND_OPINION_DESC,Every perk draft offers 1 extra choice.,每次选择特权时多一个选项。
+PERK_INSIDER_FRIEND_TITLE,Insider Friend,内线朋友
+PERK_INSIDER_FRIEND_DESC,Every 10 days one rumor is guaranteed true and marked.,每 10 天有一条传闻必定属实，并带有标记。
+PERK_IRON_HANDS_TITLE,Iron Hands,铁手
+PERK_IRON_HANDS_DESC,The first forced liquidation is turned into a warning.,第一次强制平仓会变成一次警告。
+PERK_COMPOUNDER_TITLE,Compounder,复利大师
+PERK_COMPOUNDER_DESC,Final score x1.1.,最终得分 x1.1。
+PERK_MARKET_MAKER_TITLE,Market Maker,做市商
+PERK_MARKET_MAKER_DESC,No trading fees,免交易手续费，限价单成交价好 1%。

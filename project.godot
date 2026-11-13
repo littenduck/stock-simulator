@@ -78,7 +78,7 @@ select_stock_6={
 [internationalization]
 
 locale/fallback="en"
-locale/translations=PackedStringArray("res://localization/characters.en.translation", "res://localization/companies.en.translation", "res://localization/errors.en.translation", "res://localization/news.en.translation", "res://localization/perks.en.translation", "res://localization/table.en.translation", "res://localization/ui_flow.en.translation", "res://localization/ui_game.en.translation")
+locale/translations=PackedStringArray("res://localization/characters.en.translation", "res://localization/characters.zh.translation", "res://localization/companies.en.translation", "res://localization/companies.zh.translation", "res://localization/errors.en.translation", "res://localization/errors.zh.translation", "res://localization/news.en.translation", "res://localization/news.zh.translation", "res://localization/perks.en.translation", "res://localization/perks.zh.translation", "res://localization/table.en.translation", "res://localization/table.zh.translation", "res://localization/ui_flow.en.translation", "res://localization/ui_flow.zh.translation", "res://localization/ui_game.en.translation", "res://localization/ui_game.zh.translation")
 
 [rendering]
 

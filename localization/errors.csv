@@ -1,8 +1,8 @@
-keys,en
-TRADE_ERR_INVALID_SHARES,Invalid number of shares
-TRADE_ERR_UNKNOWN_SYMBOL,Unknown stock
-TRADE_ERR_NOT_ENOUGH_CASH,Not enough cash
-TRADE_ERR_SHORT_DISABLED,Short selling is disabled for this character
-TRADE_ERR_OVER_LEVERAGE,Exceeds your maximum leverage
-TRADE_ERR_NOT_IMPLEMENTED,Not implemented yet
-TRADE_ERR_LOCKED,This stock is locked: you believe in it too much to sell
+keys,en,zh
+TRADE_ERR_INVALID_SHARES,Invalid number of shares,股数无效
+TRADE_ERR_UNKNOWN_SYMBOL,Unknown stock,没这只股票
+TRADE_ERR_NOT_ENOUGH_CASH,Not enough cash,现金不足
+TRADE_ERR_SHORT_DISABLED,Short selling is disabled for this character,这个角色不能做空
+TRADE_ERR_OVER_LEVERAGE,Exceeds your maximum leverage,超出你的最大杠杆
+TRADE_ERR_NOT_IMPLEMENTED,Not implemented yet,还没做好
+TRADE_ERR_LOCKED,This stock is locked: you believe in it too much to sell,这只股票被锁住了：你太相信它了，舍不得卖

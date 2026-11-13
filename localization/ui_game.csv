@@ -1,110 +1,110 @@
-keys,en
-UI_GAME_NEXT_DAY,Next Day
-UI_GAME_FINAL_DAY,Final Day
-UI_GAME_DAY,Day
-UI_GAME_CASH,Cash
-UI_GAME_NET_WORTH,Net worth
-UI_GAME_RETURN,Return
-UI_GAME_MENU,Menu
-UI_GAME_RESUME,Resume
-UI_GAME_ABANDON,Abandon run
-UI_GAME_ABANDON_CONFIRM,Really abandon? Click again
-UI_GAME_MARGIN_CALL,MARGIN CALL: positions were liquidated
-UI_GAME_STOCKS,STOCKS
-UI_GAME_HELD_LONG,%d held
-UI_GAME_HELD_SHORT,%d short
-UI_GAME_HIGH_LOW,High %.2f · Low %.2f
-UI_GAME_NO_HISTORY,No price history yet
-UI_GAME_AVG_COST_SHORT,Avg cost
-UI_GAME_BUY,Buy
-UI_GAME_SELL,Sell
-UI_GAME_SELL_SHORT,Sell / Short
-UI_GAME_BOUGHT,Bought
-UI_GAME_SOLD,Sold
-UI_GAME_KIND_MARKET,Market
-UI_GAME_KIND_LIMIT,Limit
-UI_GAME_KIND_STOP,Stop
-UI_GAME_ORDER_TYPE,Order
-UI_GAME_SHARES,Shares
-UI_GAME_TRIGGER_PRICE,Price
-UI_GAME_MAX,Max
-UI_GAME_MAX_TIP,Estimate of the most you can trade. The market checks the real limit.
-UI_GAME_HINT_LIMIT_BUY,Fills at the close if the price is at or below this.
-UI_GAME_HINT_LIMIT_SELL,Fills at the close if the price is at or above this.
-UI_GAME_HINT_STOP_BUY,Triggers at the close if the price is at or above this (cover a short).
-UI_GAME_HINT_STOP_SELL,Triggers at the close if the price is at or below this (cut a loss).
-UI_GAME_EFFECT_OPEN_LONG,Opens or adds to a long position
-UI_GAME_EFFECT_COVER_SHORT,Covers (reduces) your short
-UI_GAME_EFFECT_COVER_THEN_LONG,"Covers your short, then goes long"
-UI_GAME_EFFECT_OPEN_SHORT,Opens or adds to a short position
-UI_GAME_EFFECT_CLOSE_LONG,Reduces or closes your long
-UI_GAME_EFFECT_CLOSE_THEN_SHORT,"Closes your long, then goes short"
-UI_GAME_SHORT_DISABLED,Short selling is disabled for this run
-UI_GAME_ESTIMATE,Est. value %s · fee %s
-UI_GAME_ERR_SHARES,Enter at least 1 share.
-UI_GAME_ORDER_QUEUED,Order #%d queued for %s. It is checked at each close.
-UI_GAME_FILLED,%s %d %s @ %s (fee %s)
-UI_GAME_POSITION_LONG,Long %d @ avg %s
-UI_GAME_POSITION_SHORT,Short %d @ avg %s
-UI_GAME_POSITION_NONE,No position
-UI_GAME_PORTFOLIO,PORTFOLIO
-UI_GAME_SUM_CASH,Cash
-UI_GAME_SUM_LONG,Long value
-UI_GAME_SUM_SHORT,Short value
-UI_GAME_SUM_WORTH,Net worth
-UI_GAME_MARGIN_STATUS,Margin %.0f%% (liquidation below %.0f%%) · exposure %.1fx
-UI_GAME_MARGIN_NONE,No margin used
-UI_GAME_COL_SYMBOL,Stock
-UI_GAME_COL_SHARES,Qty
-UI_GAME_COL_AVG,Avg
-UI_GAME_COL_PRICE,Price
-UI_GAME_COL_PNL,P/L
-UI_GAME_SHORT_TAG,short
-UI_GAME_NO_POSITIONS,No open positions. Pick a stock and place an order.
-UI_GAME_PENDING_ORDERS,PENDING ORDERS
-UI_GAME_NO_PENDING,No pending orders
-UI_GAME_CANCEL,Cancel
-UI_GAME_CANCEL_TIP,Cancel order #%d
-UI_GAME_RUMORS,RUMORS
-UI_GAME_NO_RUMORS,No rumors yet. Advance a day.
-UI_GAME_BULLISH,Bullish
-UI_GAME_BEARISH,Bearish
-UI_GAME_INSIDER,Insider tip
-UI_GAME_INSIDER_TIP,Insider Friend: this rumor is guaranteed to be true.
-UI_GAME_CONFIRMED,Confirmed
-UI_GAME_DEBUNKED,Debunked
-UI_GAME_REVEALS_IN,Resolves in %d d
-UI_GAME_CRED_TIP,Credibility shown to you. The truth may differ.
-UI_GAME_CRED_TIP_RANGE,Fact Checker: the true credibility lies in this range.
-UI_GAME_PERKS,PERKS
-UI_GAME_NO_PERKS,None yet. A pick is offered every 10 days.
-UI_GAME_DEV_NEWS_1,NovaTech unveils a battery breakthrough
-UI_GAME_DEV_NEWS_2,Regulators probe the energy sector
-UI_GAME_DEV_NEWS_3,Retail spending slows across the market
-UI_GAME_DEV_NEWS_4,Rival bank rumored to buy FINX
-UI_GAME_DEV_PERK_FACT,Fact Checker
-UI_GAME_DEV_PERK_FACT_DESC,Shows a credibility range on rumors.
-UI_GAME_DEV_PERK_FEES,Low Fees
-UI_GAME_DEV_PERK_FEES_DESC,Trading fees are halved.
-UI_GAME_DEV_PERK_INSIDER,Insider Friend
-UI_GAME_DEV_PERK_INSIDER_DESC,"Every 10 days, one guaranteed-true rumor."
-UI_GAME_DEV_ERR_CASH,Not enough cash for this order (dev harness rule)
-UI_GAME_DEV_ERR_SHORT,Short selling is not allowed (dev harness rule)
-UI_GAME_CHART_CANDLES,Candles
-UI_GAME_CHART_LINE,Line
-UI_GAME_TODAY,Run starts
-UI_GAME_PREGAME,Before the run
-UI_GAME_OHLC,O %s   H %s   L %s   C %s
-UI_GAME_DAY_DATE,Day %d/%d · %s
-UI_GAME_DAY_ONLY,Day %d/%d
-UI_GAME_ERR_EMPTY,Type how many shares.
-UI_GAME_ERR_NOT_NUMBER,Shares must be a whole number.
-UI_GAME_ERR_TOO_BIG,That is more than the game allows.
-UI_GAME_ERR_OVER_MAX,"Too many: your max is %d."
-UI_GAME_WARN_OVER_MAX,"Above the estimated max (%d). The market will check."
-UI_GAME_ERR_NOTHING,There is nothing to sell here.
-UI_NEWS_POPUP_RUMOR,New rumor
-UI_NEWS_POPUP_RESOLVED,Rumor resolved
-UI_NEWS_POPUP_TRUE,It was true.
-UI_NEWS_POPUP_FALSE,False alarm.
-UI_NEWS_POPUP_INSIDER,Insider tip
+keys,en,zh
+UI_GAME_NEXT_DAY,Next Day,次日
+UI_GAME_FINAL_DAY,Final Day,最后一天
+UI_GAME_DAY,Day,天数
+UI_GAME_CASH,Cash,现金
+UI_GAME_NET_WORTH,Net worth,净资产
+UI_GAME_RETURN,Return,收益
+UI_GAME_MENU,Menu,菜单
+UI_GAME_RESUME,Resume,继续
+UI_GAME_ABANDON,Abandon run,放弃本局
+UI_GAME_ABANDON_CONFIRM,Really abandon? Click again,真要放弃？再点一次
+UI_GAME_MARGIN_CALL,MARGIN CALL: positions were liquidated,追加保证金通知：仓位已被强平
+UI_GAME_STOCKS,STOCKS,股票
+UI_GAME_HELD_LONG,%d held,持有 %d 股
+UI_GAME_HELD_SHORT,%d short,做空 %d 股
+UI_GAME_HIGH_LOW,High %.2f · Low %.2f,最高 %.2f · 最低 %.2f
+UI_GAME_NO_HISTORY,No price history yet,暂无价格记录
+UI_GAME_AVG_COST_SHORT,Avg cost,均价
+UI_GAME_BUY,Buy,买入
+UI_GAME_SELL,Sell,卖出
+UI_GAME_SELL_SHORT,Sell / Short,卖出 / 做空
+UI_GAME_BOUGHT,Bought,买入
+UI_GAME_SOLD,Sold,卖出
+UI_GAME_KIND_MARKET,Market,市价
+UI_GAME_KIND_LIMIT,Limit,限价
+UI_GAME_KIND_STOP,Stop,止损
+UI_GAME_ORDER_TYPE,Order,订单
+UI_GAME_SHARES,Shares,股数
+UI_GAME_TRIGGER_PRICE,Price,价格
+UI_GAME_MAX,Max,最大
+UI_GAME_MAX_TIP,Estimate of the most you can trade. The market checks the real limit.,可交易数量的估算值，实际上限以市场检查为准。
+UI_GAME_HINT_LIMIT_BUY,Fills at the close if the price is at or below this.,收盘时价格不高于此价就成交。
+UI_GAME_HINT_LIMIT_SELL,Fills at the close if the price is at or above this.,收盘时价格不低于此价就成交。
+UI_GAME_HINT_STOP_BUY,Triggers at the close if the price is at or above this (cover a short).,收盘时价格不低于此价就触发（平掉空头）。
+UI_GAME_HINT_STOP_SELL,Triggers at the close if the price is at or below this (cut a loss).,收盘时价格不高于此价就触发（及时止损）。
+UI_GAME_EFFECT_OPEN_LONG,Opens or adds to a long position,开多仓或加仓
+UI_GAME_EFFECT_COVER_SHORT,Covers (reduces) your short,平掉（减少）空头
+UI_GAME_EFFECT_COVER_THEN_LONG,"Covers your short, then goes long",先平空头，再转多
+UI_GAME_EFFECT_OPEN_SHORT,Opens or adds to a short position,开空仓或加仓
+UI_GAME_EFFECT_CLOSE_LONG,Reduces or closes your long,减少或平掉多头
+UI_GAME_EFFECT_CLOSE_THEN_SHORT,"Closes your long, then goes short",先平多头，再转空
+UI_GAME_SHORT_DISABLED,Short selling is disabled for this run,本局已禁用做空
+UI_GAME_ESTIMATE,Est. value %s · fee %s,估值 %s · 手续费 %s
+UI_GAME_ERR_SHARES,Enter at least 1 share.,至少输入 1 股。
+UI_GAME_ORDER_QUEUED,Order #%d queued for %s. It is checked at each close.,订单 #%d 已挂出（%s），每次收盘时检查。
+UI_GAME_FILLED,%s %d %s @ %s (fee %s),%s %d %s @ %s（手续费 %s）
+UI_GAME_POSITION_LONG,Long %d @ avg %s,多头 %d @ 均价 %s
+UI_GAME_POSITION_SHORT,Short %d @ avg %s,空头 %d @ 均价 %s
+UI_GAME_POSITION_NONE,No position,无持仓
+UI_GAME_PORTFOLIO,PORTFOLIO,持仓
+UI_GAME_SUM_CASH,Cash,现金
+UI_GAME_SUM_LONG,Long value,多头市值
+UI_GAME_SUM_SHORT,Short value,空头市值
+UI_GAME_SUM_WORTH,Net worth,净资产
+UI_GAME_MARGIN_STATUS,Margin %.0f%% (liquidation below %.0f%%) · exposure %.1fx,保证金 %.0f%%（低于 %.0f%% 强平）· 杠杆 %.1fx
+UI_GAME_MARGIN_NONE,No margin used,未使用保证金
+UI_GAME_COL_SYMBOL,Stock,股票
+UI_GAME_COL_SHARES,Qty,数量
+UI_GAME_COL_AVG,Avg,均价
+UI_GAME_COL_PRICE,Price,现价
+UI_GAME_COL_PNL,P/L,盈亏
+UI_GAME_SHORT_TAG,short,空
+UI_GAME_NO_POSITIONS,No open positions. Pick a stock and place an order.,还没有持仓。挑只股票下单吧。
+UI_GAME_PENDING_ORDERS,PENDING ORDERS,挂单
+UI_GAME_NO_PENDING,No pending orders,没有挂单
+UI_GAME_CANCEL,Cancel,撤销
+UI_GAME_CANCEL_TIP,Cancel order #%d,撤销订单 #%d
+UI_GAME_RUMORS,RUMORS,传闻
+UI_GAME_NO_RUMORS,No rumors yet. Advance a day.,还没有传闻。过一天看看。
+UI_GAME_BULLISH,Bullish,看涨
+UI_GAME_BEARISH,Bearish,看跌
+UI_GAME_INSIDER,Insider tip,内幕消息
+UI_GAME_INSIDER_TIP,Insider Friend: this rumor is guaranteed to be true.,内线朋友：这条传闻保证属实。
+UI_GAME_CONFIRMED,Confirmed,属实
+UI_GAME_DEBUNKED,Debunked,辟谣
+UI_GAME_REVEALS_IN,Resolves in %d d,%d天后揭晓
+UI_GAME_CRED_TIP,Credibility shown to you. The truth may differ.,这是你看到的可信度，真相可能不同。
+UI_GAME_CRED_TIP_RANGE,Fact Checker: the true credibility lies in this range.,事实核查员：真实可信度就在这个范围内。
+UI_GAME_PERKS,PERKS,特权
+UI_GAME_NO_PERKS,None yet. A pick is offered every 10 days.,暂无。每 10 天可选一个。
+UI_GAME_DEV_NEWS_1,NovaTech unveils a battery breakthrough,新星科技发布电池技术突破
+UI_GAME_DEV_NEWS_2,Regulators probe the energy sector,监管机构调查能源板块
+UI_GAME_DEV_NEWS_3,Retail spending slows across the market,全市场零售消费放缓
+UI_GAME_DEV_NEWS_4,Rival bank rumored to buy FINX,传闻对手银行将收购 FINX
+UI_GAME_DEV_PERK_FACT,Fact Checker,事实核查员
+UI_GAME_DEV_PERK_FACT_DESC,Shows a credibility range on rumors.,传闻会显示可信度范围。
+UI_GAME_DEV_PERK_FEES,Low Fees,低手续费
+UI_GAME_DEV_PERK_FEES_DESC,Trading fees are halved.,交易手续费减半。
+UI_GAME_DEV_PERK_INSIDER,Insider Friend,内线朋友
+UI_GAME_DEV_PERK_INSIDER_DESC,"Every 10 days, one guaranteed-true rumor.",每 10 天获得一条保证属实的传闻。
+UI_GAME_DEV_ERR_CASH,Not enough cash for this order (dev harness rule),现金不足，无法下单（开发测试规则）
+UI_GAME_DEV_ERR_SHORT,Short selling is not allowed (dev harness rule),不允许做空（开发测试规则）
+UI_GAME_CHART_CANDLES,Candles,K线
+UI_GAME_CHART_LINE,Line,折线
+UI_GAME_TODAY,Run starts,本局开始
+UI_GAME_PREGAME,Before the run,开局前
+UI_GAME_OHLC,O %s   H %s   L %s   C %s,开 %s   高 %s   低 %s   收 %s
+UI_GAME_DAY_DATE,Day %d/%d · %s,第%d/%d天 · %s
+UI_GAME_DAY_ONLY,Day %d/%d,第%d/%d天
+UI_GAME_ERR_EMPTY,Type how many shares.,请输入股数。
+UI_GAME_ERR_NOT_NUMBER,Shares must be a whole number.,股数必须是整数。
+UI_GAME_ERR_TOO_BIG,That is more than the game allows.,超出游戏允许的上限了。
+UI_GAME_ERR_OVER_MAX,Too many: your max is %d.,太多啦：最多 %d 股。
+UI_GAME_WARN_OVER_MAX,Above the estimated max (%d). The market will check.,超过估算上限（%d），交给市场检查。
+UI_GAME_ERR_NOTHING,There is nothing to sell here.,这里没有可卖的东西。
+UI_NEWS_POPUP_RUMOR,New rumor,新传闻
+UI_NEWS_POPUP_RESOLVED,Rumor resolved,传闻揭晓
+UI_NEWS_POPUP_TRUE,It was true.,属实！
+UI_NEWS_POPUP_FALSE,False alarm.,虚惊一场。
+UI_NEWS_POPUP_INSIDER,Insider tip,内幕消息

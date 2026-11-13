@@ -1,176 +1,177 @@
-keys,en
-TABLE_BTN_REVEAL,Reveal bets
-TABLE_BTN_CONTINUE,Continue
-TABLE_YOU,you
-TABLE_FIRED,FIRED
-TABLE_STREAK,%d wins in a row
-TABLE_BUY,Buy
-TABLE_SELL,Sell
-TABLE_Q1,1/4
-TABLE_Q2,1/2
-TABLE_Q3,3/4
-TABLE_ALL_IN,All in
-TABLE_SELL_HALF,Sell half
-TABLE_SELL_ALL,Sell all
-TABLE_TRADE_TITLE,Trade %s  %s
-TABLE_BOUGHT,Bought %d %s at %s
-TABLE_SOLD,Sold %d %s at %s
-TABLE_RUMOR_TODAY,Today's rumor
-TABLE_CRED,Credibility: %s
-TABLE_CRED_HIDDEN,Credibility: ???
-TABLE_KNOW_TRUE,You know: this rumor is TRUE
-TABLE_KNOW_FALSE,You know: this rumor is FALSE (you planted it)
-TABLE_BELIEVE,BELIEVE
-TABLE_BULLSHIT,BULLSHIT
-TABLE_PASS,PASS
-TABLE_PASS_SUB,do nothing
-TABLE_BUY_CALL,Buy Call
-TABLE_CALL,Call
-TABLE_PUT,Put
-TABLE_KEYS_HINT,"Keys: Q = BELIEVE (Buy Call), W = BULLSHIT (Buy Put), E = PASS"
-TABLE_BUY_PUT,Buy Put
-TABLE_COPYING,Copying %s: you place the same bet
-TABLE_STAKE_NONE,No cash left for a bet. Sell something first.
-TABLE_STAKE,"Stake: %s (%d%% of your net worth, paid now)"
-TABLE_BOSS_TITLE,BOSS RUMOR  ·  resolves in %d days
-TABLE_BOSS_BET,Your Boss bet: %s for %s
-TABLE_BOSS_STAKE,Boss stake: %s (%d%% of your net worth)
-TABLE_COPILOT,COPILOT: copy a player's bet
-TABLE_COPY_NONE,Nobody: bet on my own
-TABLE_INSIDER_HINT,Insider tip: tomorrow's rumor is TRUE
-TABLE_FLIP,FLIP: publish the opposite
-TABLE_FLIP_HINT,When it resolves it is stamped as planted. Nobody learns by whom.
-TABLE_FLIP_USED,Your flip is used up until the next quarter.
-TABLE_NO_HINT,No tip today. It comes on one random day each quarter.
-TABLE_DAN_HINT,DOUBLE DOWN comes after the reveal.
-TABLE_DAN_USED,Double down used: it comes back next quarter.
-TABLE_REVEAL_TITLE,Bets revealed
-TABLE_BOSS_TAG,Boss
-TABLE_COPIED,copying %s
-TABLE_DOUBLED,doubled
-TABLE_DOUBLE,DOUBLE DOWN
-TABLE_RESULT_TITLE,Day %d result
-TABLE_CONFIRMED,CONFIRMED
-TABLE_DEBUNKED,DEBUNKED
-TABLE_PLANTED,PLANTED
-TABLE_MOVE,Price move: %s
-TABLE_YOU_WON,You won %s
-TABLE_YOU_LOST,You lost %s
-TABLE_NO_BET,You passed
-TABLE_YOU_FIRED,You were FIRED. Your run ends here.
-TABLE_YOU_FIRED_SHORT,fired
-TABLE_FIRED_NOTE,%s was FIRED at the quarter review
-TABLE_QUARTER_END,Quarter %d is over: your skills are back
-TABLE_BOSS_NEW,New BOSS rumor: you can bet on it for the next 3 days
-TABLE_OK,OK
+keys,en,zh
+TABLE_BTN_REVEAL,Reveal bets,揭晓下注
+TABLE_BTN_CONTINUE,Continue,继续
+TABLE_YOU,you,你
+TABLE_FIRED,FIRED,被炒
+TABLE_STREAK,%d wins in a row,连胜 %d 场
+TABLE_BUY,Buy,买入
+TABLE_SELL,Sell,卖出
+TABLE_Q1,1/4,1/4
+TABLE_Q2,1/2,1/2
+TABLE_Q3,3/4,3/4
+TABLE_ALL_IN,All in,全仓
+TABLE_SELL_HALF,Sell half,卖出一半
+TABLE_SELL_ALL,Sell all,全部卖出
+TABLE_TRADE_TITLE,Trade %s  %s,交易 %s  %s
+TABLE_BOUGHT,Bought %d %s at %s,买入 %d 股 %s，成交价 %s
+TABLE_SOLD,Sold %d %s at %s,卖出 %d 股 %s，成交价 %s
+TABLE_RUMOR_TODAY,Today's rumor,今日传闻
+TABLE_CRED,Credibility: %s,可信度：%s
+TABLE_CRED_HIDDEN,Credibility: ???,可信度：???
+TABLE_KNOW_TRUE,You know: this rumor is TRUE,你知道：这条传闻是真的
+TABLE_KNOW_FALSE,You know: this rumor is FALSE (you planted it),你知道：这条传闻是假的（你造的谣）
+TABLE_BELIEVE,BELIEVE,相信
+TABLE_BULLSHIT,BULLSHIT,扯淡
+TABLE_PASS,PASS,观望
+TABLE_PASS_SUB,do nothing,啥也不干
+TABLE_BUY_CALL,Buy Call,买入看涨
+TABLE_CALL,Call,看涨
+TABLE_PUT,Put,看跌
+TABLE_KEYS_HINT,"Keys: Q = BELIEVE (Buy Call), W = BULLSHIT (Buy Put), E = PASS",按键：Q = 相信（买入看涨），W = 扯淡（买入看跌），E = 观望
+TABLE_BUY_PUT,Buy Put,买入看跌
+TABLE_COPYING,Copying %s: you place the same bet,跟投 %s：你下同样的注
+TABLE_STAKE_NONE,No cash left for a bet. Sell something first.,没现金下注了，先卖点东西吧。
+TABLE_STAKE,"Stake: %s (%d%% of your net worth, paid now)",下注：%s（占净资产 %d%%，立即扣款）
+TABLE_BOSS_TITLE,BOSS RUMOR  ·  resolves in %d days,BOSS传闻  ·  %d 天后揭晓
+TABLE_BOSS_BET,Your Boss bet: %s for %s,你的Boss传闻下注：%s，%s
+TABLE_BOSS_STAKE,Boss stake: %s (%d%% of your net worth),Boss下注：%s（占净资产 %d%%）
+TABLE_COPILOT,COPILOT: copy a player's bet,跟投：抄一位玩家的注
+TABLE_COPY_NONE,Nobody: bet on my own,不抄，我自己下
+TABLE_INSIDER_HINT,Insider tip: tomorrow's rumor is TRUE,内线消息：明天的传闻是真的
+TABLE_FLIP,FLIP: publish the opposite,翻转：放出相反的传闻
+TABLE_FLIP_HINT,When it resolves it is stamped as planted. Nobody learns by whom.,揭晓时会被标为被操纵，没人知道是谁干的。
+TABLE_FLIP_USED,Your flip is used up until the next quarter.,翻转已用完，下个季度恢复。
+TABLE_NO_HINT,No tip today. It comes on one random day each quarter.,今天没有消息。每个季度会随机有一天。
+TABLE_DAN_HINT,DOUBLE DOWN comes after the reveal.,加倍下注要在揭晓后使用。
+TABLE_DAN_USED,Double down used: it comes back next quarter.,加倍下注已用，下个季度恢复。
+TABLE_REVEAL_TITLE,Bets revealed,下注揭晓
+TABLE_BOSS_TAG,Boss,Boss
+TABLE_COPIED,copying %s,跟投 %s
+TABLE_DOUBLED,doubled,已加倍
+TABLE_DOUBLE,DOUBLE DOWN,加倍下注
+TABLE_RESULT_TITLE,Day %d result,第%d天结果
+TABLE_CONFIRMED,CONFIRMED,属实
+TABLE_DEBUNKED,DEBUNKED,辟谣
+TABLE_PLANTED,PLANTED,被操纵
+TABLE_MOVE,Price move: %s,股价变动：%s
+TABLE_YOU_WON,You won %s,你赢了 %s
+TABLE_YOU_LOST,You lost %s,你亏了 %s
+TABLE_NO_BET,You passed,你选择了观望
+TABLE_YOU_FIRED,You were FIRED. Your run ends here.,你被炒鱿鱼了，游戏到此结束。
+TABLE_YOU_FIRED_SHORT,fired,被炒
+TABLE_FIRED_NOTE,%s was FIRED at the quarter review,%s 在季度考核中被炒了
+TABLE_QUARTER_END,Quarter %d is over: your skills are back,第 %d 季度结束：技能已恢复
+TABLE_BOSS_NEW,New BOSS rumor: you can bet on it for the next 3 days,新的Boss传闻：接下来 3 天可以下注
+TABLE_OK,OK,好
 TABLE_BLIND_NOTE,"Gus only sees today.
+%s  %s","格斯只记得今天。
 %s  %s"
-TABLE_RANK,You finished #%d of %d
-TABLE_STARTED,The run started on %s
-TABLE_SETUP_TITLE,Pick your seat
-TABLE_SETUP_CHARACTER,Character
-TABLE_SETUP_FEES_ON,Trading fees: On (change it in Settings)
-TABLE_SETUP_FEES_OFF,Trading fees: Off (turn them on in Settings)
-TABLE_PASSIVE,Passive
-TABLE_ACTIVE,Active
-TIER_LOW,Low
-TIER_MEDIUM,Medium
-TIER_HIGH,High
-UI_FLOW_SETTINGS_FEES,Trading fees
-UI_FLOW_SETTINGS_FEES_HINT,A small fee on every trade in the table game. Off by default. Applies from the start of your next run.
-TABLE_LOG_TITLE,RUMOR LOG
-TABLE_LOG_EMPTY,Nothing has resolved yet. Every verdict lands here.
-TABLE_LOG_DAY,Day %d
-TABLE_KEYS_SHORT,[Q] [W] [E]
-TABLE_SETUP_RIVALS,Your three rivals are drawn at random
-TABLE_FEED_TITLE,RUMOR FEED
-TABLE_FEED_TODAY,TODAY · Day %d
-TABLE_FEED_RESOLVES,resolves tomorrow
-TABLE_FEED_CALL,Your call: %s
-TABLE_FEED_NO_CALL,No call yet
-TABLE_FEED_CHANGE,Change
-TABLE_FEED_CHOOSE,Choose
-TABLE_FEED_OPEN,Open card
-TABLE_CARD_TODAY,TODAY'S RUMOR · Day %d
-TABLE_CARD_CHANCE,%d%% chance it is true
-TABLE_CARD_COPY,Or copy a rival's bet
-TABLE_CARD_HINT,[Q] BELIEVE   [W] BULLSHIT   [E] PASS   [Esc] decide later
-TABLE_CARD_AFFECTS,Affects: %s
-TABLE_CARD_CLAIM_UP,claims a rise
-TABLE_CARD_CLAIM_DOWN,claims a fall
-TABLE_HOLDING,"You hold %d shares, average cost %s"
-TABLE_HOLDING_NONE,You hold none of this stock
-UI_GAME_HELD_AVG,"%d shares, average price %s"
-TABLE_COST,"-%s · %d sh"
-TABLE_GAIN,"+%s · %d sh"
-TABLE_CARD_OPTION,%s x%.2f  ·  pay %s  ·  win %s
-TABLE_CARD_OPTION_BLIND,%s  ·  pay %s
-TABLE_CARD_PASS_OPTION,do nothing  ·  pay $0
-TABLE_CARD_CHANCE_SHORT,chance it is true
-TABLE_CARD_BOSS_HEAD,BOSS
-UI_FLOW_SETTINGS_AUTO,Auto reveal
-UI_FLOW_SETTINGS_AUTO_HINT,The day resolves by itself after the reveal. Off: you press Next.
-TABLE_AUTO_NOTE,The day resolves in a moment...
-TABLE_COPILOT_ON,COPILOT: copying %s today (change it on the rumor card)
-TABLE_COPILOT_OFF,COPILOT: pick a rival to copy on the rumor card
-TABLE_STEP_PRE,Pre-market
-TABLE_STEP_OPEN,Market open
-TABLE_STEP_AFTER,After-market
-TABLE_STEP_NEXT,Next day
-TABLE_WAIT_PRE,Verdict...
-TABLE_WAIT_AFTER,Bets revealed...
-TABLE_WAIT_NEXT,Next day...
-TABLE_NEXT,Next
-TABLE_NO_CALL_WARN,No call yet: this counts as PASS
-TABLE_NEWS,NEWS
-TABLE_FEED_NEW,NEW
-TABLE_NEXT_TIP,End your turn (Space)
-TABLE_ERR_CLOSED,The market is closed. Trading is only open before the after-market.
-TABLE_PRESS_NEXT,Press Next to finish the day
-UI_FLOW_SETTINGS_OPENING,Opening animation
-UI_FLOW_SETTINGS_OPENING_HINT,Plays the intro of a new run (about 25 seconds). Space skips it.
-TABLE_SKIP_HINT,Space: skip
-TABLE_INTRO_RIVALS,Choosing your rivals
-TABLE_INTRO_YOU,YOU
-TABLE_INTRO_RIVAL,RIVAL %d
-TABLE_INTRO_PLAYER,PLAYER %d / %d
-TABLE_INTRO_STOCKS,Today's six stocks
-TABLE_BANNER_STEP,STEP
-TABLE_BANNER_PRE,Today's news is coming in
-TABLE_BANNER_OPEN,Trade and make your call
-TABLE_BANNER_AFTER,Everybody's bets are revealed
-TABLE_BANNER_DAWN,Dawn
-TABLE_BANNER_DAY,Daytime
-TABLE_BANNER_NIGHT,Night
-TABLE_DAY_OF,Day %d / %d
-TABLE_SKILL_TIP,INSIDER TIP
-TABLE_SKILL_TIP_BODY,Tomorrow's rumor is TRUE.
-TABLE_SKILL_HODL,DIAMOND HANDS
-TABLE_SKILL_HODL_BODY,"Half the cash went into %d shares of %s, bought at its low. They can never be sold."
-TABLE_SKILL_COPY,COPILOT
-TABLE_SKILL_COPY_BODY,%s copies the bet of %s.
-TABLE_SKILL_DOUBLE,DOUBLE DOWN
-TABLE_SKILL_DOUBLE_BODY,%s doubles the option: +%s more at stake.
-TABLE_SKILL_INTEREST,SAVINGS INTEREST
-TABLE_SKILL_INTEREST_BODY,%s earns %s on the cash.
-TABLE_SKILL_GOLDFISH,GOLDFISH LUCK
-TABLE_SKILL_SECTOR,SECTOR CONVICTION
-TABLE_SKILL_ODDS_BODY,%s's option pays +%.1f odds.
-TABLE_SKILL_CONTINUE,Space: continue
-TABLE_SKILL_SPENT,Your skill is used up until the next quarter.
-TABLE_FEED_SUMMARY,Day %d · Summary
-TABLE_FEED_COPY_MARK,(copy)
-TABLE_FEED_DOUBLE_MARK,(x2)
-TABLE_FEED_SKILL_COPY,%s copied %s
-TABLE_FEED_SKILL_DOUBLE,%s doubled down: +%s
-TABLE_FEED_SKILL_HODL,%s bought %d %s at its low
-TABLE_FEED_SKILL_INTEREST,%s earned %s interest
-TABLE_NIGHT_NET,Net worth %s  (%s)
-TABLE_NIGHT_BOSS,Boss rumor in %d days
-TABLE_NIGHT_BOSS_NOW,The Boss rumor is out
-TABLE_NIGHT_QUARTER,Quarter ends in %d days
-TABLE_BOARD_TITLE,QUARTER %d STANDINGS
-TABLE_PODIUM_WIN,YOU WIN
-TABLE_PODIUM_PLACE,You finish #%d
-TABLE_PODIUM_WINNER,%s wins the table
-UI_FLOW_SETTINGS_LANGUAGE,Language
+TABLE_RANK,You finished #%d of %d,你排第 %d 名（共 %d 人）
+TABLE_STARTED,The run started on %s,本局开始于 %s
+TABLE_SETUP_TITLE,Pick your seat,选个座位
+TABLE_SETUP_CHARACTER,Character,角色
+TABLE_SETUP_FEES_ON,Trading fees: On (change it in Settings),交易手续费：开（可在设置中更改）
+TABLE_SETUP_FEES_OFF,Trading fees: Off (turn them on in Settings),交易手续费：关（可在设置中开启）
+TABLE_PASSIVE,Passive,被动
+TABLE_ACTIVE,Active,主动
+TIER_LOW,Low,低
+TIER_MEDIUM,Medium,中
+TIER_HIGH,High,高
+UI_FLOW_SETTINGS_FEES,Trading fees,交易手续费
+UI_FLOW_SETTINGS_FEES_HINT,A small fee on every trade in the table game. Off by default. Applies from the start of your next run.,牌桌模式每笔交易收一点手续费。默认关闭，从下一局开始生效。
+TABLE_LOG_TITLE,RUMOR LOG,传闻记录
+TABLE_LOG_EMPTY,Nothing has resolved yet. Every verdict lands here.,还没有结果。每条裁决都会记在这里。
+TABLE_LOG_DAY,Day %d,第%d天
+TABLE_KEYS_SHORT,[Q] [W] [E],[Q] [W] [E]
+TABLE_SETUP_RIVALS,Your three rivals are drawn at random,三位对手随机抽取
+TABLE_FEED_TITLE,RUMOR FEED,传闻动态
+TABLE_FEED_TODAY,TODAY · Day %d,今日 · 第%d天
+TABLE_FEED_RESOLVES,resolves tomorrow,明天揭晓
+TABLE_FEED_CALL,Your call: %s,你的选择：%s
+TABLE_FEED_NO_CALL,No call yet,还没选
+TABLE_FEED_CHANGE,Change,更改
+TABLE_FEED_CHOOSE,Choose,选择
+TABLE_FEED_OPEN,Open card,打开卡片
+TABLE_CARD_TODAY,TODAY'S RUMOR · Day %d,今日传闻 · 第%d天
+TABLE_CARD_CHANCE,%d%% chance it is true,%d%% 的概率是真的
+TABLE_CARD_COPY,Or copy a rival's bet,或者抄对手的注
+TABLE_CARD_HINT,[Q] BELIEVE   [W] BULLSHIT   [E] PASS   [Esc] decide later,[Q] 相信   [W] 扯淡   [E] 观望   [Esc] 稍后再说
+TABLE_CARD_AFFECTS,Affects: %s,影响：%s
+TABLE_CARD_CLAIM_UP,claims a rise,称将上涨
+TABLE_CARD_CLAIM_DOWN,claims a fall,称将下跌
+TABLE_HOLDING,"You hold %d shares, average cost %s",你持有 %d 股，平均成本 %s
+TABLE_HOLDING_NONE,You hold none of this stock,你没有持有这只股票
+UI_GAME_HELD_AVG,"%d shares, average price %s",%d 股，均价 %s
+TABLE_COST,-%s · %d sh,-%s · %d 股
+TABLE_GAIN,+%s · %d sh,+%s · %d 股
+TABLE_CARD_OPTION,%s x%.2f  ·  pay %s  ·  win %s,%s x%.2f  ·  付 %s  ·  赢 %s
+TABLE_CARD_OPTION_BLIND,%s  ·  pay %s,%s  ·  付 %s
+TABLE_CARD_PASS_OPTION,do nothing  ·  pay $0,啥也不干  ·  付 $0
+TABLE_CARD_CHANCE_SHORT,chance it is true,为真的概率
+TABLE_CARD_BOSS_HEAD,BOSS,BOSS
+UI_FLOW_SETTINGS_AUTO,Auto reveal,自动揭晓
+UI_FLOW_SETTINGS_AUTO_HINT,The day resolves by itself after the reveal. Off: you press Next.,揭晓后当天自动结算。关闭后需要你点“下一步”。
+TABLE_AUTO_NOTE,The day resolves in a moment...,马上结算当天……
+TABLE_COPILOT_ON,COPILOT: copying %s today (change it on the rumor card),跟投：今天抄 %s（可在传闻卡片上更改）
+TABLE_COPILOT_OFF,COPILOT: pick a rival to copy on the rumor card,跟投：在传闻卡片上选一位对手来抄
+TABLE_STEP_PRE,Pre-market,盘前
+TABLE_STEP_OPEN,Market open,开盘
+TABLE_STEP_AFTER,After-market,盘后
+TABLE_STEP_NEXT,Next day,次日
+TABLE_WAIT_PRE,Verdict...,裁决中……
+TABLE_WAIT_AFTER,Bets revealed...,下注揭晓中……
+TABLE_WAIT_NEXT,Next day...,次日……
+TABLE_NEXT,Next,下一步
+TABLE_NO_CALL_WARN,No call yet: this counts as PASS,还没选：将视为观望
+TABLE_NEWS,NEWS,快讯
+TABLE_FEED_NEW,NEW,新
+TABLE_NEXT_TIP,End your turn (Space),结束回合（空格）
+TABLE_ERR_CLOSED,The market is closed. Trading is only open before the after-market.,已休市。盘后之前才能交易。
+TABLE_PRESS_NEXT,Press Next to finish the day,点“下一步”结束今天
+UI_FLOW_SETTINGS_OPENING,Opening animation,开场动画
+UI_FLOW_SETTINGS_OPENING_HINT,Plays the intro of a new run (about 25 seconds). Space skips it.,新一局开始时播放（约 25 秒），按空格可跳过。
+TABLE_SKIP_HINT,Space: skip,空格：跳过
+TABLE_INTRO_RIVALS,Choosing your rivals,抽取你的对手
+TABLE_INTRO_YOU,YOU,你
+TABLE_INTRO_RIVAL,RIVAL %d,对手 %d
+TABLE_INTRO_PLAYER,PLAYER %d / %d,玩家 %d / %d
+TABLE_INTRO_STOCKS,Today's six stocks,今日六只股票
+TABLE_BANNER_STEP,STEP,阶段
+TABLE_BANNER_PRE,Today's news is coming in,今日消息陆续到来
+TABLE_BANNER_OPEN,Trade and make your call,交易，然后做出选择
+TABLE_BANNER_AFTER,Everybody's bets are revealed,所有人的下注揭晓
+TABLE_BANNER_DAWN,Dawn,黎明
+TABLE_BANNER_DAY,Daytime,白天
+TABLE_BANNER_NIGHT,Night,夜晚
+TABLE_DAY_OF,Day %d / %d,第 %d / %d 天
+TABLE_SKILL_TIP,INSIDER TIP,内线消息
+TABLE_SKILL_TIP_BODY,Tomorrow's rumor is TRUE.,明天的传闻是真的。
+TABLE_SKILL_HODL,DIAMOND HANDS,钻石手
+TABLE_SKILL_HODL_BODY,"Half the cash went into %d shares of %s, bought at its low. They can never be sold.",一半现金在低点买入了 %d 股 %s，永远不能卖出。
+TABLE_SKILL_COPY,COPILOT,跟投
+TABLE_SKILL_COPY_BODY,%s copies the bet of %s.,%s 抄了 %s 的注。
+TABLE_SKILL_DOUBLE,DOUBLE DOWN,加倍下注
+TABLE_SKILL_DOUBLE_BODY,%s doubles the option: +%s more at stake.,%s 的选项加倍：多押 %s。
+TABLE_SKILL_INTEREST,SAVINGS INTEREST,存款利息
+TABLE_SKILL_INTEREST_BODY,%s earns %s on the cash.,%s 的现金赚了 %s。
+TABLE_SKILL_GOLDFISH,GOLDFISH LUCK,金鱼好运
+TABLE_SKILL_SECTOR,SECTOR CONVICTION,板块信仰
+TABLE_SKILL_ODDS_BODY,%s's option pays +%.1f odds.,%s 的选项赔率 +%.1f。
+TABLE_SKILL_CONTINUE,Space: continue,空格：继续
+TABLE_SKILL_SPENT,Your skill is used up until the next quarter.,你的技能已用完，下个季度恢复。
+TABLE_FEED_SUMMARY,Day %d · Summary,第%d天 · 总结
+TABLE_FEED_COPY_MARK,(copy),（跟投）
+TABLE_FEED_DOUBLE_MARK,(x2),（x2）
+TABLE_FEED_SKILL_COPY,%s copied %s,%s 抄了 %s 的注
+TABLE_FEED_SKILL_DOUBLE,%s doubled down: +%s,%s 加倍下注：+%s
+TABLE_FEED_SKILL_HODL,%s bought %d %s at its low,%s 在低点买入 %d 股 %s
+TABLE_FEED_SKILL_INTEREST,%s earned %s interest,%s 赚了 %s 利息
+TABLE_NIGHT_NET,Net worth %s  (%s),净资产 %s（%s）
+TABLE_NIGHT_BOSS,Boss rumor in %d days,Boss传闻还有 %d 天
+TABLE_NIGHT_BOSS_NOW,The Boss rumor is out,Boss传闻来了
+TABLE_NIGHT_QUARTER,Quarter ends in %d days,季度还有 %d 天结束
+TABLE_BOARD_TITLE,QUARTER %d STANDINGS,第 %d 季度排名
+TABLE_PODIUM_WIN,YOU WIN,你赢了
+TABLE_PODIUM_PLACE,You finish #%d,你排第 %d 名
+TABLE_PODIUM_WINNER,%s wins the table,%s 赢得牌桌
+UI_FLOW_SETTINGS_LANGUAGE,Language,语言
