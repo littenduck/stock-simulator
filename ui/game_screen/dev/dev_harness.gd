@@ -89,8 +89,8 @@ func _ready() -> void:
 	character.id = &"dev"
 	character.start_cash = 10000.0
 	var companies: Array[CompanyDef] = [
-		_company("NOVA", "tech", 80.0, 0.12, 0.55), _company("FINX", "finance", 45.0, 0.07, 0.30),
-		_company("GRNE", "energy", 32.0, 0.05, 0.45), _company("MEDI", "health", 120.0, 0.09, 0.25),
+		_company("NVDO", "tech", 80.0, 0.12, 0.55), _company("BAIT", "finance", 45.0, 0.07, 0.30),
+		_company("SPCZ", "space", 32.0, 0.05, 0.45), _company("AMZG", "consumer", 120.0, 0.09, 0.25),
 		_company("SHOP", "consumer", 60.0, 0.06, 0.35), _company("CLDX", "tech", 210.0, 0.10, 0.50),
 	]
 	var no_perks: Array[PerkDef] = []
@@ -151,16 +151,16 @@ func _company(symbol: String, sector: String, price: float, drift: float, vol: f
 func _seed_demo(days: int) -> void:
 	for i in days:
 		_advance(false)
-	_submit(Order.market(Order.Dir.BUY, "NOVA", 30))
-	_submit(Order.market(Order.Dir.SELL, "GRNE", 120))
-	_submit(Order.market(Order.Dir.BUY, "MEDI", 8))
-	_submit(Order.limit(Order.Dir.BUY, "FINX", 40, _session.market.price_of("FINX") * 0.92))
-	_submit(Order.stop(Order.Dir.SELL, "NOVA", 30, _session.market.price_of("NOVA") * 0.88))
-	_submit(Order.stop(Order.Dir.BUY, "GRNE", 120, _session.market.price_of("GRNE") * 1.12))
-	_post_rumor("UI_GAME_DEV_NEWS_1", "NOVA", 0.2, 3, 0.78, false)
-	_post_rumor("UI_GAME_DEV_NEWS_2", "", -0.12, 2, 0.41, false, "energy")
+	_submit(Order.market(Order.Dir.BUY, "NVDO", 30))
+	_submit(Order.market(Order.Dir.SELL, "SPCZ", 120))
+	_submit(Order.market(Order.Dir.BUY, "AMZG", 8))
+	_submit(Order.limit(Order.Dir.BUY, "BAIT", 40, _session.market.price_of("BAIT") * 0.92))
+	_submit(Order.stop(Order.Dir.SELL, "NVDO", 30, _session.market.price_of("NVDO") * 0.88))
+	_submit(Order.stop(Order.Dir.BUY, "SPCZ", 120, _session.market.price_of("SPCZ") * 1.12))
+	_post_rumor("UI_GAME_DEV_NEWS_1", "NVDO", 0.2, 3, 0.78, false)
+	_post_rumor("UI_GAME_DEV_NEWS_2", "", -0.12, 2, 0.41, false, "space")
 	_post_rumor("UI_GAME_DEV_NEWS_3", "", -0.05, 1, 0.55, false, "all")
-	var done := _post_rumor("UI_GAME_DEV_NEWS_4", "FINX", 0.15, 0, 0.66, false)
+	var done := _post_rumor("UI_GAME_DEV_NEWS_4", "BAIT", 0.15, 0, 0.66, false)
 	done.resolved = true
 	done.is_true = true
 	_session.owned_perks.append(_perk("UI_GAME_DEV_PERK_FEES", "UI_GAME_DEV_PERK_FEES_DESC", PerkDef.Rarity.COMMON))
@@ -209,7 +209,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_F3:
 				_session.mods.set_flag(&"insider_friend")
 				_session.owned_perks.append(_perk("UI_GAME_DEV_PERK_INSIDER", "UI_GAME_DEV_PERK_INSIDER_DESC", PerkDef.Rarity.LEGENDARY))
-				_post_rumor("UI_GAME_DEV_NEWS_1", "NOVA", 0.25, 2, 1.0, true)
+				_post_rumor("UI_GAME_DEV_NEWS_1", "NVDO", 0.25, 2, 1.0, true)
 				EventBus.perks_changed.emit()
 			KEY_F4:
 				EventBus.margin_called.emit()
@@ -288,7 +288,7 @@ func _smoke() -> void:
 	await get_tree().process_frame
 	var fails: int = 0
 	await _press("select_stock_3")
-	fails += _check("select 3 -> GRNE", _screen.selected_symbol == "GRNE")
+	fails += _check("select 3 -> GRNE", _screen.selected_symbol == "SPCZ")
 	var day: int = _session.day
 	await _press("next_day")
 	fails += _check("space advances day", _session.day == day + 1)
@@ -306,7 +306,7 @@ func _smoke() -> void:
 	var cash: float = _session.portfolio.cash
 	panel._shares.value = 5
 	panel._submit.pressed.emit()
-	fails += _check("market buy fills", _session.portfolio.shares_of("GRNE") == -115 and _session.portfolio.cash < cash)
+	fails += _check("market buy fills", _session.portfolio.shares_of("SPCZ") == -115 and _session.portfolio.cash < cash)
 	panel._kind.select(1)
 	panel._on_kind_selected(1)
 	panel._shares.value = 3
@@ -326,18 +326,18 @@ func _smoke() -> void:
 	await _click(top.get_node("NextDayButton") if top.has_node("NextDayButton") else top.find_child("NextDayButton", true, false))
 	fails += _check("click Next Day advances", _session.day == d2 + 1)
 	await _click(_screen.get_node("%StockList").find_child("Row_MEDI", true, false))
-	fails += _check("click stock row selects", _screen.selected_symbol == "MEDI")
+	fails += _check("click stock row selects", _screen.selected_symbol == "AMZG")
 	await _click(panel._sell)
 	fails += _check("click Sell side", panel._side == Order.Dir.SELL)
-	var before: int = _session.portfolio.shares_of("MEDI")
+	var before: int = _session.portfolio.shares_of("AMZG")
 	panel._shares.value = 2
 	await _click(panel._submit)
-	fails += _check("click submit sells 2", _session.portfolio.shares_of("MEDI") == before - 2)
+	fails += _check("click submit sells 2", _session.portfolio.shares_of("AMZG") == before - 2)
 	var trig_before: float = panel._trigger.value
 	panel._kind.select(1)
 	panel._on_kind_selected(1)
 	await _next_frame_days(2)
-	fails += _check("trigger follows price when untouched", is_equal_approx(panel._trigger.value, snappedf(_session.market.price_of("MEDI"), 0.01)))
+	fails += _check("trigger follows price when untouched", is_equal_approx(panel._trigger.value, snappedf(_session.market.price_of("AMZG"), 0.01)))
 	print("SMOKE %s" % ("OK" if fails == 0 else "%d FAILED" % fails))
 
 

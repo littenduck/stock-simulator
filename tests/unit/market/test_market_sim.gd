@@ -26,7 +26,7 @@ func _sim(seed_value: int, companies: Array[CompanyDef] = []) -> MarketSim:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	if companies.is_empty():
-		companies = [_company("AAA", "tech"), _company("BBB", "energy")]
+		companies = [_company("AAA", "tech"), _company("BBB", "space")]
 	return MarketSim.new(companies, GbmPriceModel.new(), rng)
 
 
@@ -79,7 +79,7 @@ func test_day_change() -> void:
 
 func test_news_shock_spread_over_duration() -> void:
 	# zero-vol companies: only the shock moves the price
-	var sim := _sim(1, [_company("AAA", "tech", 0.0001), _company("BBB", "energy", 0.0001)])
+	var sim := _sim(1, [_company("AAA", "tech", 0.0001), _company("BBB", "space", 0.0001)])
 	sim.apply_news(_event("tech", 0.20, 4))
 	var daily := pow(1.2, 0.25) - 1.0
 	for d in 4:
@@ -101,7 +101,7 @@ func test_news_scale_negative_is_counter_impact() -> void:
 
 
 func test_news_targets() -> void:
-	var sim := _sim(1, [_company("AAA", "tech", 0.0001), _company("BBB", "tech", 0.0001), _company("CCC", "energy", 0.0001)])
+	var sim := _sim(1, [_company("AAA", "tech", 0.0001), _company("BBB", "tech", 0.0001), _company("CCC", "space", 0.0001)])
 	sim.apply_news(_event("tech", 0.10, 1, "BBB"))
 	sim.step()
 	assert_almost(sim.price_of("AAA"), 100.0, 0.2)
@@ -120,7 +120,7 @@ func test_save_load_roundtrip_continues_identically() -> void:
 	# continue the original, and a restored copy with an rng in the same state
 	var rng_b := RandomNumberGenerator.new()
 	rng_b.seed = 5
-	var b := MarketSim.new([_company("AAA", "tech"), _company("BBB", "energy")], GbmPriceModel.new(), rng_b)
+	var b := MarketSim.new([_company("AAA", "tech"), _company("BBB", "space")], GbmPriceModel.new(), rng_b)
 	rng_b.state = a._rng.state
 	b.load_dict(data)
 	assert_eq(b.history_of("AAA").size(), 4)

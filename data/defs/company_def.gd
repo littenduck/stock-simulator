@@ -5,9 +5,9 @@ extends Resource
 
 ## Globally unique ticker, e.g. "NOVA". Used as key in saves and orders.
 @export var symbol: String = ""
-## Localization key, e.g. "COMPANY_NOVA".
+## Localization key, e.g. "COMPANY_NVDO".
 @export var display_name: String = ""
-## "tech" / "energy" / "consumer" / "finance" / "health"
+## "tech" / "space" / "consumer" / "finance" (used by sector news, Sector Fan and the UI theme colours)
 @export var sector: String = ""
 ## Pixel icon id drawn by the UI (e.g. "chip", "rocket"). Purely visual.
 @export var icon: String = ""

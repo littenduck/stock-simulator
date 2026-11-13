@@ -9,7 +9,7 @@ func _company(symbol: String, sector: String) -> CompanyDef:
 
 
 func _market(rng: RandomNumberGenerator) -> MarketSim:
-	return MarketSim.new([_company("AAA", "tech"), _company("BBB", "energy")], GbmPriceModel.new(), rng)
+	return MarketSim.new([_company("AAA", "tech"), _company("BBB", "space")], GbmPriceModel.new(), rng)
 
 
 func _event(id: String, sector: String, symbol := "", chance := 1.0, truth := 0.6) -> NewsEventDef:
@@ -70,7 +70,7 @@ func test_cooldown_and_min_day() -> void:
 
 func test_only_targets_present_in_market() -> void:
 	var pool: Array[NewsEventDef] = [
-		_event("health", "health"),
+		_event("consumer", "consumer"),
 		_event("sym", "tech", "ZZZZ"),
 		_event("ok_sym", "tech", "BBB"),
 	]
@@ -82,7 +82,7 @@ func test_only_targets_present_in_market() -> void:
 	assert_eq(out[0].target_symbol, "BBB")
 	d.roll(20, RunModifiers.new(), s[1])
 	for r in d.pending():
-		assert_true(r.event.id != "health" and r.event.id != "sym")
+		assert_true(r.event.id != "consumer" and r.event.id != "sym")
 
 
 func test_market_wide_always_eligible() -> void:
@@ -104,7 +104,7 @@ func test_max_per_day_and_fairness() -> void:
 
 
 func test_same_seed_same_rumors() -> void:
-	var pool: Array[NewsEventDef] = [_event("a", "tech", "", 0.5), _event("b", "energy", "", 0.5)]
+	var pool: Array[NewsEventDef] = [_event("a", "tech", "", 0.5), _event("b", "space", "", 0.5)]
 	var logs: Array = []
 	for i in 2:
 		var s := _setup(pool, 42)
@@ -139,9 +139,9 @@ func test_truth_bonuses() -> void:
 	var s := _setup([e] as Array[NewsEventDef])
 	assert_almost(NewsDirector.truth_probability(e, mods, s[1]), 0.5)
 	mods.rumor_truth_bonus = -0.1
-	mods.sector_truth_bonus = {"tech": 0.15, "energy": 0.15}
+	mods.sector_truth_bonus = {"tech": 0.15, "space": 0.15}
 	assert_almost(NewsDirector.truth_probability(e, mods, s[1]), 0.55)
-	var single := _event("b", "energy", "AAA", 1.0, 0.98)
+	var single := _event("b", "space", "AAA", 1.0, 0.98)
 	mods.rumor_truth_bonus = 0.0
 	assert_almost(NewsDirector.truth_probability(single, mods, s[1]), 1.0, 0.0001, "clamped, uses tech sector of AAA")
 	var d := _event("c", "all", "", 1.0, 0.5)
@@ -212,7 +212,7 @@ func test_insider_friend_guarantees_true_every_ten_days() -> void:
 
 
 func test_save_load_roundtrip() -> void:
-	var pool: Array[NewsEventDef] = [_event("a", "tech", "", 0.5), _event("b", "energy", "", 0.5)]
+	var pool: Array[NewsEventDef] = [_event("a", "tech", "", 0.5), _event("b", "space", "", 0.5)]
 	var s := _setup(pool, 21)
 	var d: NewsDirector = s[0]
 	for day in range(1, 12):
@@ -236,7 +236,7 @@ func test_save_load_roundtrip() -> void:
 func test_any_symbol_template_picks_stock_of_sector() -> void:
 	var tpl := _event("pick", "tech", NewsDirector.ANY_SYMBOL)
 	tpl.cooldown_days = 0
-	var companies: Array[CompanyDef] = [_company("AAA", "tech"), _company("BBB", "tech"), _company("CCC", "energy")]
+	var companies: Array[CompanyDef] = [_company("AAA", "tech"), _company("BBB", "tech"), _company("CCC", "space")]
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 4
 	var market := MarketSim.new(companies, GbmPriceModel.new(), rng)
@@ -250,8 +250,8 @@ func test_any_symbol_template_picks_stock_of_sector() -> void:
 		seen[r.target_symbol] = true
 	assert_eq(seen.size(), 2, "both stocks get picked")
 	# no stock of the sector in the market => never eligible
-	var only_energy := MarketSim.new([_company("CCC", "energy")] as Array[CompanyDef], GbmPriceModel.new(), rng)
-	assert_eq(NewsDirector.new([tpl] as Array[NewsEventDef], rng).roll(1, RunModifiers.new(), only_energy).size(), 0)
+	var only_space := MarketSim.new([_company("CCC", "space")] as Array[CompanyDef], GbmPriceModel.new(), rng)
+	assert_eq(NewsDirector.new([tpl] as Array[NewsEventDef], rng).roll(1, RunModifiers.new(), only_space).size(), 0)
 
 
 func test_any_symbol_survives_save_load_and_hits_only_that_stock() -> void:
