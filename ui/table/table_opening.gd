@@ -1,21 +1,18 @@
-## The opening of a new table run, in five short scenes (about 25 seconds, Space skips all of it):
-##   1 The rivals: a frame runs over the six characters like an arcade pick and lands on three of them.
-##   2 The four players, 3 seconds each: a live 3D character makes a move, then its two skills are stuck on.
-##   3 The stocks: the same pick over all 30 companies; each of the six lands in the left list.
-##   4 The chart: the first stock's last 30 days are drawn bar by bar, fast and then slower.
-##   5 The feed and the turn bar appear, and the first news comes in (the screen plays that itself afterwards).
-## Until its scene the screen is kept hidden: prepare() hides the parts, play() reveals them one by one.
+## The opening of a new table run, about 20 seconds (the rival roll before it is on the character screen, RivalRoll).
+## Space skips all of it. The bars at the top and bottom are always there; the screen is built board by board:
+##   1 The four players, 3 seconds each: a live 3D character makes a move, then its two skills are stuck on.
+##   2 The left board drops in; the arcade pick runs over the 30 companies and the six land in its list.
+##   3 The middle board (chart and trade, one board) drops in; the first stock's 30 days are drawn bar by bar.
+##   4 The right board drops in, empty; the screen then plays the first news, which is pasted onto it.
+## Until its scene the board is hidden: prepare() hides the parts, play() drops them one by one.
 class_name TableOpening
 extends Control
 
 signal finished
 
-const ROSTER := ["saving_son", "double_dan", "hodl_hana", "goldfish_gus", "copilot_cody", "insider_inu"]
 const BG := Color("#14111f")
 const GOLD := Color("#e3b341")
-const YOU_GREEN := Color("#3fb950")
 const INTRO_TIME := 3.0
-const RIVAL_TIMES := [0.9, 0.7, 0.6]
 const STOCK_TIMES := [0.7, 0.6, 0.5, 0.5, 0.45, 0.45]
 const CHART_TIME := 3.6
 
@@ -39,14 +36,17 @@ func _ready() -> void:
 	add_child(_hint)
 
 
-## Hides what the opening will reveal. `parts`: stock_list, chart_card, chart, trade, feed, turn_bar.
+## Hides what the opening will reveal. `parts`: stock_list, chart_card, chart, trade, feed, the three boards, body.
 func prepare(parts: Dictionary) -> void:
 	_parts = parts
 	TableUi.modal_open = true
-	for key in ["chart_card", "trade", "feed", "turn_bar"]:
+	for key in ["board_left", "board_center", "board_right"]:
+		(parts[key] as Control).modulate.a = 0.0
+	for key in ["chart_card", "trade"]:
 		(parts[key] as Control).modulate.a = 0.0
 	(parts["chart"] as GamePriceChart).reveal = 0.0
 	(parts["stock_list"] as GameStockList).set_rows_hidden(true)
+	(parts["feed"] as TableFeed).hide_content()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -71,18 +71,23 @@ func play() -> void:
 	if t == null:
 		_finish()
 		return
+	# The stage covers only the middle of the screen: the top and bottom bars stay in view. (Wait for the layout.)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var body: Control = _parts["body"]
 	_bg = ColorRect.new()
 	_bg.color = Color(BG.r, BG.g, BG.b, 0.97)
-	_bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_bg)
 	move_child(_bg, 0)
 	_stage = Control.new()
-	_stage.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_stage.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_stage)
 	move_child(_stage, 1)
-	await _scene_rivals(t)
+	for c: Control in [_bg, _stage]:
+		c.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		c.global_position = body.global_position
+		c.size = body.size
 	for i in t.seats.size():
 		if _skipped:
 			break
@@ -108,9 +113,10 @@ func _finish() -> void:
 		_bg.queue_free()
 	if _stage != null and is_instance_valid(_stage):
 		_stage.queue_free()
-	for key in ["chart_card", "trade", "feed", "turn_bar"]:
+	for key in ["board_left", "board_center", "board_right", "chart_card", "trade"]:
 		if _parts.has(key):
-			(_parts[key] as Control).modulate.a = 1.0
+			var c: Control = _parts[key]
+			c.modulate.a = 1.0
 	if _parts.has("chart"):
 		(_parts["chart"] as GamePriceChart).reveal = 1.0
 	if _parts.has("stock_list"):
@@ -121,7 +127,27 @@ func _finish() -> void:
 	_hint.visible = false
 	TableUi.modal_open = false
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# A board still in the air is put back by the container.
+	(_parts["body"] as Control).queue_sort()
 	finished.emit()
+
+
+## A board is thrown down from behind the top bar: it bounces once on the screen, with a thud and a jolt.
+func _drop(board: Control) -> void:
+	var rest := board.position
+	board.position = Vector2(rest.x, rest.y - board.size.y - 180.0)
+	board.modulate.a = 1.0
+	var tw := board.create_tween()
+	tw.tween_property(board, "position:y", rest.y, 0.6).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+	await get_tree().create_timer(0.22).timeout
+	TableFx.sfx(&"board_drop")
+	var scene := get_tree().current_scene as Control
+	if scene != null and not _skipped:
+		TableFx.shake(scene, 7.0, 0.3)
+	await _wait(0.4)
+	if tw.is_running():
+		tw.kill()
+	board.position = rest
 
 
 func _fade_out(c: CanvasItem, sec: float) -> void:
@@ -136,100 +162,7 @@ func _fade_in(c: CanvasItem, sec: float) -> void:
 	await tw.finished
 
 
-# ---- Scene 1: the rivals --------------------------------------------------------------------------------------
-
-func _character_card(id: String, number: int) -> PanelContainer:
-	var def := ContentDb.character_by_id(StringName(id))
-	var card := PanelContainer.new()
-	card.theme_type_variation = &"DialogPanel"
-	card.custom_minimum_size = Vector2(150, 200)
-	var box := TableUi.column(card, 4, 8)
-	var no := GameFmt.label("%02d" % number, Color("#5d5870"), 14)
-	no.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	box.add_child(no)
-	var portrait := PortraitView.make(id, 6)
-	portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	box.add_child(portrait)
-	var name_label := GameFmt.label(tr(def.title_key), Color("#2b2540"), 15)
-	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	box.add_child(name_label)
-	var tag := GameFmt.label(" ", GOLD, 15)
-	tag.name = "Tag"
-	tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	box.add_child(tag)
-	return card
-
-
-func _scene_rivals(t: TableSession) -> void:
-	var column := VBoxContainer.new()
-	column.set_anchors_preset(Control.PRESET_CENTER)
-	column.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	column.grow_vertical = Control.GROW_DIRECTION_BOTH
-	column.add_theme_constant_override("separation", 26)
-	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(column)
-	var title := GameFmt.label(tr("TABLE_INTRO_RIVALS"), GOLD, 30)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	column.add_child(title)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 12)
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(row)
-	var cards: Array = []
-	for i in ROSTER.size():
-		var card := _character_card(ROSTER[i], i + 1)
-		card.modulate.a = 0.0
-		row.add_child(card)
-		cards.append(card)
-	await get_tree().process_frame
-	await get_tree().process_frame
-	for i in cards.size():
-		if _skipped:
-			return
-		var card: Control = cards[i]
-		card.modulate.a = 1.0
-		TableFx.pop(card, 0.6, 0.0)
-		TableFx.sfx(&"reveal_tick")
-		await _wait(0.06)
-	# You are already seated.
-	var you_index: int = ROSTER.find(String(t.seats[0].character.id))
-	_mark(cards[you_index], tr("TABLE_INTRO_YOU"), YOU_GREEN, true)
-	var open: Array = []
-	for i in cards.size():
-		if i != you_index:
-			open.append(i)
-	await _wait(0.2)
-	var roller := SlotPick.make_frame(Color.WHITE, 6)
-	_stage.add_child(roller)
-	roller.visible = false
-	for n in range(1, 4):
-		if _skipped:
-			return
-		var target: int = ROSTER.find(String(t.seats[n].character.id))
-		await SlotPick.run(self, roller, cards, open, target, RIVAL_TIMES[n - 1], _is_skipped)
-		open.erase(target)
-		_mark(cards[target], tr("TABLE_INTRO_RIVAL") % n, GOLD, false)
-		TableFx.pop(cards[target], 1.18, 0.0)
-		await _wait(0.12)
-	roller.visible = false
-	for i in open:
-		(cards[i] as Control).modulate = Color(0.45, 0.45, 0.5, 1.0)
-	await _wait(0.35)
-
-
-## A solid frame and a tag under the card: who sits there.
-func _mark(card: Control, text: String, color: Color, mine: bool) -> void:
-	var tag: Label = card.find_child("Tag", true, false)
-	tag.text = text
-	GameFmt.tint(tag, color if not mine else Color("#2f9e44"))
-	var frame := SlotPick.make_frame(color, 5)
-	_stage.add_child(frame)
-	frame.global_position = card.global_position - Vector2(5, 5)
-	frame.size = card.size + Vector2(10, 10)
-
-
-# ---- Scene 2: the four players ----------------------------------------------------------------------------------
+# ---- Scene 1: the four players ----------------------------------------------------------------------------------
 
 func _scene_player(t: TableSession, index: int) -> void:
 	for child in _stage.get_children():
@@ -328,10 +261,11 @@ func _stick(c: Control) -> void:
 	TableFx.sfx(&"stamp")
 
 
-# ---- Scene 3: the stocks ------------------------------------------------------------------------------------------
+# ---- Scene 2: the stocks ------------------------------------------------------------------------------------------
 
 func _scene_stocks(t: TableSession) -> void:
 	var list: GameStockList = _parts["stock_list"]
+	await _drop(_parts["board_left"])
 	var companies: Array = ContentDb.companies()
 	var panel := PanelContainer.new()
 	panel.theme_type_variation = &"DialogPanel"
@@ -400,11 +334,13 @@ func _fly_to_list(cell: Control, company: CompanyDef, list: GameStockList, symbo
 		TableFx.sfx(&"stamp"))
 
 
-# ---- Scenes 4 and 5: chart, feed ------------------------------------------------------------------------------
+# ---- Scenes 3 and 4: chart, feed ------------------------------------------------------------------------------
 
 func _scene_chart() -> void:
 	var chart: GamePriceChart = _parts["chart"]
 	var card: Control = _parts["chart_card"]
+	await _drop(_parts["board_center"])
+	TableFx.sfx(&"board_fill")
 	await _fade_in(card, 0.25)
 	var bars: int = maxi(1, TableUi.session().market.history_of(chart.symbol).size())
 	var last := [0]
@@ -424,6 +360,6 @@ func _scene_chart() -> void:
 	await _wait(0.35)
 
 
+## The right board is thrown down empty; the screen then plays the first news and pastes it on.
 func _scene_feed() -> void:
-	_fade_in(_parts["turn_bar"], 0.3)
-	await _fade_in(_parts["feed"], 0.3)
+	await _drop(_parts["board_right"])

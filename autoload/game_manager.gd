@@ -29,8 +29,15 @@ var opening_pending: bool = false
 
 
 func start_run(config: RunConfig) -> void:
+	if prepare_run(config):
+		_enter_game()
+
+
+## Makes the session of a new run without opening the game screen: the run setup plays its rival roll first and then
+## calls enter_run(). Returns false when the config cannot start a run.
+func prepare_run(config: RunConfig) -> bool:
 	if config == null or config.character == null:
-		return
+		return false
 	if config.mode == RunConfig.Mode.TABLE:
 		session = TableSession.new(config, ContentDb.companies(), ContentDb.perks(), ContentDb.news(), _unlocked_ids())
 	else:
@@ -40,7 +47,13 @@ func start_run(config: RunConfig) -> void:
 		(session as TableSession).strict_windows = true
 	opening_pending = config.mode == RunConfig.Mode.TABLE
 	SaveManager.save_run(session)
-	_enter_game()
+	return true
+
+
+## Opens the game screen of the run made by prepare_run().
+func enter_run() -> void:
+	if session != null:
+		_enter_game()
 
 
 ## Resumes the saved run. Returns false if there is none.

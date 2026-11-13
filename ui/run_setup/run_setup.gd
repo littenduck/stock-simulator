@@ -204,7 +204,17 @@ func _on_difficulty_button_toggled(pressed: bool, level: int) -> void:
 func _on_start_button_pressed() -> void:
 	if _character == null:
 		return
-	GameManager.start_run(RunConfig.make_table(_character, 0, GameSettings.fees_enabled()))
+	_start_button.disabled = true
+	_back_button.disabled = true
+	if not GameManager.prepare_run(RunConfig.make_table(_character, 0, GameSettings.fees_enabled())):
+		_start_button.disabled = false
+		_back_button.disabled = false
+		return
+	# The rivals are rolled here, in front of the character screen, and only then does the game open.
+	var table := GameManager.session as TableSession
+	if table != null and GameSettings.opening_enabled():
+		await RivalRoll.play(self, table)
+	GameManager.enter_run()
 
 
 func _on_back_button_pressed() -> void:

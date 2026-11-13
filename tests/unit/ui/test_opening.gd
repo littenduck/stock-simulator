@@ -21,7 +21,7 @@ func test_every_table_character_has_a_3d_model_with_its_intro_move() -> void:
 
 func test_the_roster_order_matches_the_character_picker() -> void:
 	var ids := {}
-	for id in TableOpening.ROSTER:
+	for id in RivalRoll.ROSTER:
 		ids[id] = true
 		assert_true(ContentDb.character_by_id(StringName(id)) != null, "%s exists" % id)
 	for c in ContentDb.characters():

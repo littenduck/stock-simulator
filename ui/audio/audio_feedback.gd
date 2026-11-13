@@ -6,6 +6,7 @@
 extends Node
 
 const IFACE := "res://audio/kenney_interface-sounds/Audio/"
+const IMPACT := "res://audio/kenney_impact-sounds/Audio/"
 ## Event -> file. All effects come from Kenney "Interface Sounds" so the style stays consistent.
 ## The other Kenney packs in audio/ are bundled unused for now (see CREDITS.md).
 const SFX: Dictionary = {
@@ -27,6 +28,8 @@ const SFX: Dictionary = {
 	&"slot_tick": IFACE + "tick_001.ogg",
 	&"slot_land": IFACE + "confirmation_002.ogg",
 	&"chart_tick": IFACE + "tick_002.ogg",
+	&"board_drop": IMPACT + "impactPlank_medium_000.ogg",
+	&"board_fill": IFACE + "scroll_001.ogg",
 }
 const POLYPHONY := 4
 

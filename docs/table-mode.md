@@ -70,17 +70,23 @@ by other characters, real-money odds mode (odds scaled by the actual price move)
 
 ## The opening of a new run
 
-A new run does not show everything at once. It opens with five short scenes, about 25 seconds in all; Space skips the
-whole thing, and the "Opening animation" switch in Settings turns it off (on by default). Continued runs skip it.
+A new run does not show everything at once; Space skips it, and the "Opening animation" switch in Settings turns it
+off (on by default). Continued runs skip it.
 
-1. **The rivals.** A frame runs over the six characters like an arcade pick, fast and then slower, and lands on the three
-   rivals one after another. You are already seated.
-2. **The four players, 3 seconds each.** A live 3D character (Kenney Mini Characters, `ui/theme/models/`) makes its
+0. **The rivals, on the character screen.** After you press Start, a frame runs over the six characters like an arcade
+   pick, fast and then slower, and lands on the three rivals one after another. Only then does the game open
+   (`ui/table/rival_roll.gd`; the session is made first with `GameManager.prepare_run`, the screen opens with `enter_run`).
+
+The top bar, the standings and the turn bar are always on screen. The three boards in between are thrown down one by
+one, each with a thud, and then filled in:
+
+1. **The four players, 3 seconds each.** A live 3D character (Kenney Mini Characters, `ui/theme/models/`) makes its
    move, then its passive and active skills are stuck on.
-3. **The stocks.** The same pick over all 30 companies; each of the six lands in the left list.
-4. **The chart.** The first stock's 30 days are drawn bar by bar, fast and then slower.
-5. **The feed.** The feed and the turn bar appear and the first news comes in: its frame takes the colour of the
-   claim (green for a rise, red for a fall, purple for the Boss), with the company icon and a typewriter headline.
+2. **The left board** drops in; the same arcade pick runs over all 30 companies and the six land in its list.
+3. **The middle board** (chart and trade are one board) drops in; the first stock's 30 days are drawn bar by bar.
+4. **The right board** drops in empty; the first news comes in and is pasted onto it.
+
+Every skill animation waits for Space (or a click) before the next one plays, so the text can be read.
 
 Code: `ui/table/table_opening.gd` (the director), `slot_pick.gd` (the arcade pick), `character_model.gd` (3D models).
 

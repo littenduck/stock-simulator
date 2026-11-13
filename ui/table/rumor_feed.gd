@@ -7,6 +7,8 @@ const SHOWN := 30
 const CARD_BG := Color("#e9e1cb")
 
 var _list: VBoxContainer
+## True while the board is only a frame (the opening): the first rumor is pasted on with reveal_content().
+var content_hidden: bool = false
 
 
 func _ready() -> void:
@@ -46,6 +48,29 @@ func _refresh() -> void:
 			break
 	if t.history.is_empty() and t.today_rumor == null:
 		_list.add_child(TableUi.wrapped(tr("TABLE_LOG_EMPTY"), GameColors.MUTED, 13))
+
+
+## The board arrives empty; the contents are hidden until reveal_content().
+func hide_content() -> void:
+	content_hidden = true
+	if get_child_count() > 0:
+		(get_child(0) as CanvasItem).modulate.a = 0.0
+
+
+## The first rumor is pasted onto the board: its card slaps down and the title appears.
+func reveal_content() -> void:
+	if not content_hidden:
+		return
+	content_hidden = false
+	if get_child_count() > 0:
+		(get_child(0) as CanvasItem).modulate.a = 1.0
+	if _list != null and _list.get_child_count() > 0:
+		var entry := _list.get_child(0) as Control
+		entry.pivot_offset = entry.size * 0.5
+		entry.scale = Vector2(1.35, 1.35)
+		var tw := entry.create_tween()
+		tw.tween_property(entry, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	TableFx.sfx(&"stamp")
 
 
 ## A feed card with a coloured edge; returns the column inside it.

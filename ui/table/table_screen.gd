@@ -29,6 +29,9 @@ func _init() -> void:
 
 func _ready() -> void:
 	UiFx.install(get_tree())
+	# The top and bottom bars stay in front of the boards: the boards of the opening drop in from behind them.
+	for bar: Control in [%TopBar, %StandingsBar, %TurnBar]:
+		bar.z_index = 2
 	PanelFx.decorate_tree($Layout)
 	_stock_list.stock_selected.connect(select_symbol)
 	_top_bar.menu_requested.connect(_menu.toggle)
@@ -76,7 +79,8 @@ func _play_opening() -> void:
 	var opening := TableOpening.new()
 	add_child(opening)
 	opening.prepare({"stock_list": _stock_list, "chart_card": _chart_card, "chart": _chart, "trade": _trade,
-			"feed": _feed, "turn_bar": %TurnBar})
+			"feed": _feed, "board_left": _stock_list, "board_center": %CenterBoard, "board_right": _feed,
+			"body": $Layout/Rows/Body})
 	opening.play()
 	await opening.finished
 	opening.queue_free()
@@ -202,6 +206,7 @@ func _play_news(boss: bool) -> void:
 	TableFx.sfx(&"reveal_tick")
 	TableFx.flash(self, Color("#e3b341"), 0.12, 0.4)
 	EventBus.table_changed.emit()
+	(_feed as TableFeed).reveal_content()    # the first rumor is pasted onto the empty board
 
 
 func _unhandled_input(event: InputEvent) -> void:

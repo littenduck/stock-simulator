@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=20 format=3]
 
 [ext_resource type="Script" path="res://ui/table/table_screen.gd" id="1"]
 [ext_resource type="PackedScene" path="res://ui/audio/music_player.tscn" id="music"]
@@ -15,6 +15,8 @@
 [ext_resource type="Script" path="res://ui/table/table_overlay.gd" id="15"]
 [ext_resource type="Script" path="res://ui/table/turn_bar.gd" id="17"]
 [ext_resource type="Script" path="res://ui/table/rumor_feed.gd" id="18"]
+
+[sub_resource type="StyleBoxEmpty" id="empty"]
 
 [node name="TableScreen" type="Control"]
 script = ExtResource("1")
@@ -66,25 +68,30 @@ layout_mode = 2
 custom_minimum_size = Vector2(266, 0)
 row_height = 50
 
-[node name="Center" type="VBoxContainer" parent="Layout/Rows/Body"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 6
-
-[node name="ChartCard" type="PanelContainer" parent="Layout/Rows/Body/Center"]
+[node name="CenterBoard" type="PanelContainer" parent="Layout/Rows/Body"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Center" type="VBoxContainer" parent="Layout/Rows/Body/CenterBoard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ChartCard" type="PanelContainer" parent="Layout/Rows/Body/CenterBoard/Center"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("empty")
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.0
 
-[node name="PriceChart" type="VBoxContainer" parent="Layout/Rows/Body/Center/ChartCard"]
+[node name="PriceChart" type="VBoxContainer" parent="Layout/Rows/Body/CenterBoard/Center/ChartCard"]
 unique_name_in_owner = true
 script = ExtResource("5")
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.0
 
-[node name="BlindNote" type="Label" parent="Layout/Rows/Body/Center"]
+[node name="BlindNote" type="Label" parent="Layout/Rows/Body/CenterBoard/Center"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -93,10 +100,11 @@ size_flags_stretch_ratio = 3.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TradePanel" type="PanelContainer" parent="Layout/Rows/Body/Center"]
+[node name="TradePanel" type="PanelContainer" parent="Layout/Rows/Body/CenterBoard/Center"]
 unique_name_in_owner = true
 script = ExtResource("8")
 layout_mode = 2
+theme_override_styles/panel = SubResource("empty")
 
 [node name="Right" type="VBoxContainer" parent="Layout/Rows/Body"]
 layout_mode = 2

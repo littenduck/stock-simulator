@@ -21,6 +21,7 @@ var t: float = 0.0:
 		queue_redraw()
 var _skipped: bool = false
 var _done: bool = false
+var _age: float = 0.0
 
 
 ## Plays every event that may be seen (public ones, and your own hidden ones), one after another.
@@ -114,12 +115,21 @@ func run(event: Dictionary, session: TableSession) -> void:
 	TableFx.sfx(&"stamp")
 	if skill == TableSkills.DOUBLE_DOWN:
 		_slam_double(card)
-	var life := create_tween()
+	# The animation keeps looping until you press Space (or click): nothing moves on by itself, so the text can be read.
+	var life := create_tween().set_loops()
 	life.tween_property(self, "t", 1.0, duration)
+	life.tween_callback(func() -> void: t = 0.0)
+	var hint := GameFmt.label(tr("TABLE_SKILL_CONTINUE"), Color(1, 1, 1, 0.9), 15)
+	hint.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM, Control.PRESET_MODE_MINSIZE, 70)
+	hint.modulate.a = 0.0
+	add_child(hint)
 	var waited := 0.0
-	while waited < duration and not _skipped:
+	while not _skipped:
 		await get_tree().process_frame
 		waited += get_process_delta_time()
+		_age = waited
+		if waited > 0.7:
+			hint.modulate.a = 0.55 + 0.45 * absf(sin(waited * 4.0))
 	life.kill()
 	var out := create_tween().set_parallel(true)
 	out.tween_property(card, "modulate:a", 0.0, 0.2)
@@ -131,7 +141,11 @@ func run(event: Dictionary, session: TableSession) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _done and (event.is_action_pressed("next_day") or event.is_action_pressed("ui_accept")):
+	if _done:
+		return
+	var pressed: bool = event.is_action_pressed("next_day") or event.is_action_pressed("ui_accept") \
+			or (event is InputEventMouseButton and event.pressed)
+	if pressed and _age > 0.7:    # not at once: a key still held from the last step must not skip it
 		_skipped = true
 		get_viewport().set_input_as_handled()
 
