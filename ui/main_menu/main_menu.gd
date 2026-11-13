@@ -37,7 +37,8 @@ func _add_version_label() -> void:
 		return
 	var label := Label.new()
 	label.name = "VersionLabel"
-	label.text = "v%s Prototype" % version
+	var commit := _commit_id()
+	label.text = "v%s  ·  %s  ·  Prototype" % [version, commit] if commit != "" else "v%s  ·  Prototype" % version
 	label.add_theme_font_size_override("font_size", 12)
 	label.add_theme_color_override("font_color", Color(1, 1, 1, 0.55))
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -45,6 +46,17 @@ func _add_version_label() -> void:
 	label.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	label.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	add_child(label)
+
+
+## Short commit id: asked from git when the game runs from the project folder, otherwise read from
+## res://build_info.txt (one line, written by whoever exports a build). Empty when neither is available.
+func _commit_id() -> String:
+	var out: Array = []
+	if not OS.has_feature("template") and OS.execute("git", ["-C", ProjectSettings.globalize_path("res://"), "rev-parse", "--short", "HEAD"], out) == 0 and not out.is_empty():
+		return String(out[0]).strip_edges()
+	if FileAccess.file_exists("res://build_info.txt"):
+		return FileAccess.get_file_as_string("res://build_info.txt").strip_edges()
+	return ""
 
 
 ## Title bounces in, then the buttons rise one after another.
