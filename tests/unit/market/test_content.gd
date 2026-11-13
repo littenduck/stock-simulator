@@ -93,6 +93,9 @@ func test_news_csv_keys_match_events() -> void:
 	for e in ContentDb.news():
 		assert_true(keys.has(e.headline_key), "csv lacks " + e.headline_key)
 		used[e.headline_key] = true
+	for k in GenericRumors.UP + GenericRumors.DOWN:
+		assert_true(keys.has(k), "csv lacks generic " + k)
+		used[k] = true    # table-mode jokes that fit any stock
 	for k in keys:
 		assert_true(used.has(k), "orphan csv key " + k)
 

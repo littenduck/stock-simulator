@@ -21,6 +21,9 @@ var score_mult := 1.0                ## Compounder = 1.1
 var limit_price_improvement := 0.0   ## Market Maker = 0.01
 var can_short := true                ## Value Investor = false
 var volatility_mult := 1.0           ## difficulty 4 = 1.2; MarketSim multiplies every company's volatility by it
+var bet_odds_bonus := 0.0            ## Goldfish Gus = +1: added to the odds of a winning rumor option
+var sector_odds_bonus := 0.0         ## Hodl Hana = +0.5: odds bonus when the rumor is about her locked stock's sector
+var locked_symbol := ""              ## runtime: a stock this seat may never sell (Hodl Hana)
 var iron_hands_used := false         ## runtime state, saved by the session
 
 var _flags: Dictionary = {}          ## StringName -> true

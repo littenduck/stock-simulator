@@ -20,6 +20,12 @@ func next_ohlc(current: float, company: CompanyDef, extra_drift: float, rng: Ran
 	return synth_candle(current, close, company.annual_volatility)
 
 
+## Real return between two run days (absolute steps) when the model knows the future (historical replay).
+## NAN = unknown (random models). Used to make daily rumors line up with what really happens.
+func peek_return(_company: CompanyDef, _from_step: int, _to_step: int) -> float:
+	return NAN
+
+
 ## Builds a plausible candle around prev_close -> close. Wick sizes derive from a hash of the two prices, so the
 ## result is deterministic without touching any rng. `annual_vol` scales the wicks.
 static func synth_candle(prev_close: float, close: float, annual_vol: float) -> PackedFloat32Array:

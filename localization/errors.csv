@@ -5,3 +5,4 @@ TRADE_ERR_NOT_ENOUGH_CASH,Not enough cash
 TRADE_ERR_SHORT_DISABLED,Short selling is disabled for this character
 TRADE_ERR_OVER_LEVERAGE,Exceeds your maximum leverage
 TRADE_ERR_NOT_IMPLEMENTED,Not implemented yet
+TRADE_ERR_LOCKED,This stock is locked: you believe in it too much to sell

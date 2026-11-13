@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CharacterDef" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://data/defs/character_def.gd" id="1"]
+[ext_resource type="Script" path="res://data/defs/perk_effect_def.gd" id="2"]
+
+[sub_resource type="Resource" id="Resource_0"]
+script = ExtResource("2")
+stat = &"bet_odds_bonus"
+op = 0
+value = 1.0
+
+[resource]
+script = ExtResource("1")
+id = &"goldfish_gus"
+title_key = "CHAR_GOLDFISH_GUS_TITLE"
+description_key = "CHAR_GOLDFISH_GUS_DESC"
+start_cash = 10000.0
+effects = Array[ExtResource("2")]([SubResource("Resource_0")])
+flags = Array[StringName]([&"goldfish"])
+unlock_id = &""
+table_role = true
+difficulty_tag = "easy"

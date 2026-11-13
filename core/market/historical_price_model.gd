@@ -22,6 +22,16 @@ func has_data(company: CompanyDef) -> bool:
 	return history != null and company.history_key != "" and history.has_key(company.history_key)
 
 
+func peek_return(company: CompanyDef, from_step: int, to_step: int) -> float:
+	if not has_data(company):
+		return NAN
+	var r0 := window_start + from_step
+	var r1 := window_start + to_step
+	if r0 < 0 or r1 >= history.row_count() or r1 <= r0:
+		return NAN
+	return history.close_at(company.history_key, r1) / history.close_at(company.history_key, r0) - 1.0
+
+
 ## Plain close-only API (used by generic callers); honors news, no volatility scaling info.
 func next_price(current: float, company: CompanyDef, extra_drift: float, rng: RandomNumberGenerator) -> float:
 	return _fallback.next_price(current, company, extra_drift, rng)

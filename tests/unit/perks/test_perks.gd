@@ -18,7 +18,11 @@ func _build(perk_id: StringName = &"", character_id: StringName = &"rookie", dif
 
 func test_all_perks_and_characters_load_with_localization() -> void:
 	assert_eq(ContentDb.perks().size(), 15, "perk count")
-	assert_eq(ContentDb.characters().size(), 3, "character count")
+	var classic := 0
+	for c in ContentDb.characters():
+		classic += 0 if c.table_role else 1
+	assert_eq(classic, 3, "classic character count")
+	assert_eq(ContentDb.characters().size(), 9, "3 classic + 6 table characters")
 	for id in PERK_IDS:
 		var p := ContentDb.perk_by_id(id)
 		assert_not_null(p, "perk %s" % id)
