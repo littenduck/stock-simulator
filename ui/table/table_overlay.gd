@@ -3,6 +3,8 @@
 class_name TableOverlay
 extends Control
 
+signal result_closed
+
 enum Mode { NONE, REVEAL, RESULT }
 
 const ROW_STEP := 0.24
@@ -47,8 +49,11 @@ func _input(event: InputEvent) -> void:
 
 
 func _close() -> void:
+	var was_result := _mode == Mode.RESULT
 	_mode = Mode.NONE
 	hide()
+	if was_result:
+		result_closed.emit()
 
 
 # ---------------------------------------------------------------- reveal

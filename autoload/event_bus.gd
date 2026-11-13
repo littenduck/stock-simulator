@@ -32,3 +32,5 @@ signal table_resolved(report: TableReport)
 signal table_changed
 ## Any widget may ask for a sound effect by name (AudioFeedback.SFX).
 signal sfx_requested(sfx: StringName)
+## Table mode. Open the rumor card (false = today's rumor, true = the Boss rumor).
+signal rumor_card_requested(boss: bool)

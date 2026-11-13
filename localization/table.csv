@@ -86,3 +86,21 @@ TABLE_LOG_EMPTY,Nothing has resolved yet. Every verdict lands here.
 TABLE_LOG_DAY,Day %d
 TABLE_KEYS_SHORT,[Q] [W] [E]
 TABLE_SETUP_RIVALS,Your three rivals are drawn at random
+TABLE_FEED_TITLE,RUMOR FEED
+TABLE_FEED_TODAY,TODAY · Day %d
+TABLE_FEED_RESOLVES,resolves tomorrow
+TABLE_FEED_CALL,Your call: %s
+TABLE_FEED_NO_CALL,No call yet
+TABLE_FEED_CHANGE,Change
+TABLE_FEED_CHOOSE,Choose
+TABLE_FEED_OPEN,Open card
+TABLE_CARD_TODAY,TODAY'S RUMOR · Day %d
+TABLE_CARD_CHANCE,%d%% chance it is true
+TABLE_CARD_COPY,Or copy a rival's bet
+TABLE_CARD_HINT,[Q] BELIEVE   [W] BULLSHIT   [E] PASS   [Esc] decide later
+TABLE_CARD_AFFECTS,Affects: %s
+TABLE_CARD_CLAIM_UP,claims a rise
+TABLE_CARD_CLAIM_DOWN,claims a fall
+TABLE_HOLDING,"You hold %d shares, average cost %s"
+TABLE_HOLDING_NONE,You hold none of this stock
+UI_GAME_HELD_AVG,"%d shares, average price %s"

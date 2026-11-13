@@ -19,7 +19,8 @@ var _swap_button: Button
 
 func _ready() -> void:
 	var box := TableUi.column(self, 4, 6)
-	_title = GameFmt.label("", Color.WHITE, 15)    # kept for the refresh code, not shown
+	_title = GameFmt.label("", Color.WHITE, 16)
+	box.add_child(_title)
 	var buy_row := _row(box, "TABLE_BUY")
 	for pair in [["TABLE_Q1", 0.25], ["TABLE_Q2", 0.5], ["TABLE_Q3", 0.75], ["TABLE_ALL_IN", 1.0]]:
 		var b := GameFmt.button(tr(pair[0]))
@@ -67,7 +68,11 @@ func _refresh() -> void:
 	var t := TableUi.session()
 	if t == null or _title == null or symbol == "" or not t.market.has_symbol(symbol):
 		return
-	_title.text = "%s  %s" % [symbol, GameFmt.price(t.market.price_of(symbol))]
+	var seat_now := t.human()
+	var shares_now := seat_now.portfolio.shares_of(symbol)
+	var avg_now: float = float(seat_now.portfolio.positions.get(symbol, {}).get("avg_cost", 0.0))
+	_title.text = "%s  %s    %s" % [symbol, GameFmt.price(t.market.price_of(symbol)),
+			(tr("TABLE_HOLDING") % [shares_now, GameFmt.price(avg_now)]) if shares_now != 0 else tr("TABLE_HOLDING_NONE")]
 	var seat := t.human()
 	var open := t.phase == TableSession.Phase.ACTION and seat.alive and not t.is_finished()
 	var price := t.market.price_of(symbol)

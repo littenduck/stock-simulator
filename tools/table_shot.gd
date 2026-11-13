@@ -54,11 +54,17 @@ func _run(char_id: StringName, seed_value: int) -> void:
 	await _shot("1_setup")
 	gm.start_run(RunConfig.make_table(ContentDb.character_by_id(char_id), seed_value))
 	await _wait(40)
-	await _shot("2_action")
+	await create_timer(1.2).timeout
+	await _shot("2a_card")
 	var t := gm.session as TableSession
-	t.set_call(RumorTier.Side.BELIEVE)
+	# Not typed: UI scripts that use autoloads cannot be compiled while this tool script loads.
+	var card: Node = current_scene.get_node("%RumorCard")
+	t.set_call(RumorTier.Side.BELIEVE)     # what a click on BELIEVE does
+	card.call("close")
+	await create_timer(0.5).timeout
 	t.buy_fraction(0, t.market.symbols()[1], 0.25)
 	gm.table_refresh()
+	await _shot("2_action")
 	gm.next_day()
 	await create_timer(0.55).timeout
 	await _shot("3a_reveal_mid")
