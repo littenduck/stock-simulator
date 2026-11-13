@@ -60,7 +60,7 @@ static func introduce(model: Node3D, character_id: String) -> void:
 
 
 ## A transparent viewport that shows the model, lit and framed head to toe. Add it to a SubViewportContainer.
-static func make_viewport(model: Node3D, px: Vector2i) -> SubViewport:
+static func make_viewport(model: Node3D, px: Vector2i, view_height: float = 1.25, center_y: float = 0.46) -> SubViewport:
 	var vp := SubViewport.new()
 	vp.size = px
 	vp.transparent_bg = true
@@ -70,9 +70,9 @@ static func make_viewport(model: Node3D, px: Vector2i) -> SubViewport:
 	vp.add_child(model)
 	var cam := Camera3D.new()
 	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
-	cam.size = 1.25
+	cam.size = view_height
 	vp.add_child(cam)
-	cam.look_at_from_position(Vector3(0, 0.46, 3), Vector3(0, 0.46, 0))
+	cam.look_at_from_position(Vector3(0, center_y, 3), Vector3(0, center_y, 0))
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-30, 20, 0)
 	vp.add_child(light)

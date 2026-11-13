@@ -15,7 +15,9 @@ const MOVES := {
 	"insider_inu": ["pick-up", "emote-no"],
 }
 const MIN_HEIGHT := 56.0
-const ASPECT := 0.8    # width / height of one character's cell
+const ASPECT := 0.8
+## Distance between two neighbours as a share of a cell's width (below 1: they overlap and stand closer).
+const PITCH := 0.7    # width / height of one character's cell
 
 var _cells: Array[Control] = []
 
@@ -31,7 +33,7 @@ func _ready() -> void:
 		var model := CharacterModel.make(id)
 		if model == null:
 			continue
-		var vp := CharacterModel.make_viewport(model, Vector2i(200, 250))
+		var vp := CharacterModel.make_viewport(model, Vector2i(200, 250), 1.0, 0.42)    # framed tighter: a bigger figure in the same cell
 		vp.name = "View"
 		cell.add_child(vp)
 		var tex := TextureRect.new()
@@ -50,17 +52,19 @@ func _ready() -> void:
 ## Lays the row out under `panel` (the menu panel): the same width, from its bottom edge to the bottom of the window.
 func fit_under(panel: Control) -> void:
 	var rect := panel.get_global_rect()
-	var available := size_of_window().y - rect.end.y - 10.0
+	var available := size_of_window().y - rect.end.y - 6.0
 	visible = available >= MIN_HEIGHT
 	if not visible:
 		return
 	var cell_h := minf(available, rect.size.x / float(IDS.size()) / ASPECT)
 	var cell_w := cell_h * ASPECT
-	var row_w := cell_w * IDS.size()
+	# The figures only fill part of their cell, so the cells overlap a little: the six stand close together.
+	var pitch := cell_w * PITCH
+	var row_w := pitch * (IDS.size() - 1) + cell_w
 	var x0 := rect.position.x + (rect.size.x - row_w) * 0.5
-	var y0 := size_of_window().y - cell_h - 6.0
+	var y0 := size_of_window().y - cell_h - 3.0
 	for i in _cells.size():
-		_cells[i].position = Vector2(x0 + cell_w * i, y0)
+		_cells[i].position = Vector2(x0 + pitch * i, y0)
 		_cells[i].size = Vector2(cell_w, cell_h)
 
 
