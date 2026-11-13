@@ -80,9 +80,6 @@ func _animate_in() -> void:
 	var column: Control = $Center/Panel/Column
 	await get_tree().process_frame
 	UiFx.bounce_in($Center/Panel/Column/TitleLabel as Control, 0.05)
-	var tagline: Control = $Center/Panel/Column/TaglineLabel
-	tagline.modulate.a = 0.0
-	tagline.create_tween().tween_property(tagline, "modulate:a", 1.0, 0.4).set_delay(0.35)
 	var i: int = 0
 	for child in column.get_children():
 		if child is Button and child.visible:
