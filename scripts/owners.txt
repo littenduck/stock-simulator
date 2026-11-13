@@ -6,4 +6,4 @@ meta-progression|core/perks/perk_drafter.gd core/perks/modifiers_builder.gd core
 ui-gameplay|ui/game_screen/ localization/ui_game.
 ui-flow|ui/main_menu/ ui/run_setup/ ui/perk_draft/ ui/high_scores/ ui/game_over/ ui/theme/ localization/ui_flow.
 session-integration|core/game_session.gd core/day_report.gd core/content_db.gd autoload/game_manager.gd autoload/save_manager.gd tests/unit/session/
-release-qa|tools/ tests/integration/ .github/ export_presets.cfg audio/ ui/audio/ CREDITS.md LICENSE docs/release/
+release-qa|tools/ tests/integration/ .github/ export_presets.cfg audio/ ui/audio/ CREDITS.txt LICENSE.txt docs/release/

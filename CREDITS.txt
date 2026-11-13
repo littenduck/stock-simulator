@@ -1,13 +1,16 @@
-# Credits
+# Credits and licence scope
 
-## Code
-Stock Simulator is released under the MIT licence (see `LICENSE`). The licence holder line is a
-proposal: the lead confirms the name/year before the first public release.
+Everything original to this project (source code, art, icons, music, writing such as headlines and names, and the
+game design) is licensed under the PolyForm Noncommercial License 1.0.0, see `LICENSE.txt`. You may read, learn from,
+modify, archive and share it, and make fan works, for noncommercial purposes if you keep the Required Notice.
+You may not sell it or use it commercially; only the copyright holder may. This is not an open source licence.
 
-Built with [Godot Engine](https://godotengine.org) 4.7 (MIT licence, (c) Godot Engine contributors).
+Third-party material listed below is not covered by `LICENSE.txt` and keeps its original licence.
+
+Built with [Godot Engine](https://godotengine.org) 4.7 (MIT licence, (c) Godot Engine contributors). Distributed builds must include the Godot licence notice.
 
 ## Market data (`data/market/history.csv`)
-Daily open/high/low/close prices for 24 stocks (2022-2026), downloaded from Yahoo Finance with
+Daily open/high/low/close prices for 30 stocks (2022-2026), downloaded from Yahoo Finance with
 `tools/fetch_history.py`. Fetched for personal, non-commercial prototyping. **The values in the CSV are modified: every price was multiplied by 0.1 (scaled down to one tenth) by `tools/fetch_history.py`, so they are processed data derived from Yahoo Finance, not the original quotes. Daily percentage moves are unchanged.** Scaling does not change where the data comes from, so the licensing caveat below still applies. Yahoo's terms may restrict
 redistribution: check them (or switch to a licensed data source) before a public or commercial release.
 

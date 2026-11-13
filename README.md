@@ -3,6 +3,7 @@
 A turn-based stock Roguelike (60 trading days, 6 of 30 real-world-flavored companies in 4 sectors (tech, space, consumer, finance), a perk every 10 days,
 rumors that come true or not). Web build first; Steam later.
 
+- Licence: source-available, noncommercial use only (PolyForm Noncommercial 1.0.0), see [LICENSE.txt](LICENSE.txt) and [CREDITS.txt](CREDITS.txt)
 - Version: v0.1
 - Engine: Godot 4.7 (GDScript, Compatibility renderer)
 - Game design: [docs/game-design.md](docs/game-design.md)
@@ -17,7 +18,7 @@ Companies are real stocks with joke names (Nvideo, Macro Hard, Pineapple, Foogl,
 fictional rumors layered on top of the real price path.
 
 Refresh the data (needs network) with `python3 tools/fetch_history.py`; it rewrites `data/market/history.csv`. Note: the stored prices are modified, scaled to 1/10 of the real quotes (percentage moves are unchanged), so they are processed data, not original Yahoo values.
-The export preset ships the CSV (`include_filter="data/market/*.csv"`). See [CREDITS.md](CREDITS.md) for the data source.
+The export preset ships the CSV (`include_filter="data/market/*.csv"`). See [CREDITS.txt](CREDITS.txt) for the data source.
 
 ## Run
 
