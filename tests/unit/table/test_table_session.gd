@@ -355,3 +355,24 @@ func test_rumor_log_survives_saving() -> void:
 	var t := TableSession.from_dict(data, GameSession.config_from_dict(data), ContentDb.companies(), ContentDb.perks(), ContentDb.news()) as TableSession
 	assert_eq(t.history.size(), 3)
 	assert_almost(float(t.history[2]["net"]), float(s.history[2]["net"]), 0.01)
+
+
+func test_button_previews_match_what_the_trade_really_does() -> void:
+	var s := _session()
+	var sym := s.market.symbols()[0]
+	for fraction in [0.25, 0.5, 0.75, 1.0]:
+		var preview := s.buy_preview(0, sym, fraction)
+		var cash_before := s.portfolio.cash
+		var held_before := s.portfolio.shares_of(sym)
+		var res := s.buy_fraction(0, sym, fraction)
+		assert_true(res.ok)
+		assert_eq(s.portfolio.shares_of(sym) - held_before, int(preview["shares"]), "shares for %s of the cash" % fraction)
+		assert_almost(cash_before - s.portfolio.cash, float(preview["cost"]), 0.01, "cost for %s of the cash" % fraction)
+		s.sell_fraction(0, sym, 1.0)
+		s.portfolio.cash = 10000.0
+	s.buy_fraction(0, sym, 0.5)
+	var half := s.sell_preview(0, sym, 0.5)
+	var cash_now := s.portfolio.cash
+	s.sell_fraction(0, sym, 0.5)
+	assert_almost(s.portfolio.cash - cash_now, float(half["proceeds"]), 0.01, "proceeds of selling half")
+	assert_eq(int(s.sell_preview(0, "NOPE_" + sym, 1.0)["shares"]), 0, "nothing to sell")

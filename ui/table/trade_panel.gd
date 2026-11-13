@@ -1,7 +1,10 @@
-## Five simple trade buttons for the selected stock: buy 1/4, 1/2, 3/4 or all of your cash, sell half or everything,
-## and swap one stock for another. Share counts are worked out by TableSession; the old order forms stay in the core.
+## The trade window under the chart. Two rows of big buttons, with the money on every one:
+## Buy 1/4, 1/2, 3/4 or all of your cash (the button says what it will cost), Sell half or everything (what you get).
 class_name TradePanel
 extends PanelContainer
+
+const BUY_STEPS := [["TABLE_Q1", 0.25], ["TABLE_Q2", 0.5], ["TABLE_Q3", 0.75], ["TABLE_ALL_IN", 1.0]]
+const SELL_STEPS := [["TABLE_SELL_HALF", 0.5], ["TABLE_SELL_ALL", 1.0]]
 
 var symbol: String = "":
 	set(value):
@@ -11,40 +14,26 @@ var symbol: String = "":
 var _title: Label
 var _status: Label
 var _buy_buttons: Array[Button] = []
-var _sell_half: Button
-var _sell_all: Button
-var _swap_target: OptionButton
-var _swap_button: Button
+var _sell_buttons: Array[Button] = []
 
 
 func _ready() -> void:
-	var box := TableUi.column(self, 4, 6)
-	_title = GameFmt.label("", Color.WHITE, 16)
+	var box := TableUi.column(self, 8, 10)
+	_title = GameFmt.label("", Color.WHITE, 17)
 	box.add_child(_title)
 	var buy_row := _row(box, "TABLE_BUY")
-	for pair in [["TABLE_Q1", 0.25], ["TABLE_Q2", 0.5], ["TABLE_Q3", 0.75], ["TABLE_ALL_IN", 1.0]]:
-		var b := GameFmt.button(tr(pair[0]))
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.pressed.connect(_buy.bind(float(pair[1])))
+	for step in BUY_STEPS:
+		var b := _big_button(tr(step[0]))
+		b.pressed.connect(_buy.bind(float(step[1])))
 		buy_row.add_child(b)
 		_buy_buttons.append(b)
 	var sell_row := _row(box, "TABLE_SELL")
-	_sell_half = GameFmt.button(tr("TABLE_SELL_HALF"))
-	_sell_half.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_sell_half.pressed.connect(_sell.bind(0.5))
-	_sell_all = GameFmt.button(tr("TABLE_SELL_ALL"))
-	_sell_all.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_sell_all.pressed.connect(_sell.bind(1.0))
-	sell_row.add_child(_sell_half)
-	sell_row.add_child(_sell_all)
-	_swap_target = OptionButton.new()
-	_swap_target.focus_mode = Control.FOCUS_NONE
-	_swap_target.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	sell_row.add_child(_swap_target)
-	_swap_button = GameFmt.button(tr("TABLE_SWAP_BTN"))
-	_swap_button.pressed.connect(_swap)
-	sell_row.add_child(_swap_button)
-	_status = TableUi.wrapped("", GameColors.MUTED, 12)
+	for step in SELL_STEPS:
+		var b := _big_button(tr(step[0]))
+		b.pressed.connect(_sell.bind(float(step[1])))
+		sell_row.add_child(b)
+		_sell_buttons.append(b)
+	_status = TableUi.wrapped("", GameColors.MUTED, 13)
 	_status.visible = false
 	box.add_child(_status)
 	EventBus.portfolio_changed.connect(_refresh)
@@ -53,12 +42,20 @@ func _ready() -> void:
 	_refresh()
 
 
+func _big_button(text: String) -> Button:
+	var b := GameFmt.button(text)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.custom_minimum_size = Vector2(0, 66)
+	b.add_theme_font_size_override("font_size", 14)
+	return b
+
+
 ## A line with a short caption on the left; the buttons are added to the returned row.
 func _row(parent: VBoxContainer, caption_key: String) -> HBoxContainer:
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 5)
-	var caption := GameFmt.label(tr(caption_key), GameColors.MUTED, 12)
-	caption.custom_minimum_size = Vector2(34, 0)
+	row.add_theme_constant_override("separation", 8)
+	var caption := GameFmt.label(tr(caption_key), GameColors.MUTED, 14)
+	caption.custom_minimum_size = Vector2(40, 0)
 	row.add_child(caption)
 	parent.add_child(row)
 	return row
@@ -68,52 +65,33 @@ func _refresh() -> void:
 	var t := TableUi.session()
 	if t == null or _title == null or symbol == "" or not t.market.has_symbol(symbol):
 		return
-	var seat_now := t.human()
-	var shares_now := seat_now.portfolio.shares_of(symbol)
-	var avg_now: float = float(seat_now.portfolio.positions.get(symbol, {}).get("avg_cost", 0.0))
-	_title.text = "%s  %s    %s" % [symbol, GameFmt.price(t.market.price_of(symbol)),
-			(tr("TABLE_HOLDING") % [shares_now, GameFmt.price(avg_now)]) if shares_now != 0 else tr("TABLE_HOLDING_NONE")]
 	var seat := t.human()
 	var open := t.phase == TableSession.Phase.ACTION and seat.alive and not t.is_finished()
-	var price := t.market.price_of(symbol)
-	for b in _buy_buttons:
-		b.disabled = not open or seat.portfolio.cash < price
 	var held := seat.portfolio.shares_of(symbol)
+	var avg: float = float(seat.portfolio.positions.get(symbol, {}).get("avg_cost", 0.0))
+	_title.text = "%s  %s    %s" % [symbol, GameFmt.price(t.market.price_of(symbol)),
+			(tr("TABLE_HOLDING") % [held, GameFmt.price(avg)]) if held != 0 else tr("TABLE_HOLDING_NONE")]
+	for i in _buy_buttons.size():
+		var preview := t.buy_preview(0, symbol, float(BUY_STEPS[i][1]))
+		var shares := int(preview["shares"])
+		_buy_buttons[i].text = "%s\n%s" % [tr(BUY_STEPS[i][0]), (tr("TABLE_COST") % [GameFmt.money(float(preview["cost"]), 0), shares]) if shares > 0 else "-"]
+		_buy_buttons[i].disabled = not open or shares <= 0
 	var locked := seat.mods.locked_symbol == symbol
-	_sell_half.disabled = not open or held <= 0 or locked
-	_sell_all.disabled = _sell_half.disabled
-	var selected_target := _swap_target.get_item_text(_swap_target.selected) if _swap_target.item_count > 0 else ""
-	_swap_target.clear()
-	for s in t.market.symbols():
-		if s != symbol:
-			_swap_target.add_item(s)
-			if s == selected_target:
-				_swap_target.select(_swap_target.item_count - 1)
-	_swap_button.disabled = not open or held <= 0 or locked or _swap_target.item_count == 0
+	for i in _sell_buttons.size():
+		var preview := t.sell_preview(0, symbol, float(SELL_STEPS[i][1]))
+		var shares := int(preview["shares"])
+		_sell_buttons[i].text = "%s\n%s" % [tr(SELL_STEPS[i][0]), (tr("TABLE_GAIN") % [GameFmt.money(float(preview["proceeds"]), 0), shares]) if shares > 0 else "-"]
+		_sell_buttons[i].disabled = not open or shares <= 0 or locked
 	if locked:
 		_show(tr("TRADE_ERR_LOCKED"), GameColors.WARN)
 
 
 func _buy(fraction: float) -> void:
-	var t := TableUi.session()
-	_report(t.buy_fraction(0, symbol, fraction), "TABLE_BOUGHT")
+	_report(TableUi.session().buy_fraction(0, symbol, fraction), "TABLE_BOUGHT")
 
 
 func _sell(fraction: float) -> void:
-	var t := TableUi.session()
-	_report(t.sell_fraction(0, symbol, fraction), "TABLE_SOLD")
-
-
-func _swap() -> void:
-	var t := TableUi.session()
-	var target := _swap_target.get_item_text(_swap_target.selected)
-	var res := t.swap(0, symbol, target)
-	if res.ok:
-		_show(tr("TABLE_SWAPPED") % [symbol, target], GameColors.UP)
-		EventBus.order_filled.emit(res.order, res)
-		GameManager.table_refresh()
-	else:
-		_show(tr(res.reason), GameColors.DOWN)
+	_report(TableUi.session().sell_fraction(0, symbol, fraction), "TABLE_SOLD")
 
 
 func _report(res: TradeResult, key: String) -> void:

@@ -10,12 +10,15 @@ enum Mode { NONE, REVEAL, RESULT }
 const ROW_STEP := 0.24
 const STAMP_DELAY := 0.4
 const STAMP_GAP := 1.35
+## How long the revealed bets stay on screen before the day resolves by itself.
+const AUTO_HOLD := 1.3
 
 var _mode: Mode = Mode.NONE
 var _panel: PanelContainer
 var _body: VBoxContainer
 var _dim: ColorRect
 var _play_intro: bool = false
+var _auto_token: int = 0
 
 
 func _ready() -> void:
@@ -96,9 +99,32 @@ func _refresh_reveal() -> void:
 	go.pressed.connect(GameManager.next_day)
 	_body.add_child(go)
 	extras.append(go)
+	var auto_on := GameSettings.auto_reveal() and not t.can_double(0)
+	if auto_on:
+		var note := GameFmt.label(tr("TABLE_AUTO_NOTE"), GameColors.MUTED, 12)
+		note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_body.add_child(note)
+		_body.move_child(note, _body.get_child_count() - 3 if _body.get_child_count() > 3 else 0)
+	var intro_time := 0.3 + ROW_STEP * rows.size()
 	if _play_intro:
 		_play_intro = false
 		_animate_reveal(rows, extras)
+		if auto_on:
+			_schedule_auto(intro_time + AUTO_HOLD)
+	elif auto_on:
+		_schedule_auto(1.2)
+
+
+## Resolves the day after `seconds`, unless the player already did, the screen moved on, or Dan still has a choice.
+func _schedule_auto(seconds: float) -> void:
+	_auto_token += 1
+	var token := _auto_token
+	get_tree().create_timer(seconds).timeout.connect(func() -> void:
+		var t := TableUi.session()
+		if token != _auto_token or t == null or _mode != Mode.REVEAL or not visible:
+			return
+		if t.phase == TableSession.Phase.REVEALED and not t.can_double(0):
+			GameManager.next_day())
 
 
 ## The bets turn over one after another: each row fades in with a tick and its call pops big.
@@ -110,7 +136,7 @@ func _animate_reveal(rows: Array[Control], extras: Array[Control]) -> void:
 		tw.tween_interval(at)
 		tw.tween_callback(func() -> void: TableFx.sfx(&"reveal_tick"))
 		tw.tween_property(row, "modulate:a", 1.0, 0.1)
-		TableFx.pop(row.get_child(1) as Control, 2.2, at)
+		TableFx.pop(row.get_child(1) as Control, 3.4, at)
 		at += ROW_STEP
 	for e in extras:
 		e.modulate.a = 0.0
@@ -148,6 +174,7 @@ func _on_resolved(report: TableReport) -> void:
 	var t := TableUi.session()
 	if t == null:
 		return
+	_auto_token += 1
 	_mode = Mode.RESULT
 	_clear()
 	_body.add_child(GameFmt.label(tr("TABLE_RESULT_TITLE") % report.day, Color.WHITE, 22))
@@ -189,11 +216,11 @@ func _verdict(t: TableSession, rumor: TableRumor, report: TableReport, delay: fl
 	box.add_child(stamps)
 	var stamp := TableFx.make_stamp(tr("TABLE_CONFIRMED") if rumor.came_true else tr("TABLE_DEBUNKED"), color, 32)
 	stamps.add_child(stamp)
-	TableFx.slam(stamp, delay, _impact.bind(color, 0.32, rumor.is_boss(), mine))
+	TableFx.slam(stamp, delay, _impact.bind(color, 0.42, rumor.is_boss(), mine))
 	if rumor.planted:
 		var planted := TableFx.make_stamp(tr("TABLE_PLANTED"), TableFx.PLANTED_COLOR, 24)
 		stamps.add_child(planted)
-		TableFx.slam(planted, delay + 0.55, _impact.bind(TableFx.PLANTED_COLOR, 0.18, false, {}))
+		TableFx.slam(planted, delay + 0.6, _impact.bind(TableFx.PLANTED_COLOR, 0.3, false, {}))
 	var headline := TableUi.wrapped(rumor.headline(tr, t.market), Color.WHITE, 15)
 	headline.modulate.a = 0.0
 	headline.create_tween().tween_property(headline, "modulate:a", 1.0, 0.3)
@@ -224,19 +251,32 @@ func _mine(report: TableReport, rumor: TableRumor) -> Dictionary:
 	return {}
 
 
-## The stamp has landed: thud, flash, the card jolts; your own win throws confetti, a loss sounds sour.
+## The stamp has landed: thud, flash, the whole screen shakes and the card jolts. Your own win throws confetti from both
+## sides, a loss flashes red twice and shakes harder.
 func _impact(color: Color, strength: float, boss: bool, mine: Dictionary) -> void:
 	TableFx.sfx(&"stamp")
-	TableFx.flash(self, color, strength + (0.12 if boss else 0.0), 0.5)
-	TableFx.jolt(_panel, 1.09 if boss else 1.05)
+	var lost := not mine.is_empty() and float(mine["net"]) <= 0.0
+	TableFx.flash(self, color, strength + (0.18 if boss else 0.0), 0.65)
+	TableFx.jolt(_panel, 1.16 if boss else 1.09)
+	var scene := get_tree().current_scene as Control
+	if scene != null:
+		TableFx.shake(scene, (30.0 if boss else 15.0) + (8.0 if lost else 0.0), 0.55)
 	if mine.is_empty():
 		return
 	var net: float = mine["net"]
 	var timer := get_tree().create_timer(0.14)
 	timer.timeout.connect(func() -> void:
 		TableFx.sfx(&"win" if net > 0.0 else &"lose")
-		if net > 0.0 and is_inside_tree():
-			TableFx.confetti(self, _panel.global_position + Vector2(_panel.size.x * 0.5, 30.0), 70 if boss else 44))
+		if not is_inside_tree():
+			return
+		if net > 0.0:
+			var top := _panel.global_position.y + 30.0
+			var amount := 160 if boss else 90
+			TableFx.confetti(self, Vector2(_panel.global_position.x + 40.0, top + 40.0), amount, 0.55)
+			TableFx.confetti(self, Vector2(_panel.global_position.x + _panel.size.x - 40.0, top + 40.0), amount, -0.55)
+			TableFx.confetti(self, Vector2(_panel.global_position.x + _panel.size.x * 0.5, top), amount, 0.0)
+		else:
+			TableFx.flash(self, GameColors.DOWN, 0.5, 0.5))
 
 
 func _clear() -> void:

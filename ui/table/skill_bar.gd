@@ -31,25 +31,9 @@ func _refresh() -> void:
 	_row.add_child(GameFmt.label(TableUi.seat_name(seat, self), GameColors.GOLD, 15))
 	var key := String(seat.character.id).to_upper()
 	if seat.has_flag(&"copilot"):
-		_row.add_child(TableUi.wrapped(tr("TABLE_COPILOT"), Color.WHITE, 13))
-		var pick := OptionButton.new()
-		pick.focus_mode = Control.FOCUS_NONE
-		pick.disabled = not open
-		pick.add_item(tr("TABLE_COPY_NONE"))
-		pick.set_item_metadata(0, -1)
-		var selected := 0
-		for other in t.seats:
-			if other.id == 0 or not other.alive:
-				continue
-			pick.add_item(TableUi.seat_name(other, self))
-			pick.set_item_metadata(pick.item_count - 1, other.id)
-			if int(t.copy_targets.get(0, -1)) == other.id:
-				selected = pick.item_count - 1
-		pick.select(selected)
-		pick.item_selected.connect(func(index: int) -> void:
-			t.set_copy_target(int(pick.get_item_metadata(index)))
-			GameManager.table_refresh())
-		_row.add_child(pick)
+		var target := int(t.copy_targets.get(0, -1))
+		var text := tr("TABLE_COPILOT_ON") % TableUi.seat_name(t.seats[target], self) if target >= 0 else tr("TABLE_COPILOT_OFF")
+		_row.add_child(TableUi.wrapped(text, Color.WHITE, 13))
 	elif seat.has_flag(&"insider"):
 		var hint := t.insider_hint()
 		if hint != null:

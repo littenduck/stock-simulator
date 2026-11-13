@@ -65,15 +65,15 @@ func _run(char_id: StringName, seed_value: int) -> void:
 	t.buy_fraction(0, t.market.symbols()[1], 0.25)
 	gm.table_refresh()
 	await _shot("2_action")
-	gm.next_day()
+	gm.next_day()    # end the turn: the bets are revealed, then the day resolves by itself (auto reveal)
 	await create_timer(0.55).timeout
 	await _shot("3a_reveal_mid")
-	await create_timer(1.4).timeout
+	await create_timer(1.0).timeout
 	await _shot("3b_reveal")
-	gm.next_day()
-	await create_timer(0.45).timeout
+	await create_timer(1.55).timeout    # the day resolves at about 2.6 s
+	await create_timer(0.5).timeout
 	await _shot("4a_stamp_in_the_air")
-	await create_timer(0.2).timeout
+	await create_timer(0.25).timeout
 	await _shot("4b_impact")
 	await create_timer(0.5).timeout
 	await _shot("4c_confetti")

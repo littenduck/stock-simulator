@@ -227,6 +227,26 @@ func buy_amount(seat_id: int, symbol: String, amount: float) -> TradeResult:
 	return _trade(seat, Order.market(Order.Dir.BUY, symbol, shares))
 
 
+## What a buy button would do right now: {"shares": int, "cost": float} for a share of the seat's cash (fee included).
+func buy_preview(seat_id: int, symbol: String, fraction: float) -> Dictionary:
+	var seat := seats[seat_id]
+	var price := market.price_of(symbol)
+	var per_share := price * (1.0 + seat.mods.effective_fee_rate())
+	var amount := seat.portfolio.cash * clampf(fraction, 0.0, 1.0)
+	var shares := maxi(0, floori(amount / per_share)) if per_share > 0.0 else 0
+	return {"shares": shares, "cost": shares * per_share}
+
+
+## What a sell button would do right now: {"shares": int, "proceeds": float}.
+func sell_preview(seat_id: int, symbol: String, fraction: float) -> Dictionary:
+	var seat := seats[seat_id]
+	var held := seat.portfolio.shares_of(symbol)
+	if held <= 0:
+		return {"shares": 0, "proceeds": 0.0}
+	var shares := held if fraction >= 0.999 else maxi(1, floori(held * fraction))
+	return {"shares": shares, "proceeds": shares * market.price_of(symbol) * (1.0 - seat.mods.effective_fee_rate())}
+
+
 ## Sells a share of the position (0.5 = half, 1.0 = everything).
 func sell_fraction(seat_id: int, symbol: String, fraction: float) -> TradeResult:
 	var seat := seats[seat_id]

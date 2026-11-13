@@ -12,12 +12,9 @@ TABLE_Q3,3/4
 TABLE_ALL_IN,All in
 TABLE_SELL_HALF,Sell half
 TABLE_SELL_ALL,Out
-TABLE_SWAP,Swap
-TABLE_SWAP_BTN,Swap
 TABLE_TRADE_TITLE,Trade %s  %s
 TABLE_BOUGHT,Bought %d %s at %s
 TABLE_SOLD,Sold %d %s at %s
-TABLE_SWAPPED,Swapped %s into %s
 TABLE_RUMOR_TODAY,Today's rumor
 TABLE_CRED,Credibility: %s
 TABLE_CRED_HIDDEN,Credibility: ???
@@ -104,3 +101,17 @@ TABLE_CARD_CLAIM_DOWN,claims a fall
 TABLE_HOLDING,"You hold %d shares, average cost %s"
 TABLE_HOLDING_NONE,You hold none of this stock
 UI_GAME_HELD_AVG,"%d shares, average price %s"
+TABLE_COST,"pay %s
+%d sh"
+TABLE_GAIN,"get %s
+%d sh"
+TABLE_CARD_OPTION,%s x%.2f  ·  pay %s  ·  win %s
+TABLE_CARD_OPTION_BLIND,%s  ·  pay %s
+TABLE_CARD_PASS_OPTION,do nothing  ·  pay $0
+TABLE_CARD_CHANCE_SHORT,chance it is true
+TABLE_CARD_BOSS_HEAD,BOSS
+UI_FLOW_SETTINGS_AUTO,Auto reveal
+UI_FLOW_SETTINGS_AUTO_HINT,"After you end the turn, everybody's bets are revealed and the day resolves by itself. Turn it off to press Space for every step."
+TABLE_AUTO_NOTE,The day resolves in a moment...
+TABLE_COPILOT_ON,COPILOT: copying %s today (change it on the rumor card)
+TABLE_COPILOT_OFF,COPILOT: pick a rival to copy on the rumor card

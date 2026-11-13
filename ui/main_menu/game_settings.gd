@@ -18,6 +18,15 @@ static func margin_enabled() -> bool:
 	return bool(_get_value("margin_enabled", false))
 
 
+## Table mode: after you end the turn the bets are revealed and the day resolves by itself (on by default).
+static func auto_reveal() -> bool:
+	return bool(_get_value("auto_reveal", true))
+
+
+static func set_auto_reveal(value: bool) -> void:
+	_set_value("auto_reveal", value)
+
+
 ## Trading fees in table mode (off by default).
 static func fees_enabled() -> bool:
 	return bool(_get_value("fees_enabled", false))
