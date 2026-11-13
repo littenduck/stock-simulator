@@ -42,6 +42,7 @@ static func pixel() -> Theme:
 	_pixel_button(t, "PrimaryButton", "Button", "green", "green")
 	_pixel_button(t, "BuyButton", "Button", "green", "green")
 	_pixel_button(t, "SellButton", "Button", "red", "red")
+	_pixel_button(t, "PassButton", "Button", "grey", "grey")
 	t.set_type_variation("RowButton", "Button")
 	for state in ["normal", "hover"]:
 		t.set_stylebox(state, "RowButton", _tex("ancient_tan", 12, 10, 4))

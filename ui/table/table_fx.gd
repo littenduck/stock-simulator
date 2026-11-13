@@ -20,7 +20,6 @@ static func make_stamp(text: String, color: Color, font_size: int = 30) -> Panel
 	sb.bg_color = Color(color.r, color.g, color.b, 0.14)
 	sb.border_color = color
 	sb.set_border_width_all(4)
-	sb.set_corner_radius_all(6)
 	sb.content_margin_left = 14
 	sb.content_margin_right = 14
 	sb.content_margin_top = 2

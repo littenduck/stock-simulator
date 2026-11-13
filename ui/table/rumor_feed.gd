@@ -56,7 +56,6 @@ func _card(accent: Color) -> VBoxContainer:
 	sb.bg_color = CARD_BG
 	sb.border_color = accent
 	sb.border_width_left = 4
-	sb.set_corner_radius_all(6)
 	sb.content_margin_left = 10
 	sb.content_margin_right = 8
 	sb.content_margin_top = 6

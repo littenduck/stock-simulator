@@ -6,9 +6,9 @@ extends Control
 
 signal closed(boss: bool)
 
-const SIDE_COLORS := {RumorTier.Side.BELIEVE: Color("#3fb950"), RumorTier.Side.BULLSHIT: Color("#e5484d"), RumorTier.Side.PASS: Color("#8b949e")}
-const PAPER := Color("#f6edd9")
 const INK := Color("#2b2540")
+## The theme's own pixel buttons: green, red and grey.
+const SIDE_BUTTONS := {RumorTier.Side.BELIEVE: &"BuyButton", RumorTier.Side.BULLSHIT: &"SellButton", RumorTier.Side.PASS: &"PassButton"}
 
 var _boss: bool = false
 var _panel: PanelContainer
@@ -21,7 +21,7 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var dim := ColorRect.new()
-	dim.color = Color(0, 0, 0, 0.62)
+	dim.color = Color(0, 0, 0, 0.55)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dim)
@@ -30,19 +30,8 @@ func _ready() -> void:
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(center)
 	_panel = PanelContainer.new()
-	_panel.custom_minimum_size = Vector2(390, 0)
-	var card := StyleBoxFlat.new()
-	card.bg_color = PAPER
-	card.border_color = INK
-	card.set_border_width_all(5)
-	card.set_corner_radius_all(18)
-	card.shadow_color = Color(0, 0, 0, 0.45)
-	card.shadow_size = 14
-	card.content_margin_left = 16
-	card.content_margin_right = 16
-	card.content_margin_top = 14
-	card.content_margin_bottom = 14
-	_panel.add_theme_stylebox_override("panel", card)
+	_panel.theme_type_variation = &"DialogPanel"     # the same pixel panel as every other dialog
+	_panel.custom_minimum_size = Vector2(430, 0)
 	_panel.set_meta("no_fx", true)
 	center.add_child(_panel)
 	_body = VBoxContainer.new()
@@ -93,20 +82,11 @@ func _build(t: TableSession, rumor: TableRumor) -> void:
 		child.queue_free()
 	var seat := t.human()
 	var blind := seat.has_flag(&"goldfish")
-	# Ribbon across the top.
-	var ribbon := PanelContainer.new()
-	ribbon.set_meta("no_fx", true)
-	var rb := StyleBoxFlat.new()
-	rb.bg_color = Color("#cf534f") if _boss else Color("#e3b341")
-	rb.set_corner_radius_all(8)
-	rb.content_margin_top = 4
-	rb.content_margin_bottom = 4
-	ribbon.add_theme_stylebox_override("panel", rb)
 	var title := (tr("TABLE_BOSS_TITLE") % maxi(rumor.resolve_day - t.day, 1)) if _boss else (tr("TABLE_CARD_TODAY") % t.day)
-	var ribbon_label := GameFmt.label(title, Color.WHITE if _boss else INK, 15)
-	ribbon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	ribbon.add_child(ribbon_label)
-	_body.add_child(ribbon)
+	var header := GameFmt.label(title, Color("#c77d0a") if not _boss else Color("#cf534f"), 16)
+	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_body.add_child(header)
+	_body.add_child(_rule())
 	_body.add_child(_hero(t, rumor))
 	_body.add_child(_rule())
 	var headline := TableUi.wrapped(rumor.headline(tr, t.market), INK, 20)
@@ -125,12 +105,11 @@ func _build(t: TableSession, rumor: TableRumor) -> void:
 	for side in [RumorTier.Side.BELIEVE, RumorTier.Side.BULLSHIT, RumorTier.Side.PASS]:
 		var b := Button.new()
 		b.focus_mode = Control.FOCUS_NONE
-		b.set_meta("no_fx", false)
+		b.theme_type_variation = SIDE_BUTTONS[side]
 		b.text = _option_text(t, rumor, side, stake, blind)
 		b.custom_minimum_size = Vector2(0, 66)
 		b.toggle_mode = true
 		b.set_pressed_no_signal(current == side and chosen)
-		_style_option(b, SIDE_COLORS[side])
 		b.pressed.connect(_choose.bind(side))
 		_body.add_child(b)
 	var rate := TableSession.BOSS_RATE if _boss else TableSession.DAILY_RATE
@@ -217,13 +196,13 @@ func _chance(rumor: TableRumor, blind: bool) -> Control:
 	bar.min_value = 0.0
 	bar.max_value = 100.0
 	bar.value = 0.0
-	bar.custom_minimum_size = Vector2(0, 14)
+	bar.custom_minimum_size = Vector2(0, 16)
 	var fill := StyleBoxFlat.new()
 	fill.bg_color = color
-	fill.set_corner_radius_all(6)
 	var back := StyleBoxFlat.new()
 	back.bg_color = Color(0, 0, 0, 0.15)
-	back.set_corner_radius_all(6)
+	back.border_color = INK
+	back.set_border_width_all(2)
 	bar.add_theme_stylebox_override("fill", fill)
 	bar.add_theme_stylebox_override("background", back)
 	box.add_child(bar)
@@ -243,31 +222,6 @@ func _option_text(t: TableSession, rumor: TableRumor, side: int, stake: float, b
 		return title + "\n" + tr("TABLE_CARD_OPTION_BLIND") % [kind, GameFmt.money(stake, 0)]
 	var odds := t.odds_for(t.human(), rumor, side)
 	return title + "\n" + tr("TABLE_CARD_OPTION") % [kind, odds, GameFmt.money(stake, 0), GameFmt.money(stake * odds, 0)]
-
-
-func _style_option(b: Button, color: Color) -> void:
-	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
-		if state == "focus":
-			b.add_theme_stylebox_override(state, StyleBoxEmpty.new())
-			continue
-		var sb := StyleBoxFlat.new()
-		sb.set_corner_radius_all(10)
-		sb.content_margin_left = 10
-		sb.content_margin_right = 10
-		sb.content_margin_top = 6
-		sb.content_margin_bottom = 6
-		if state == "pressed" or state == "hover_pressed":
-			sb.bg_color = color.darkened(0.12)
-			sb.border_color = Color.WHITE
-			sb.set_border_width_all(4)
-		else:
-			sb.bg_color = color.lightened(0.1) if state == "hover" else color
-			sb.border_color = color.darkened(0.4)
-			sb.border_width_bottom = 5
-		b.add_theme_stylebox_override(state, sb)
-	for key in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
-		b.add_theme_color_override(key, Color.WHITE)
-	b.add_theme_font_size_override("font_size", 15)
 
 
 func _choose(side: int) -> void:
